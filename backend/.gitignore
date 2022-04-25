@@ -5,7 +5,6 @@ application-jwt.yml
 application-server.yml
 application-springdoc.yml
 application-file.yml
-path.properties
 
 HELP.md
 .gradle
