@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    include: database,file,jpa,jwt,server,springdoc
+
+  devtools:
+    restart:
+      enabled: true
+
+#  messages:
+#    basename: path
+
+logging:
+  level:
+    com.i3e3.mindlet: debug
+    org.springframework.web: debug
+    org.hibernate.SQL: debug
