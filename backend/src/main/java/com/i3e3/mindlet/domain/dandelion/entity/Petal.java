@@ -32,6 +32,7 @@ public class Petal extends BaseLastModifiedEntity {
     @Column(nullable = false)
     private String city;
 
+    @Column(nullable = false)
     private String nationalFlagImagePath;
 
     @Column(nullable = false, columnDefinition = "TINYINT")
