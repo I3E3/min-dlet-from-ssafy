@@ -36,7 +36,7 @@ public class Report extends BaseLastModifiedEntity {
     private Petal petal;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_seq", nullable = false)
+    @JoinColumn(name = "admin_seq")
     private Admin admin;
 
     @Builder
@@ -53,7 +53,9 @@ public class Report extends BaseLastModifiedEntity {
     public void changeStatus(Status status, Admin admin) {
         this.status = status;
 
-        this.admin.getReports().remove(this);
+        if (this.admin != null) {
+            this.admin.getReports().remove(this);
+        }
         this.admin = admin;
 
         admin.getReports().add(this);
