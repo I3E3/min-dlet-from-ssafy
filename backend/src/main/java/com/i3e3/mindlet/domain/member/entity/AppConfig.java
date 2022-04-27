@@ -54,7 +54,7 @@ public class AppConfig extends BaseLastModifiedEntity {
         this.soundOff = true;
     }
 
-    public void changeGroup(Community community) {
+    public void changeCommunity(Community community) {
         this.community = community;
     }
 
