@@ -1,8 +1,8 @@
 package com.i3e3.mindlet.domain.admin.entity;
 
 import com.i3e3.mindlet.global.entity.base.BaseLastModifiedEntity;
+import com.i3e3.mindlet.global.enums.Role;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -58,29 +58,5 @@ public class Admin extends BaseLastModifiedEntity {
 
     public void delete() {
         this.isDeleted = true;
-    }
-
-    public enum Role implements GrantedAuthority {
-
-        ADMIN("ROLE_ADMIN", "admin"),
-        SUPER_ADMIN("ROLE_SUPER_ADMIN", "super admin");
-
-        private final String authority;
-
-        private final String description;
-
-        Role(String authority, String description) {
-            this.authority = authority;
-            this.description = description;
-        }
-
-        @Override
-        public String getAuthority() {
-            return null;
-        }
-
-        public String getDescription() {
-            return description;
-        }
     }
 }
