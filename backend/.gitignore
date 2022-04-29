@@ -6,6 +6,9 @@ application-server.yml
 application-springdoc.yml
 application-file.yml
 
+*.css
+*.js
+
 HELP.md
 .gradle
 build/
