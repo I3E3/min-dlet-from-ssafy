@@ -4,6 +4,7 @@ import com.i3e3.mindlet.domain.admin.controller.form.RegisterForm;
 import com.i3e3.mindlet.domain.admin.entity.Admin;
 import com.i3e3.mindlet.domain.admin.entity.RegisterKey;
 import com.i3e3.mindlet.domain.admin.exception.DuplicateIdException;
+import com.i3e3.mindlet.domain.admin.exception.InvalidKeyException;
 import com.i3e3.mindlet.domain.admin.exception.PasswordContainIdException;
 import com.i3e3.mindlet.domain.admin.repository.AdminRepository;
 import com.i3e3.mindlet.domain.admin.repository.RegisterKeyRepository;
@@ -145,5 +146,19 @@ class AdminServiceTest {
         assertThatThrownBy(() -> adminService.register(newRegisterForm.toDto()))
                 .isInstanceOf(DuplicateIdException.class)
                 .hasMessage(ErrorMessage.DUPLICATE_ID.getMessage());
+    }
+
+    @Test
+    @DisplayName("관리자 회원가입 실패 - 실패 : 유효하지 않은 키")
+    void registerFailWhenInvalidRegisterKey() {
+        RegisterForm newRegisterForm = RegisterForm.builder()
+                .id("idid2")
+                .password("pass12#4")
+                .key("invalid-key") // 데이터베이스에 존재하지 않는 키
+                .build();
+
+        assertThatThrownBy(() -> adminService.register(newRegisterForm.toDto()))
+                .isInstanceOf(InvalidKeyException.class)
+                .hasMessage(ErrorMessage.INVALID_REGISTER_KEY.getMessage());
     }
 }
