@@ -61,4 +61,10 @@ class AdminRepositoryTest {
         assertThat(findAdmin.getId()).isEqualTo(admin1.getId());
         assertThat(findAdmin.getPassword()).isEqualTo(admin1.getPassword());
     }
+
+    @Test
+    @DisplayName("관리자 엔티티 조회 by 식별키 - 성공 : 데이터기 없는 경우")
+    void findAdminBySuccessAndNull() {
+        assertThat(adminRepository.findAdminBySeq(0L).isPresent()).isFalse();
+    }
 }
