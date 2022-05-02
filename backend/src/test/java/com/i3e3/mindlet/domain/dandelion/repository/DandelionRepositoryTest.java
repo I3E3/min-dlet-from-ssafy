@@ -5,12 +5,16 @@ import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -48,5 +52,26 @@ class DandelionRepositoryTest {
                 .flowerSignNumber(1)
                 .member(member1)
                 .build();
+    }
+
+    @Test
+    @DisplayName("민들레 엔티티 조회 - 데이터가 존재하는 경우")
+    void findDandelionSuccessExist() {
+        // given
+        memberRepository.save(member1);
+        Dandelion savedDandelion = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findDandelion = dandelionRepository.findBySeq(savedDandelion.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion).isNotNull();
+        assertThat(findDandelion.getBlossomedDate()).isEqualTo(dandelion1.getBlossomedDate());
+        assertThat(findDandelion.getCommunity()).isEqualTo(dandelion1.getCommunity());
+        assertThat(findDandelion.getFlowerSignNumber()).isEqualTo(dandelion1.getFlowerSignNumber());
+        assertThat(findDandelion.getMember().getSeq()).isEqualTo(dandelion1.getMember().getSeq());
     }
 }
