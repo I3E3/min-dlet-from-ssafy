@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Slf4j
-@ControllerAdvice
+@ControllerAdvice(basePackages = "com.i3e3.mindlet.domain.admin")
 public class GlobalControllerAdvice {
 
     @ExceptionHandler(Exception.class)

@@ -33,7 +33,7 @@ public class Dandelion extends BaseLastModifiedEntity {
     @Column(nullable = false, columnDefinition = "INT UNSIGNED")
     private Integer flowerSignNumber;
 
-    @Column(nullable = false)
+    @Column
     private String description;
 
     @Enumerated(EnumType.STRING)
