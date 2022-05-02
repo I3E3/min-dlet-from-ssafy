@@ -31,4 +31,14 @@ public class DandelionServiceImpl implements DandelionService {
 
         return findDandelion.getMember().getSeq() == memberSeq;
     }
+
+    @Transactional
+    @Override
+    public String changeDescription(Long dandelionSeq, String description) {
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        findDandelion.changeDescription(description);
+        return findDandelion.getDescription();
+    }
 }

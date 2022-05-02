@@ -5,4 +5,6 @@ public interface DandelionService {
     boolean isBlossomed(Long dandelionSeq);
 
     boolean isOwner(Long dandelionSeq, Long memberSeq);
+
+    String changeDescription(Long dandelionSeq, String description);
 }
