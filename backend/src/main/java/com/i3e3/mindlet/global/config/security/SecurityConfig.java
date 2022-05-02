@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/register", "/admin/login").permitAll()
                 .antMatchers("/admin").permitAll()
                 .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
+                .antMatchers("/api/v1/**").permitAll() // 임시 추가
                 .anyRequest().authenticated()
 
                 .and()
