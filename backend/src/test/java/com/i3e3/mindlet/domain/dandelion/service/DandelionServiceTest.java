@@ -147,4 +147,22 @@ class DandelionServiceTest {
         // then
         assertThat(isOwner).isTrue();
     }
+
+    @Test
+    @DisplayName("민들레 주인 확인 - 주인이 아닌 경우")
+    void checkOwnerFalse() {
+        // given
+        memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Member savedMember2 = memberRepository.save(member2);
+        dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isOwner = dandelionService.isOwner(savedDandelion1.getSeq(), savedMember2.getSeq());
+
+        // then
+        assertThat(isOwner).isFalse();
+    }
 }
