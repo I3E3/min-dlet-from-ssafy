@@ -165,4 +165,36 @@ class DandelionServiceTest {
         // then
         assertThat(isOwner).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 주인 확인 - 예외 발생")
+    void checkOwnerException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isOwner(0L, 0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레 꽃말 수정 - 성공")
+    void changeDescriptionSuccess() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        String newDescription = savedDandelion1.getDescription() + "1";
+
+        // when
+        String findDescription = dandelionService.changeDescription(savedDandelion1.getSeq(), newDescription);
+
+        // then
+        assertThat(findDescription).isEqualTo(newDescription);
+        assertThat(findDescription).isNotEqualTo(savedDandelion1.getDescription());
+    }
 }
