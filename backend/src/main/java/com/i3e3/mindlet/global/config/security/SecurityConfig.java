@@ -30,13 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/css/**", "/images/**", "/js/**").permitAll()
-                .antMatchers("/error/**").permitAll()
-                .antMatchers("/admin/register", "/admin/login").permitAll()
-                .antMatchers("/admin").permitAll()
-                .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
-                .antMatchers("/api/v1/**").permitAll() // 임시 추가
-                .anyRequest().authenticated()
+//                .antMatchers("/", "/css/**", "/images/**", "/js/**").permitAll()
+//                .antMatchers("/error/**").permitAll()
+//                .antMatchers("/admin/register", "/admin/login").permitAll()
+//                .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
+//                .anyRequest().authenticated()
+                .antMatchers("/**").permitAll()
 
                 .and()
                 .logout()
