@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 @ToString(of = {"description"})
 public class DandelionDescriptionModifyDto {
 
+    @Schema(title = "꽃말", description = "꽃말 데이터를 담는 필드입니다.", example = "꽃말1", required = true)
     @Length(min = 1, max = 20)
     @NotBlank
     private String description;
