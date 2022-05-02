@@ -197,4 +197,17 @@ class DandelionServiceTest {
         assertThat(findDescription).isEqualTo(newDescription);
         assertThat(findDescription).isNotEqualTo(savedDandelion1.getDescription());
     }
+
+    @Test
+    @DisplayName("민들레 꽃말 수정 - 예외 발생")
+    void changeDescriptionException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.changeDescription(0L, "꽃말"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
