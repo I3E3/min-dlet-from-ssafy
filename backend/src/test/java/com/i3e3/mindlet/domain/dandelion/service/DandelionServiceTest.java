@@ -131,4 +131,20 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("민들레 주인 확인 - 주인이 맞는 경우")
+    void checkOwnerTrue() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isOwner = dandelionService.isOwner(savedDandelion1.getSeq(), savedMember1.getSeq());
+
+        // then
+        assertThat(isOwner).isTrue();
+    }
 }
