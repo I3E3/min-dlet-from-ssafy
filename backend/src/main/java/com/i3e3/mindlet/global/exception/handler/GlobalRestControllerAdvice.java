@@ -34,6 +34,14 @@ public class GlobalRestControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalStateException.class)
+    public ErrorResponseDto<Void> illegalStateExceptionHandler(IllegalStateException e) {
+        logPrint(e);
+        return ErrorResponseDto.<Void>builder()
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
     public ErrorResponseDto<Void> illegalArgumentExceptionHandler(IllegalArgumentException e) {
         logPrint(e);
