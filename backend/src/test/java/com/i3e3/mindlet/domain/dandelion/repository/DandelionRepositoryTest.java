@@ -74,4 +74,17 @@ class DandelionRepositoryTest {
         assertThat(findDandelion.getFlowerSignNumber()).isEqualTo(dandelion1.getFlowerSignNumber());
         assertThat(findDandelion.getMember().getSeq()).isEqualTo(dandelion1.getMember().getSeq());
     }
+
+    @Test
+    @DisplayName("민들레 엔티티 조회 - 데이터가 없는 경우")
+    void findDandelionSuccessNonExist() {
+        // given
+
+        // when
+        Dandelion findDandelion = dandelionRepository.findBySeq(0L)
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion).isNull();
+    }
 }
