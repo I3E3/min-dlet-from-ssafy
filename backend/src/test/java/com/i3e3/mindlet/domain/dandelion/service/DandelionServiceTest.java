@@ -438,4 +438,33 @@ class DandelionServiceTest {
         // then
         assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
     }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - 한 회원이 6개의 민들레를 등록한 경우")
+    void countLeftSeedWhenMoreThanMaxCount() {
+        // given
+        Member savedMember = memberRepository.save(Member.builder()
+                .id("test1")
+                .password("midlet")
+                .tel("010-0000-0000")
+                .build());
+
+        for (int i = 1; i <= 6; i++) {
+            dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-05-03"))
+                    .community(Community.WORLD)
+                    .flowerSignNumber(i)
+                    .member(savedMember)
+                    .build());
+        }
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.getLeftSeedCount(savedMember.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.MORE_THAN_MAX_COUNT.getMessage());
+    }
 }
