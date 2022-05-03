@@ -225,4 +225,20 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - 민들레가 1개도 등록되지 않은 경우")
+    void countLeftSeedWhenNotExistDandelion() {
+        // given
+        member1.getDandelions().clear();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
 }
