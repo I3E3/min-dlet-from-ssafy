@@ -119,4 +119,21 @@ class DandelionRepositoryTest {
         // then
         assertThat(countUsingSeed).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - flying 상태의 민들레가 1개이지만 삭제된 경우")
+    void countUsingSeedWhenFlyingAndDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.FLYING);
+        dandelion1.delete();
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
 }
