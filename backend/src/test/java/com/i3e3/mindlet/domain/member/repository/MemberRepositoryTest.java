@@ -51,4 +51,16 @@ class MemberRepositoryTest {
         // then
         assertThat(isExist).isTrue();
     }
+
+    @Test
+    @DisplayName("회원 데이터 유무 확인 - 데이터가 없는 경우")
+    void checkMemberNoneExist() {
+        // given
+
+        // when
+        boolean isExist = memberRepository.existsBySeq(0L);
+
+        // then
+        assertThat(isExist).isFalse();
+    }
 }
