@@ -307,4 +307,20 @@ class DandelionServiceTest {
         // then
         assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
     }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - return 상태의 민들레가 1개 등록될 경우")
+    void countLeftSeedWhenReturn() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.RETURN);
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue() - 1);
+    }
 }
