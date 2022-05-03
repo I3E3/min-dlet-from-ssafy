@@ -284,4 +284,20 @@ class DandelionRepositoryTest {
         // then
         assertThat(countUsingSeed).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - album 상태의 민들레만 1개일 경우")
+    void countUsingSeedWhenAlbum() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.ALBUM);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
 }
