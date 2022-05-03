@@ -63,4 +63,20 @@ class MemberRepositoryTest {
         // then
         assertThat(isExist).isFalse();
     }
+
+    @Test
+    @DisplayName("회원 데이터 유무 확인 - 데이터가 있지만 탈퇴한 경우")
+    void checkMemberExistWhenDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        savedMember.delete();
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isExist = memberRepository.existsBySeq(savedMember.getSeq());
+
+        // then
+        assertThat(isExist).isFalse();
+    }
 }
