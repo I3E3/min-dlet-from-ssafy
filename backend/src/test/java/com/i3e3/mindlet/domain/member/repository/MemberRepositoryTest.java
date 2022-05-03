@@ -2,11 +2,15 @@ package com.i3e3.mindlet.domain.member.repository;
 
 import com.i3e3.mindlet.domain.member.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -31,5 +35,20 @@ class MemberRepositoryTest {
                 .password("패스워드1")
                 .tel("010-0000-0001")
                 .build();
+    }
+
+    @Test
+    @DisplayName("회원 데이터 유무 확인 - 데이터가 있는 경우")
+    void checkMemberExistSuccess() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isExist = memberRepository.existsBySeq(savedMember.getSeq());
+
+        // then
+        assertThat(isExist).isTrue();
     }
 }
