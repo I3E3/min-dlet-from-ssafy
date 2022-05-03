@@ -52,6 +52,7 @@ class DandelionRepositoryTest {
                 .flowerSignNumber(1)
                 .member(member1)
                 .build();
+
     }
 
     @Test
@@ -86,5 +87,20 @@ class DandelionRepositoryTest {
 
         // then
         assertThat(findDandelion).isNull();
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - 사용중인 민들레가 0개인 경우")
+    void countUsingSeedWhenNothing() {
+        // given
+        member1.getDandelions().clear();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
     }
 }
