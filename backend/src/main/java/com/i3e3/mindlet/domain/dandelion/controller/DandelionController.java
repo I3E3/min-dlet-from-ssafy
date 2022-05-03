@@ -2,6 +2,7 @@ package com.i3e3.mindlet.domain.dandelion.controller;
 
 import com.i3e3.mindlet.domain.dandelion.controller.dto.DandelionDescriptionModifyDto;
 import com.i3e3.mindlet.domain.dandelion.service.DandelionService;
+import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.dto.BaseResponseDto;
 import com.i3e3.mindlet.global.dto.ErrorResponseDto;
@@ -71,6 +72,40 @@ public class DandelionController {
         }
 
         return BaseResponseDto.<Void>builder()
+                .build();
+    }
+    
+    /**
+     * @TODO OAuth
+     */
+    @Operation(
+            summary = "남은 씨앗 개수 조회 API",
+            description = "인증 토큰을 전달받고 남은 씨앗 개수를 반환합니다.",
+            tags = {"dandelion"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "남은 씨앗 개수 반환 완료",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @GetMapping("/leftover-seed-count")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseDto<SeedCountDto> getSeedCount() {
+
+        /**
+         * 회원 식별키는 OAuth에서 뽑아야 한다.
+         */
+        Long memberSeq = null;
+
+        SeedCountDto leftSeedCount = dandelionService.getLeftSeedCount(memberSeq);
+
+        return BaseResponseDto.<SeedCountDto>builder()
+                .data(leftSeedCount)
                 .build();
     }
 }
