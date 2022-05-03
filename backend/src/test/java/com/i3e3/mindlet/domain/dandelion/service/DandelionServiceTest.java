@@ -2,8 +2,10 @@ package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
+import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
+import com.i3e3.mindlet.global.constant.dandelion.DandelionConst;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
@@ -207,6 +209,19 @@ class DandelionServiceTest {
 
         // then
         assertThatThrownBy(() -> dandelionService.changeDescription(0L, "꽃말"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - 예외 발생: 해당 회원이 존재하지 않는 경우")
+    void countLeftSeedWhenNotExistMember() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.getLeftSeedCount(0L))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
