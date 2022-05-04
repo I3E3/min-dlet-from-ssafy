@@ -11,4 +11,6 @@ public interface DandelionService {
     String changeDescription(Long dandelionSeq, String description);
 
     SeedCountDto getLeftSeedCount(Long memberSeq);
+
+    boolean isReturn(Long dandelionSeq);
 }
