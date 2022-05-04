@@ -4,6 +4,7 @@ import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
+import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @SpringBootTest
@@ -77,5 +79,18 @@ class MemberServiceTest {
         //then
         assertThat(changedAppConfig.getCommunity()).isEqualTo(Community.KOREA);
         assertThat(changedAppConfig.getMember().getSeq()).isEqualTo(savedMember.getSeq());
+    }
+
+    @Test
+    @DisplayName("회원 식별키로 커뮤니티 변경 - 회원 정보가 없을 때")
+    void changeCommunityFailNonMember() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeCommunity(0L, Community.KOREA))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 }
