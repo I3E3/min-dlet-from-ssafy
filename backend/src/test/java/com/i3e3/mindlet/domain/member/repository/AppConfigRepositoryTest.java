@@ -79,4 +79,22 @@ class AppConfigRepositoryTest {
         //then
         assertThat(appConfigNull).isNull();
     }
+
+    @Test
+    @DisplayName("회원 식별키로 앱 설정 데이터 조회 - 회원 Seq 가 존재하고 deleted 가 true 인 경우")
+    void findAppConfigFailExistMemberAndDeleted() {
+        //given
+        Member savedMember = memberRepository.save(member1);
+        savedMember.delete();
+        appConfigRepository.save(appConfig1);
+
+        em.flush();
+        em.clear();
+
+        //when
+        AppConfig appConfigNull = appConfigRepository.findByMemberSeq(savedMember.getSeq())
+                .orElse(null);
+        //then
+        assertThat(appConfigNull).isNull();
+    }
 }
