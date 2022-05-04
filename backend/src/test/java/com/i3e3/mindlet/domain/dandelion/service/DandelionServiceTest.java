@@ -490,4 +490,27 @@ class DandelionServiceTest {
         // then
         assertThat(isReturn).isTrue();
     }
+
+    @Test
+    @DisplayName("민들레 상태(Return) 확인 - False")
+    void checkReturnFalse() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-04"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isReturn = dandelionService.isReturn(savedDandelion.getSeq());
+
+        // then
+        assertThat(isReturn).isFalse();
+    }
 }
