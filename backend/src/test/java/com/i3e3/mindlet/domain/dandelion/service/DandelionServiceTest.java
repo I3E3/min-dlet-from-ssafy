@@ -552,4 +552,16 @@ class DandelionServiceTest {
         assertThat(findDandelion.getStatus()).isEqualTo(Dandelion.Status.BLOSSOMED);
     }
 
+    @Test
+    @DisplayName("민들레 상태 변경 - 예외 발생")
+    void changeDandelionStatusException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.changeStatus(0L, Dandelion.Status.FLYING))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
