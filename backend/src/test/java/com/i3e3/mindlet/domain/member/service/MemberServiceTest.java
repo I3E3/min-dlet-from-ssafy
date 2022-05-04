@@ -93,4 +93,22 @@ class MemberServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("회원 식별키로 커뮤니티 변경 - 회원 정보가 있는데 deleted 가 true")
+    void changeCommunityFailExistMemberAndDeleted() {
+        //given
+        Member savedMember = memberRepository.save(member1);
+        appConfigRepository.save(appConfig1);
+        savedMember.delete();
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeCommunity(savedMember.getSeq(), Community.KOREA))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
