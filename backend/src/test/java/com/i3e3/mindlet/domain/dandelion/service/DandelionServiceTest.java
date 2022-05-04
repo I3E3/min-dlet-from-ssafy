@@ -526,4 +526,30 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("민들레 상태 변경")
+    void changeDandelionStatus() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-04"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.RETURN);
+        dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionService.changeStatus(newDandelion.getSeq(), Dandelion.Status.BLOSSOMED);
+        Dandelion findDandelion = dandelionRepository.findBySeq(newDandelion.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion.getStatus()).isEqualTo(Dandelion.Status.BLOSSOMED);
+    }
+
 }
