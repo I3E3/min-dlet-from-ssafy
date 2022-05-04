@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
-  // TODO timeout 설정
   timeout: 30000,
   headers: {
     'Content-type': 'application/json',
@@ -72,7 +71,6 @@ instance.interceptors.response.use(
 
 export const multipartInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
-  // TODO timeout 설정
   timeout: 30000,
   headers: {
     'Content-Type': `multipart/form-data`,

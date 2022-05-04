@@ -11,7 +11,11 @@ html {
 }
 
 body {
-  background-color: white;
+  background: linear-gradient(180deg, #92c4ff 0%, #ffffff 100%);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0 auto;
 }
 
 h1 {
