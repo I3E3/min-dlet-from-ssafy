@@ -9,4 +9,6 @@ import lombok.ToString;
 @ToString(of = {"status"})
 public class DandelionStatusChangeDto {
 
+    @Schema(title = "상태", description = "민들레 상태를 담는 필드입니다.", example = "ALBUM")
+    private String status;
 }
