@@ -65,4 +65,23 @@ public class DandelionServiceImpl implements DandelionService {
                 .leftSeedCount(leftSeedCount)
                 .build();
     }
+
+    @Override
+    public boolean isReturn(Long dandelionSeq) {
+
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        return findDandelion.getStatus() == Dandelion.Status.RETURN;
+    }
+
+    @Transactional
+    @Override
+    public void changeStatus(Long dandelionSeq, Dandelion.Status status) {
+
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        findDandelion.changeStatus(status);
+    }
 }

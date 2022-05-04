@@ -467,4 +467,101 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.MORE_THAN_MAX_COUNT.getMessage());
     }
+
+    @Test
+    @DisplayName("민들레 상태(Return) 확인 - True")
+    void checkReturnTrue() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-04"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.RETURN);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isReturn = dandelionService.isReturn(savedDandelion.getSeq());
+
+        // then
+        assertThat(isReturn).isTrue();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Return) 확인 - False")
+    void checkReturnFalse() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-04"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isReturn = dandelionService.isReturn(savedDandelion.getSeq());
+
+        // then
+        assertThat(isReturn).isFalse();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Return) 확인 - 예외 발생")
+    void checkReturnException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isReturn(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레 상태 변경")
+    void changeDandelionStatus() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-04"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.RETURN);
+        dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionService.changeStatus(newDandelion.getSeq(), Dandelion.Status.BLOSSOMED);
+        Dandelion findDandelion = dandelionRepository.findBySeq(newDandelion.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion.getStatus()).isEqualTo(Dandelion.Status.BLOSSOMED);
+    }
+
+    @Test
+    @DisplayName("민들레 상태 변경 - 예외 발생")
+    void changeDandelionStatusException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.changeStatus(0L, Dandelion.Status.FLYING))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
