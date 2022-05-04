@@ -513,4 +513,17 @@ class DandelionServiceTest {
         // then
         assertThat(isReturn).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 상태(Return) 확인 - 예외 발생")
+    void checkReturnException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isReturn(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
