@@ -67,4 +67,16 @@ class AppConfigRepositoryTest {
         assertThat(findAppConfig.getSeq()).isEqualTo(savedAppConfig.getSeq());
         assertThat(findAppConfig.getMember().getSeq()).isEqualTo(savedMember.getSeq());
     }
+
+    @Test
+    @DisplayName("회원 식별키로 앱 설정 데이터 조회 - 회원 Seq 가 존재하지 않을 경우")
+    void findAppConfigFailNonExistMember() {
+        //given
+
+        //when
+        AppConfig appConfigNull = appConfigRepository.findByMemberSeq(0L)
+                .orElse(null);
+        //then
+        assertThat(appConfigNull).isNull();
+    }
 }
