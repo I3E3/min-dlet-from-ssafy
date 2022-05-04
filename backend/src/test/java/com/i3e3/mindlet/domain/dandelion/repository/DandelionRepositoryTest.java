@@ -52,6 +52,7 @@ class DandelionRepositoryTest {
                 .flowerSignNumber(1)
                 .member(member1)
                 .build();
+
     }
 
     @Test
@@ -86,5 +87,217 @@ class DandelionRepositoryTest {
 
         // then
         assertThat(findDandelion).isNull();
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - 사용중인 민들레가 0개인 경우")
+    void countUsingSeedWhenNothing() {
+        // given
+        member1.getDandelions().clear();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - flying 상태의 민들레가 1개인 경우")
+    void countUsingSeedWhenFlying() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.FLYING);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - flying 상태의 민들레가 1개이지만 삭제된 경우")
+    void countUsingSeedWhenFlyingAndDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.FLYING);
+        dandelion1.delete();
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - hold 상태의 민들레가 1개인 경우")
+    void countUsingSeedWhenHold() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.HOLD);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - hold 상태의 민들레가 1개이지만 삭제된 경우")
+    void countUsingSeedWhenHoldAndDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.HOLD);
+        dandelion1.delete();
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - return 상태의 민들레가 1개인 경우")
+    void countUsingSeedWhenReturn() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.RETURN);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - return 상태의 민들레가 1개이지만 삭제된 경우")
+    void countUsingSeedWhenReturnAndDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.RETURN);
+        dandelion1.delete();
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - pending 상태의 민들레가 1개인 경우")
+    void countUsingSeedWhenPending() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.PENDING);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - pending 상태의 민들레가 1개이지만 삭제된 경우")
+    void countUsingSeedWhenPendingAndDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.PENDING);
+        dandelion1.delete();
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - blossomed 상태의 민들레가 1개인 경우")
+    void countUsingSeedWhenBlossomed() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.BLOSSOMED);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - blossomed 상태의 민들레가 1개이지만 삭제된 경우")
+    void countUsingSeedWhenBlossomedAndDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.BLOSSOMED);
+        dandelion1.delete();
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - blocked 상태의 민들레만 1개일 경우")
+    void countUsingSeedWhenBlocked() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.BLOCKED);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("사용중인 민들레 개수 조회 - album 상태의 민들레만 1개일 경우")
+    void countUsingSeedWhenAlbum() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion1.changeStatus(Dandelion.Status.ALBUM);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
+        // then
+        assertThat(countUsingSeed).isEqualTo(0);
     }
 }

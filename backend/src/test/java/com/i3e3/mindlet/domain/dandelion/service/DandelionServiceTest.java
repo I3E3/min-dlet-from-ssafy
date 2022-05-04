@@ -2,8 +2,10 @@ package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
+import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
+import com.i3e3.mindlet.global.constant.dandelion.DandelionConst;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
@@ -209,5 +211,260 @@ class DandelionServiceTest {
         assertThatThrownBy(() -> dandelionService.changeDescription(0L, "꽃말"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - 예외 발생: 해당 회원이 존재하지 않는 경우")
+    void countLeftSeedWhenNotExistMember() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.getLeftSeedCount(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - 민들레가 1개도 등록되지 않은 경우")
+    void countLeftSeedWhenNotExistDandelion() {
+        // given
+        member1.getDandelions().clear();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - flying 상태의 민들레가 1개 등록될 경우")
+    void countLeftSeedWhenFlying() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.FLYING);
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue() - 1);
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - flying 상태의 민들레가 1개 있지만 삭제된 경우")
+    void countLeftSeedWhenFlyingAndDeleted() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.FLYING);
+        dandelion1.delete();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - hold 상태의 민들레가 1개 등록될 경우")
+    void countLeftSeedWhenHold() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.HOLD);
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue() - 1);
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - hold 상태의 민들레가 1개 있지만 삭제된 경우")
+    void countLeftSeedWhenHoldAndDeleted() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.HOLD);
+        dandelion1.delete();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - return 상태의 민들레가 1개 등록될 경우")
+    void countLeftSeedWhenReturn() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.RETURN);
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue() - 1);
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - return 상태의 민들레가 1개 있지만 삭제된 경우")
+    void countLeftSeedWhenReturnAndDeleted() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.RETURN);
+        dandelion1.delete();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - pending 상태의 민들레가 1개 등록될 경우")
+    void countLeftSeedWhenPending() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.PENDING);
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue() - 1);
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - pending 상태의 민들레가 1개 있지만 삭제된 경우")
+    void countLeftSeedWhenPendingAndDeleted() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.PENDING);
+        dandelion1.delete();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - blossomed 상태의 민들레가 1개 등록될 경우")
+    void countLeftSeedWhenBlossomed() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.BLOSSOMED);
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue() - 1);
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - blossomed 상태의 민들레가 1개 있지만 삭제된 경우")
+    void countLeftSeedWhenBlossomedAndDeleted() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.BLOSSOMED);
+        dandelion1.delete();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - blocked 상태의 민들레가 1개인 경우")
+    void countLeftSeedWhenBlocked() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.BLOCKED);
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - album 상태의 민들레가 1개인 경우")
+    void countLeftSeedWhenAlbum() {
+        // given
+        dandelion1.changeStatus(Dandelion.Status.ALBUM);
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        SeedCountDto seedCountDto = dandelionService.getLeftSeedCount(savedMember.getSeq());
+
+        // then
+        assertThat(seedCountDto.getLeftSeedCount()).isEqualTo(DandelionConst.MAX_USING_DANDELION_COUNT.getValue());
+    }
+
+    @Test
+    @DisplayName("남은 씨앗 개수 조회 - 한 회원이 6개의 민들레를 등록한 경우")
+    void countLeftSeedWhenMoreThanMaxCount() {
+        // given
+        Member savedMember = memberRepository.save(Member.builder()
+                .id("test1")
+                .password("midlet")
+                .tel("010-0000-0000")
+                .build());
+
+        for (int i = 1; i <= 6; i++) {
+            dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-05-03"))
+                    .community(Community.WORLD)
+                    .flowerSignNumber(i)
+                    .member(savedMember)
+                    .build());
+        }
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.getLeftSeedCount(savedMember.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.MORE_THAN_MAX_COUNT.getMessage());
     }
 }
