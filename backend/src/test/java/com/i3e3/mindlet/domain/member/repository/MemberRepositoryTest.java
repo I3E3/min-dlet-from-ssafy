@@ -33,7 +33,6 @@ class MemberRepositoryTest {
         member1 = Member.builder()
                 .id("아이디1")
                 .password("패스워드1")
-                .tel("010-0000-0001")
                 .build();
     }
 

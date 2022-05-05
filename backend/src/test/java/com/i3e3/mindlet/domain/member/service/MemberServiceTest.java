@@ -50,7 +50,6 @@ class MemberServiceTest {
         member1 = Member.builder()
                 .id("아이디1")
                 .password("패스워드1")
-                .tel("010-1234-1234")
                 .build();
 
         appConfig1 = AppConfig.builder()
