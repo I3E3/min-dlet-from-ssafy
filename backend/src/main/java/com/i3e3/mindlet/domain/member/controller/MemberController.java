@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,43 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/members")
 public class MemberController {
     private final MemberService memberService;
+
+    @Operation(
+            summary = "아이디 중복 확인 API",
+            description = "아이디 값을 받아 중복 확인 후 결과를 반환합니다.",
+            tags = {"member"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "중복된 아이디",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "아이디 중복이 아님",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @GetMapping("/id-duplicate-check/{id}")
+    public ResponseEntity<BaseResponseDto<Void>> idDuplicateCheck(@PathVariable("id") String id) {
+        String idRegx = "^[0-9|a-z|\\s]{4,12}$";
+        if (!id.matches(idRegx)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_ID.getMessage() + " ID=" + id);
+        }
+
+        HttpStatus status = memberService.isExistsId(id) ?
+                HttpStatus.OK : HttpStatus.NO_CONTENT;
+
+        return new ResponseEntity<>(BaseResponseDto.<Void>builder()
+                .build(), status);
+    }
 
     /**
      * @TODO OAuth
