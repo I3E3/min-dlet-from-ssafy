@@ -131,4 +131,23 @@ class MemberServiceTest {
         assertThat(changedAppConfig.isSoundOff()).isTrue();
     }
 
+    @Test
+    @DisplayName("회원 식별키로 사운드 변경 성공 - 음소거 Off")
+    void changeSoundSuccessMuteOff() {
+        //given
+        Member savedMember = memberRepository.save(member1);
+        AppConfig savedConfig = appConfigRepository.save(appConfig1);
+        savedConfig.soundOff();
+
+        em.flush();
+        em.clear();
+
+        //when
+        memberService.changeSound(savedMember.getSeq(), false);
+        AppConfig changedAppConfig = appConfigRepository.findByMemberSeq(savedMember.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(changedAppConfig.isSoundOff()).isFalse();
+    }
 }
