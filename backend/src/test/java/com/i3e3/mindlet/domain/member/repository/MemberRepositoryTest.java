@@ -91,4 +91,19 @@ class MemberRepositoryTest {
         // then
         assertThat(isExists).isFalse();
     }
+
+    @Test
+    @DisplayName("아이디로 회원 데이터 유무 확인 - 데이터가 있는 경우")
+    void checkMemberExistById() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isExists = memberRepository.existsByIdContainsDeleted(savedMember.getId());
+
+        // then
+        assertThat(isExists).isTrue();
+    }
 }
