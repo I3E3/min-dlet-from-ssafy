@@ -18,7 +18,6 @@ import javax.persistence.EntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
@@ -110,5 +109,20 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.changeCommunity(savedMember.getSeq(), Community.KOREA))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("아이디 중복 확인 - 중복된 경우 : 회원 데이터 있음")
+    void checkIdDuplicateTrue() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isExist = memberService.isExistsId(savedMember.getId());
+
+        // then
+        assertThat(isExist).isTrue();
     }
 }
