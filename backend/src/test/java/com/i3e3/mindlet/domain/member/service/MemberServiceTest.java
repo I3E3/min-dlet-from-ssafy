@@ -150,4 +150,20 @@ class MemberServiceTest {
         //then
         assertThat(changedAppConfig.isSoundOff()).isFalse();
     }
+
+    @Test
+    @DisplayName("회원 식별키로 사운드 변경 실패 - 회원 정보가 없을 때")
+    void changeSoundFailNonMember() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeSound(0L, true))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+        assertThatThrownBy(() -> memberService.changeSound(0L, false))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
