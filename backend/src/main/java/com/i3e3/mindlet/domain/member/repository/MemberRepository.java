@@ -9,4 +9,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT COUNT(m.seq) > 0 FROM Member m WHERE m.seq = :seq AND m.isDeleted = false")
     boolean existsBySeq(@Param("seq") Long seq);
+
+    @Query("SELECT COUNT(m) > 0 FROM Member m WHERE m.id = :id")
+    boolean existsByIdContainsDeleted(@Param("id") String id);
 }
