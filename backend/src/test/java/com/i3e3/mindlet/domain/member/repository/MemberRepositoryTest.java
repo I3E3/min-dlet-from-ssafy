@@ -38,7 +38,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("회원 데이터 유무 확인 - 데이터가 있는 경우")
+    @DisplayName("회원 식별키로 회원 데이터 유무 확인 - 데이터가 있는 경우")
     void checkMemberExistSuccess() {
         // given
         Member savedMember = memberRepository.save(member1);
@@ -53,7 +53,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("회원 데이터 유무 확인 - 데이터가 없는 경우")
+    @DisplayName("회원 식별키로 회원 데이터 유무 확인 - 데이터가 없는 경우")
     void checkMemberNoneExist() {
         // given
 
@@ -65,7 +65,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("회원 데이터 유무 확인 - 데이터가 있지만 탈퇴한 경우")
+    @DisplayName("회원 식별키로 회원 데이터 유무 확인 - 데이터가 있지만 탈퇴한 경우")
     void checkMemberExistWhenDeleted() {
         // given
         Member savedMember = memberRepository.save(member1);
@@ -78,5 +78,17 @@ class MemberRepositoryTest {
 
         // then
         assertThat(isExist).isFalse();
+    }
+
+    @Test
+    @DisplayName("아이디로 회원 데이터 유무 확인 - 데이터가 없는 경우")
+    void checkMemberExistByIdNotExist() {
+        // given
+
+        // when
+        boolean isExists = memberRepository.existsByIdContainsDeleted("no1234");
+
+        // then
+        assertThat(isExists).isFalse();
     }
 }
