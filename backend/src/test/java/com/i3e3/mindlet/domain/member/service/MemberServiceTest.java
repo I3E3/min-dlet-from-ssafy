@@ -166,4 +166,25 @@ class MemberServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("회원 식별키로 사운드 변경 실패 - 회원 정보가 있는데 deleted 가 true")
+    void changeSoundFailExistMemberAndDeleted() {
+        //given
+        Member savedMember = memberRepository.save(member1);
+        appConfigRepository.save(appConfig1);
+        savedMember.delete();
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeSound(savedMember.getSeq(), true))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+        assertThatThrownBy(() -> memberService.changeSound(savedMember.getSeq(), false))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
