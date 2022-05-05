@@ -111,4 +111,24 @@ class MemberServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("회원 식별키로 사운드 변경 성공 - 음소거 on")
+    void changeSoundSuccessMuteOn() {
+        //given
+        Member savedMember = memberRepository.save(member1);
+        appConfigRepository.save(appConfig1);
+
+        em.flush();
+        em.clear();
+
+        //when
+        memberService.changeSound(savedMember.getSeq(), true);
+        AppConfig changedAppConfig = appConfigRepository.findByMemberSeq(savedMember.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(changedAppConfig.isSoundOff()).isTrue();
+    }
+
 }
