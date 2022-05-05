@@ -4,6 +4,7 @@ import com.i3e3.mindlet.global.enums.Community;
 
 public interface MemberService {
 
-    void changeCommunity(Long memberSeq, Community community);
+    boolean isExistsId(String id);
 
+    void changeCommunity(Long memberSeq, Community community);
 }
