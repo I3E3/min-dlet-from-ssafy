@@ -125,4 +125,20 @@ class MemberServiceTest {
         // then
         assertThat(isExist).isTrue();
     }
+
+    @Test
+    @DisplayName("아이디 중복 확인 - 중복된 경우 : 회원 데이터 있음 및 회원 탈퇴")
+    void checkIdDuplicateTrueWhenDeletedMember() {
+        // given
+        member1.delete();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isExist = memberService.isExistsId(savedMember.getId());
+
+        // then
+        assertThat(isExist).isTrue();
+    }
 }
