@@ -141,4 +141,16 @@ class MemberServiceTest {
         // then
         assertThat(isExist).isTrue();
     }
+
+    @Test
+    @DisplayName("아이디 중복 확인 - 중복이 아닌 경우 : 회원 데이터 없음")
+    void checkIdDuplicateFalseNotExistMember() {
+        // given
+
+        // when
+        boolean isExist = memberService.isExistsId("no1234");
+
+        // then
+        assertThat(isExist).isFalse();
+    }
 }
