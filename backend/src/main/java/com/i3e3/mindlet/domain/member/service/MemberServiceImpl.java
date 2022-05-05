@@ -2,6 +2,7 @@ package com.i3e3.mindlet.domain.member.service;
 
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
+import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
+    private final MemberRepository memberRepository;
+
     private final AppConfigRepository appConfigRepository;
+
+    @Override
+    public boolean isExistsId(String id) {
+        return memberRepository.existsByIdContainsDeleted(id);
+    }
 
     @Transactional
     @Override
