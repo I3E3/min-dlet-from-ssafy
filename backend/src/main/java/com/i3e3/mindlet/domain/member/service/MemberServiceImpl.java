@@ -25,4 +25,17 @@ public class MemberServiceImpl implements MemberService {
 
         appConfig.changeCommunity(community);
     }
+
+    @Transactional
+    @Override
+    public void changeSound(Long memberSeq, boolean soundOff) {
+        AppConfig appConfig = appConfigRepository.findByMemberSeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        if (soundOff) {
+            appConfig.soundOff();
+        } else {
+            appConfig.soundOn();
+        }
+    }
 }

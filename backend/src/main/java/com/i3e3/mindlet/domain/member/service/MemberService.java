@@ -6,4 +6,5 @@ public interface MemberService {
 
     void changeCommunity(Long memberSeq, Community community);
 
+    void changeSound(Long memberSeq, boolean soundOff);
 }
