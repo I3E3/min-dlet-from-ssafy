@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
@@ -107,6 +108,82 @@ class MemberServiceTest {
 
         //then
         assertThatThrownBy(() -> memberService.changeCommunity(savedMember.getSeq(), Community.KOREA))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 식별키로 사운드 변경 성공 - 음소거 on")
+    void changeSoundSuccessMuteOn() {
+        //given
+        Member savedMember = memberRepository.save(member1);
+        appConfigRepository.save(appConfig1);
+
+        em.flush();
+        em.clear();
+
+        //when
+        memberService.changeSound(savedMember.getSeq(), true);
+        AppConfig changedAppConfig = appConfigRepository.findByMemberSeq(savedMember.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(changedAppConfig.isSoundOff()).isTrue();
+    }
+
+    @Test
+    @DisplayName("회원 식별키로 사운드 변경 성공 - 음소거 Off")
+    void changeSoundSuccessMuteOff() {
+        //given
+        Member savedMember = memberRepository.save(member1);
+        AppConfig savedConfig = appConfigRepository.save(appConfig1);
+        savedConfig.soundOff();
+
+        em.flush();
+        em.clear();
+
+        //when
+        memberService.changeSound(savedMember.getSeq(), false);
+        AppConfig changedAppConfig = appConfigRepository.findByMemberSeq(savedMember.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(changedAppConfig.isSoundOff()).isFalse();
+    }
+
+    @Test
+    @DisplayName("회원 식별키로 사운드 변경 실패 - 회원 정보가 없을 때")
+    void changeSoundFailNonMember() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeSound(0L, true))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+        assertThatThrownBy(() -> memberService.changeSound(0L, false))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 식별키로 사운드 변경 실패 - 회원 정보가 있는데 deleted 가 true")
+    void changeSoundFailExistMemberAndDeleted() {
+        //given
+        Member savedMember = memberRepository.save(member1);
+        appConfigRepository.save(appConfig1);
+        savedMember.delete();
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeSound(savedMember.getSeq(), true))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+        assertThatThrownBy(() -> memberService.changeSound(savedMember.getSeq(), false))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }

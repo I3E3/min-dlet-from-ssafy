@@ -1,6 +1,7 @@
 package com.i3e3.mindlet.domain.member.controller;
 
 import com.i3e3.mindlet.domain.member.controller.dto.CommunityModifyDto;
+import com.i3e3.mindlet.domain.member.controller.dto.SoundModifyDto;
 import com.i3e3.mindlet.domain.member.service.MemberService;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.dto.BaseResponseDto;
@@ -111,6 +112,51 @@ public class MemberController {
         }
 
         memberService.changeCommunity(memberSeq, community);
+
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
+
+    /**
+     * @TODO OAuth
+     */
+    @Operation(
+            summary = "사운드 음소거 설정 API",
+            description = "인증 토큰, 회원 식별키, 사운드 재생여부값을 받아 사운드를 On/Off 합니다.",
+            tags = {"member"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "사운드 변경 완료",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PatchMapping("/{memberSeq}/sound-off")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseDto<Void> changeSound(@PathVariable Long memberSeq, @Validated @RequestBody SoundModifyDto modifyDto) {
+        Long findMemberSeq = memberSeq;
+
+        if (findMemberSeq == null || !findMemberSeq.equals(memberSeq)) {
+            throw new AccessDeniedException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        memberService.changeSound(memberSeq, modifyDto.isSoundOff());
 
         return BaseResponseDto.<Void>builder()
                 .build();
