@@ -16,13 +16,12 @@ import java.util.List;
 @Table(
         name = "tb_member",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "id"),
-                @UniqueConstraint(columnNames = "tel")
+                @UniqueConstraint(columnNames = "id")
         }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(of = {"seq", "id", "password", "tel", "role", "isDeleted"})
+@ToString(of = {"seq", "id", "password", "role", "isDeleted"})
 public class Member extends BaseLastModifiedEntity {
 
     @Id
@@ -35,9 +34,6 @@ public class Member extends BaseLastModifiedEntity {
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false, length = 13)
-    private String tel;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -68,19 +64,14 @@ public class Member extends BaseLastModifiedEntity {
     private List<MemberDandelionHistory> memberDandelionHistories = new ArrayList<>();
 
     @Builder
-    public Member(String id, String password, String tel) {
+    public Member(String id, String password) {
         this.id = id;
         this.password = password;
-        this.tel = tel;
         this.role = Role.MEMBER;
     }
 
     public void changePassword(String password) {
         this.password = password;
-    }
-
-    public void changeTel(String tel) {
-        this.tel = tel;
     }
 
     public void changeAppConfig(AppConfig appConfig) {

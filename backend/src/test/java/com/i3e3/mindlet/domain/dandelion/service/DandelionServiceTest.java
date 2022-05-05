@@ -51,13 +51,11 @@ class DandelionServiceTest {
         member1 = Member.builder()
                 .id("아이디1")
                 .password("패스워드1")
-                .tel("010-0000-0001")
                 .build();
 
         member2 = Member.builder()
                 .id("아이디2")
                 .password("패스워드2")
-                .tel("010-0000-0002")
                 .build();
 
         dandelion1 = Dandelion.builder()
@@ -446,7 +444,6 @@ class DandelionServiceTest {
         Member savedMember = memberRepository.save(Member.builder()
                 .id("test1")
                 .password("midlet")
-                .tel("010-0000-0000")
                 .build());
 
         for (int i = 1; i <= 6; i++) {
