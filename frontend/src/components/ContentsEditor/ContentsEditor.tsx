@@ -1,0 +1,124 @@
+import React, { useEffect, useRef, useState } from 'react';
+import petal from 'assets/images/img_petal_1.png';
+import classNames from 'classnames/bind';
+import styles from './ContentsEditor.module.scss';
+import { ReactComponent as ImageIcon } from 'assets/images/icon/image_white.svg';
+import { ReactComponent as DeleteImg } from 'assets/images/icon/icon_img_delete.svg';
+const cx = classNames.bind(styles);
+
+const ContentsEditor = ({ form, img, msg, onSend }: any) => {
+  const [letters, SetLetters] = useState(0);
+  const [imgFile, setImgFile] = useState('');
+  const [text, SetText] = useState<string>('');
+  const date = new Date();
+  date.setDate(date.getDate() + 2);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    SetText(e.target.value);
+    msg(e.target.value);
+  };
+  const getByte = (str: string) => {
+    const byte: number = str
+      .split('')
+      .map((s: string) => s.charCodeAt(0))
+      .reduce((prev, c) => prev + (c === 10 ? 2 : c >> 7 ? 2 : 1), 0);
+    if (byte <= 150) {
+      SetLetters(byte);
+    } else {
+      // TODO : hot toast alert 적용 및 넘김 처리
+      alert('150자 초과!');
+      SetText(text.substring(0, text.length - 1));
+      msg(text.substring(0, text.length - 1));
+    }
+  };
+
+  const handleUploadBtnClick = () => {
+    inputRef.current?.click();
+  };
+
+  const handleUploadImage = async (event: any) => {
+    const file = event.target.files;
+    img(URL.createObjectURL(file[0]));
+    setImgFile(URL.createObjectURL(file[0]));
+  };
+
+  const sendData = () => {
+    onSend();
+    console.log(imgFile);
+    console.log(text);
+  };
+
+  const deleteImg = () => {
+    img('');
+    setImgFile('');
+  };
+
+  useEffect(() => {
+    getByte(text);
+  }, [text]);
+
+  useEffect(() => {
+    SetText(form.message);
+    setImgFile(form.image);
+  }, []);
+
+  return (
+    <div className={cx('container')}>
+      <div className={cx('inner-container')}>
+        <div className={cx('petal-img')}>
+          <img className={cx('petal')} src={petal} alt="petal" />
+          <div className={cx('editor')}>
+            <textarea
+              placeholder="마음을 전해 보세요🌼"
+              value={text}
+              onChange={handleChange}
+            />
+            <div className={cx('byte-limit')}>byte {letters}/150 </div>
+
+            <div className={cx('thumbnail')}>
+              <div className={cx('default')} onClick={handleUploadBtnClick}>
+                <input
+                  type="file"
+                  id="inputImage"
+                  className={cx('upload-image')}
+                  onChange={handleUploadImage}
+                  ref={inputRef}
+                  accept="image/*"
+                />
+                {imgFile ? (
+                  <>
+                    <div className={cx('preview-img')}>
+                      <img src={imgFile} alt="preview" />
+                    </div>
+                  </>
+                ) : (
+                  <div className={cx('upload')}>
+                    <ImageIcon width={42} height={42} />
+                  </div>
+                )}
+              </div>
+            </div>
+            {imgFile ? (
+              <div className={cx('delete')} onClick={deleteImg}>
+                <DeleteImg width={25} height={25} />
+              </div>
+            ) : null}
+          </div>
+        </div>
+        <div>
+          {letters > 30 ? (
+            <div className={cx('write-btn')} onClick={sendData}>
+              Write
+            </div>
+          ) : (
+            <div className={cx('minsize-msg')}>
+              최소 30byte 이상 작성해주세요✉
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ContentsEditor;

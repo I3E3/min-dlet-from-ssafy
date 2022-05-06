@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
 import Router from 'routes/routes';
 import { BrowserView, MobileView } from 'react-device-detect';
