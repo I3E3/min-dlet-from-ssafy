@@ -313,4 +313,20 @@ class MemberServiceTest {
         // then
         assertThat(isLogin).isFalse();
     }
+
+    @Test
+    @DisplayName("회원 아이디로 회원 정보 조회 - 성공")
+    void findMemberInfoSuccess() {
+        // given
+        Member savedMember = memberService.register(registerRequestDto1.toServiceDto());
+
+        // when
+        MemberInfoDto findMemberInfo = memberService.getMemberInfoById(savedMember.getId());
+
+        // then
+        assertThat(findMemberInfo.getSeq()).isEqualTo(savedMember.getSeq());
+        assertThat(findMemberInfo.getCommunity()).isEqualTo(savedMember.getAppConfig().getCommunity());
+        assertThat(findMemberInfo.getLanguage()).isEqualTo(savedMember.getAppConfig().getLanguage());
+        assertThat(findMemberInfo.getRole()).isEqualTo(savedMember.getRole());
+    }
 }
