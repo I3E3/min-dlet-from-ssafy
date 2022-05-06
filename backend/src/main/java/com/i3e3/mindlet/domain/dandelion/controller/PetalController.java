@@ -6,6 +6,7 @@ import com.i3e3.mindlet.domain.dandelion.service.PetalService;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.dto.BaseResponseDto;
 import com.i3e3.mindlet.global.dto.ErrorResponseDto;
+import com.i3e3.mindlet.global.util.AuthenticationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,11 +50,11 @@ public class PetalController {
                     description = "서버 에러",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @PostMapping("/{petalSeq}/reports")
     @ResponseStatus(HttpStatus.CREATED)
     public BaseResponseDto<Void> report(@PathVariable Long petalSeq,
                                         @Validated @RequestBody ReportReasonDto reportDto) {
-
         Report.Reason reason = null;
 
         try {
@@ -61,9 +63,9 @@ public class PetalController {
             throw new IllegalArgumentException(ErrorMessage.INVALID_REQUEST.getMessage());
         }
 
-        Long memberSeq = null;
+        Long findMemberSeq = AuthenticationUtil.getMemberSeq();
 
-        petalService.reportPetal(memberSeq, petalSeq, reason);
+        petalService.reportPetal(findMemberSeq, petalSeq, reason);
 
         return BaseResponseDto.<Void>builder()
                 .build();

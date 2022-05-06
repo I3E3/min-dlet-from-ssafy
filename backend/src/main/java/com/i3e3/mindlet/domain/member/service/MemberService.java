@@ -2,10 +2,16 @@ package com.i3e3.mindlet.domain.member.service;
 
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
-import com.i3e3.mindlet.domain.member.service.dto.MemberRegisterDto;
+import com.i3e3.mindlet.domain.member.service.dto.request.MemberLoginDto;
+import com.i3e3.mindlet.domain.member.service.dto.request.MemberRegisterDto;
+import com.i3e3.mindlet.domain.member.service.dto.response.MemberInfoDto;
 import com.i3e3.mindlet.global.enums.Community;
 
 public interface MemberService {
+
+    boolean login(MemberLoginDto memberLoginDto);
+
+    MemberInfoDto getMemberInfoById(String id);
 
     Member register(MemberRegisterDto memberRegisterDto);
 

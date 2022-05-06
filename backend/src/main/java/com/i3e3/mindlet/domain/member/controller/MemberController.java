@@ -1,15 +1,15 @@
 package com.i3e3.mindlet.domain.member.controller;
 
-import com.i3e3.mindlet.domain.member.controller.dto.CommunityModifyDto;
-import com.i3e3.mindlet.domain.member.controller.dto.LanguageModifyDto;
-import com.i3e3.mindlet.domain.member.controller.dto.RegisterRequestDto;
-import com.i3e3.mindlet.domain.member.controller.dto.SoundModifyDto;
+import com.i3e3.mindlet.domain.member.controller.dto.*;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.service.MemberService;
+import com.i3e3.mindlet.domain.member.service.dto.response.MemberInfoDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.dto.BaseResponseDto;
 import com.i3e3.mindlet.global.dto.ErrorResponseDto;
 import com.i3e3.mindlet.global.enums.Community;
+import com.i3e3.mindlet.global.util.AuthenticationUtil;
+import com.i3e3.mindlet.global.util.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,9 +104,6 @@ public class MemberController {
                 .build(), status);
     }
 
-    /**
-     * @TODO OAuth
-     */
     @Operation(
             summary = "커뮤니티 변경 API",
             description = "인증 토큰, 회원 식별키, 커뮤니티 값을 받아 커뮤니티를 수정합니다.",
@@ -134,15 +131,11 @@ public class MemberController {
                     description = "서버 에러",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @PatchMapping("/{memberSeq}/community")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto<Void> changeCommunity(@PathVariable Long memberSeq, @Validated @RequestBody CommunityModifyDto modifyDto) {
-
-        Long findMemberSeq = memberSeq;
-
-        if (findMemberSeq == null || !findMemberSeq.equals(memberSeq)) {
-            throw new AccessDeniedException(ErrorMessage.INVALID_REQUEST.getMessage());
-        }
+        AuthenticationUtil.verityMember(memberSeq);
 
         Community community = null;
         try {
@@ -157,9 +150,6 @@ public class MemberController {
                 .build();
     }
 
-    /**
-     * @TODO OAuth
-     */
     @Operation(
             summary = "사운드 음소거 설정 API",
             description = "인증 토큰, 회원 식별키, 사운드 재생여부값을 받아 사운드를 On/Off 합니다.",
@@ -187,14 +177,11 @@ public class MemberController {
                     description = "서버 에러",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @PatchMapping("/{memberSeq}/sound-off")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto<Void> changeSound(@PathVariable Long memberSeq, @Validated @RequestBody SoundModifyDto modifyDto) {
-        Long findMemberSeq = memberSeq;
-
-        if (findMemberSeq == null || !findMemberSeq.equals(memberSeq)) {
-            throw new AccessDeniedException(ErrorMessage.INVALID_REQUEST.getMessage());
-        }
+        AuthenticationUtil.verityMember(memberSeq);
 
         memberService.changeSound(memberSeq, modifyDto.isSoundOff());
 
@@ -202,9 +189,6 @@ public class MemberController {
                 .build();
     }
 
-    /**
-     * @TODO OAuth
-     */
     @Operation(
             summary = "언어 변경 API",
             description = "인증 토큰, 회원 식별키, 선택 언어 값을 받아 언어를 변경 합니다.",
@@ -232,17 +216,11 @@ public class MemberController {
                     description = "서버 에러",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @PatchMapping("/{memberSeq}/language")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto<Void> changeLanguage(@PathVariable Long memberSeq, @Validated @RequestBody LanguageModifyDto modifyDto) {
-        /**
-         * 회원 식별키는 JWT 토큰에서 뽑아야 한다.
-         */
-        Long findMemberSeq = null;
-
-        if (findMemberSeq == null || !findMemberSeq.equals(memberSeq)) {
-            throw new AccessDeniedException(ErrorMessage.INVALID_REQUEST.getMessage());
-        }
+        AuthenticationUtil.verityMember(memberSeq);
 
         AppConfig.Language language = null;
 
@@ -258,4 +236,46 @@ public class MemberController {
                 .build();
     }
 
+    @Operation(
+            summary = "로그인 API",
+            description = "아이디, 패스워드를을 받아 로그인합니다.",
+            tags = {"member"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "로그인 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "아이디 또는 패스워드가 틀림",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PostMapping("/login")
+    public ResponseEntity<BaseResponseDto<MemberInfoDto>> login(@Validated @RequestBody LoginRequestDto loginRequestDto) {
+        HttpStatus status = null;
+        MemberInfoDto memberInfo = null;
+        if (memberService.login(loginRequestDto.toServiceDto())) {
+            memberInfo = memberService.getMemberInfoById(loginRequestDto.getId());
+
+            String jwtToken = JwtTokenUtil.getToken(memberInfo.getSeq(), memberInfo.getId());
+            memberInfo.provideToken(jwtToken);
+
+            status = HttpStatus.OK;
+        } else {
+            status = HttpStatus.NO_CONTENT;
+        }
+
+        return new ResponseEntity<>(BaseResponseDto.<MemberInfoDto>builder()
+                .data(memberInfo)
+                .build(), status);
+    }
 }
