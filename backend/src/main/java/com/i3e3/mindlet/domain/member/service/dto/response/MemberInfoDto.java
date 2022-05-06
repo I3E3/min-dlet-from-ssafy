@@ -1,6 +1,10 @@
 package com.i3e3.mindlet.domain.member.service.dto.response;
 
+import com.i3e3.mindlet.domain.member.entity.AppConfig;
+import com.i3e3.mindlet.global.enums.Community;
+import com.i3e3.mindlet.global.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -8,4 +12,32 @@ import lombok.ToString;
 @Getter
 @ToString
 public class MemberInfoDto {
+
+    private Long seq;
+
+    private String id;
+
+    private AppConfig.Language language;
+
+    private Community community;
+
+    private boolean soundOff;
+
+    private Role role;
+
+    private String jwtToken;
+
+    @Builder
+    public MemberInfoDto(Long seq, String id, AppConfig.Language language, Community community, boolean soundOff, Role role) {
+        this.seq = seq;
+        this.id = id;
+        this.language = language;
+        this.community = community;
+        this.soundOff = soundOff;
+        this.role = role;
+    }
+
+    public void provideToken(String jwtToken) {
+        this.jwtToken = jwtToken;
+    }
 }
