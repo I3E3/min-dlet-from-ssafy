@@ -169,4 +169,21 @@ class MemberRepositoryTest {
         assertThat(findMember.getId()).isEqualTo(member1.getId());
         assertThat(findMember.getPassword()).isEqualTo(member1.getPassword());
     }
+
+    @Test
+    @DisplayName("회원 아이디로 회원 엔티티 조회 - 데이터가 있지만 삭제 처리된 경우")
+    void findMemberByIdWhenDeleted() {
+        // given
+        member1.delete();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        Member findMember = memberRepository.findById(savedMember.getId())
+                .orElse(null);
+
+        // then
+        assertThat(findMember).isNull();
+    }
 }
