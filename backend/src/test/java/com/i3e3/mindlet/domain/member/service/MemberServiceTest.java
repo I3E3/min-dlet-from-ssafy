@@ -261,4 +261,25 @@ class MemberServiceTest {
         assertThat(findAppConfig.getCommunity()).isEqualTo(Community.KOREA);
         assertThat(findAppConfig.getMember().getSeq()).isEqualTo(savedMember.getSeq());
     }
+
+    @Test
+    @DisplayName("언어 변경 - 성공")
+    void changeLanguageSuccess() {
+
+        //given
+        Member savedMember = memberRepository.save(member1);
+        AppConfig savedAppConfig = appConfigRepository.save(appConfig1);
+        savedAppConfig.changeLanguage(AppConfig.Language.ENGLISH);
+        em.flush();
+        em.clear();
+
+        //when
+        memberService.changeLanguage(savedMember.getSeq(), AppConfig.Language.KOREAN);
+        AppConfig findAppConfig = appConfigRepository.findByMemberSeq(savedMember.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(findAppConfig.getLanguage()).isEqualTo(AppConfig.Language.KOREAN);
+    }
+
 }
