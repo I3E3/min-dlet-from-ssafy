@@ -282,4 +282,17 @@ class MemberServiceTest {
         assertThat(findAppConfig.getLanguage()).isEqualTo(AppConfig.Language.KOREAN);
     }
 
+    @Test
+    @DisplayName("언어 변경 - 실패 / 회원이 null")
+    void changeLanguageFailNotExistMember() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeLanguage(0L, AppConfig.Language.KOREAN))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
 }
