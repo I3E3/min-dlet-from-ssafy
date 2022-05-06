@@ -295,4 +295,23 @@ class MemberServiceTest {
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 
+    @Test
+    @DisplayName("언어 변경 - 실패 / 회원이 deleted")
+    void changeLanguageFailExistMemberDeleted(){
+        //given
+        Member savedMember = memberRepository.save(member1);
+        appConfigRepository.save(appConfig1);
+        savedMember.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeLanguage(savedMember.getSeq(), AppConfig.Language.KOREAN))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+    }
 }
