@@ -1,13 +1,16 @@
 package com.i3e3.mindlet.domain.member.controller.dto;
 
-import com.i3e3.mindlet.domain.member.service.dto.MemberRegisterDto;
+import com.i3e3.mindlet.domain.member.service.dto.request.MemberRegisterDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.validation.constraints.Pattern;
 
+@Schema(name = "회원가입 요청 DTO", description = "회원가입 API를 호출할 때 사용됩니다.")
+@NoArgsConstructor
 @Getter
 @ToString(of = {"id", "password"})
 public class RegisterRequestDto {
