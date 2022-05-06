@@ -296,4 +296,21 @@ class MemberServiceTest {
         // then
         assertThat(isLogin).isFalse();
     }
+
+    @Test
+    @DisplayName("로그인 - 실패 : 패스워드를 잘못 입력한 경우")
+    void loginFailWhenInvalidPassword() {
+        // given
+        memberService.register(registerRequestDto1.toServiceDto());
+        LoginRequestDto newLoginRequestDto = LoginRequestDto.builder()
+                .id(registerRequestDto1.getId())
+                .password(registerRequestDto1.getPassword() + "invalid")
+                .build();
+
+        // when
+        boolean isLogin = memberService.login(newLoginRequestDto.toServiceDto());
+
+        // then
+        assertThat(isLogin).isFalse();
+    }
 }
