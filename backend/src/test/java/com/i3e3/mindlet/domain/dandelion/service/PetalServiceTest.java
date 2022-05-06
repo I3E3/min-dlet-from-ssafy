@@ -139,4 +139,35 @@ public class PetalServiceTest {
         assertThat(reports.get(0).getPetal().getSeq()).isEqualTo(petal1.getSeq());
         assertThat(reports.get(0).getReason()).isEqualTo(Report.Reason.AD);
     }
+
+    @Test
+    @DisplayName("신고 접수 - rejected가 아니고 리스트 크기가 1 이하일 경우")
+    void addReportRequestedWhenHasData() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        Petal savedPetal = petalRepository.save(petal1);
+        Report newReport = Report.builder()
+                .reason(Report.Reason.AD)
+                .member(member2)
+                .petal(petal1)
+                .build();
+        newReport.changeStatus(Report.Status.REQUESTED, null);
+        em.flush();
+        em.clear();
+
+        // when
+        petalService.reportPetal(member2.getSeq(), savedPetal.getSeq(), Report.Reason.AD);
+        Petal findPetal = petalRepository.findBySeq(savedPetal.getSeq())
+                .orElse(null);
+        List<Report> reports = findPetal.getReports();
+
+        // then
+        assertThat(reports.size()).isEqualTo(2);
+        assertThat(reports.get(1).getStatus()).isEqualTo(Report.Status.REQUESTED);
+        assertThat(reports.get(1).getMember().getSeq()).isEqualTo(member2.getSeq());
+        assertThat(reports.get(1).getPetal().getSeq()).isEqualTo(petal1.getSeq());
+        assertThat(reports.get(1).getReason()).isEqualTo(Report.Reason.AD);
+    }
 }
