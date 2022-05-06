@@ -1,9 +1,7 @@
 package com.i3e3.mindlet.domain.member.controller;
 
-import com.i3e3.mindlet.domain.member.controller.dto.CommunityModifyDto;
-import com.i3e3.mindlet.domain.member.controller.dto.LoginRequestDto;
-import com.i3e3.mindlet.domain.member.controller.dto.RegisterRequestDto;
-import com.i3e3.mindlet.domain.member.controller.dto.SoundModifyDto;
+import com.i3e3.mindlet.domain.member.controller.dto.*;
+import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.service.MemberService;
 import com.i3e3.mindlet.domain.member.service.dto.response.MemberInfoDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
@@ -186,6 +184,53 @@ public class MemberController {
         AuthenticationUtil.verityMember(memberSeq);
 
         memberService.changeSound(memberSeq, modifyDto.isSoundOff());
+
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
+
+    @Operation(
+            summary = "언어 변경 API",
+            description = "인증 토큰, 회원 식별키, 선택 언어 값을 받아 언어를 변경 합니다.",
+            tags = {"member"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "언어 변경 완료",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+    @PatchMapping("/{memberSeq}/language")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseDto<Void> changeLanguage(@PathVariable Long memberSeq, @Validated @RequestBody LanguageModifyDto modifyDto) {
+        AuthenticationUtil.verityMember(memberSeq);
+
+        AppConfig.Language language = null;
+
+        try {
+            language = AppConfig.Language.valueOf(modifyDto.getLanguage());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        memberService.changeLanguage(memberSeq, language);
 
         return BaseResponseDto.<Void>builder()
                 .build();
