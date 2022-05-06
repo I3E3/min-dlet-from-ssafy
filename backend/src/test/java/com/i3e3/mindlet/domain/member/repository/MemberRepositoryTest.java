@@ -105,4 +105,21 @@ class MemberRepositoryTest {
         // then
         assertThat(isExists).isTrue();
     }
+
+    @Test
+    @DisplayName("회원 식별키로 회원 엔티티 조회 - 데이터가 있는 경우")
+    void findMemberBySeq() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        Member findMember = memberRepository.findBySeq(savedMember.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findMember.getId()).isEqualTo(member1.getId());
+        assertThat(findMember.getPassword()).isEqualTo(member1.getPassword());
+    }
 }
