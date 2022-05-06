@@ -139,4 +139,17 @@ class MemberRepositoryTest {
         // then
         assertThat(findMember).isNull();
     }
+
+    @Test
+    @DisplayName("회원 식별키로 회원 엔티티 조회 - 데이터가 없는 경우")
+    void findMemberBySeqWhenNotExist() {
+        // given
+
+        // when
+        Member findMember = memberRepository.findBySeq(0L)
+                .orElse(null);
+
+        // then
+        assertThat(findMember).isNull();
+    }
 }
