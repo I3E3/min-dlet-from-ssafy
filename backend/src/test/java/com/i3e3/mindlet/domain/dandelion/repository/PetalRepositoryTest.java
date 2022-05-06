@@ -125,4 +125,26 @@ public class PetalRepositoryTest {
         // then
         assertThat(findPetal).isNull();
     }
+
+    @Test
+    @DisplayName("꽃잎 식별키로 민들레 데이터 조회 - 존재 할 경우")
+    void findDandelionByPetalSeqSuccess() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        Petal savedPetal = petalRepository.save(petal1);
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findDandelion = petalRepository.findDandelionBySeq(savedPetal.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion).isNotNull();
+        assertThat(findDandelion.getBlossomedDate()).isEqualTo(dandelion1.getBlossomedDate());
+        assertThat(findDandelion.getCommunity()).isEqualTo(dandelion1.getCommunity());
+        assertThat(findDandelion.getFlowerSignNumber()).isEqualTo(dandelion1.getFlowerSignNumber());
+        assertThat(findDandelion.getMember().getSeq()).isEqualTo(dandelion1.getMember().getSeq());
+    }
 }
