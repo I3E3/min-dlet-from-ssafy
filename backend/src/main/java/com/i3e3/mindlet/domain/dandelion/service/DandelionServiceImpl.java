@@ -1,7 +1,9 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.constant.dandelion.DandelionConst;
@@ -19,6 +21,8 @@ public class DandelionServiceImpl implements DandelionService {
 
     private final DandelionRepository dandelionRepository;
     private final MemberRepository memberRepository;
+
+    private final TagRepository tagRepository;
 
     @Override
     public boolean isBlossomed(Long dandelionSeq) {
@@ -83,5 +87,18 @@ public class DandelionServiceImpl implements DandelionService {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
 
         findDandelion.changeStatus(status);
+    }
+
+    @Transactional
+    @Override
+    public void deleteTag(Long tagSeq, Long memberSeq) {
+        Tag findTag = tagRepository.findBySeq(tagSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        if (!findTag.getMember().getSeq().equals(memberSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        } else {
+            tagRepository.delete(findTag);
+        }
     }
 }
