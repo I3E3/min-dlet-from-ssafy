@@ -160,4 +160,23 @@ public class PetalRepositoryTest {
         // then
         assertThat(findDandelion).isNull();
     }
+
+    @Test
+    @DisplayName("꽃잎 식별키로 민들레 데이터 조회 - 꽃잎이 삭제 된 경우")
+    void findDandelionByPetalSeqDelete() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        petal1.delete();
+        Petal savedPetal = petalRepository.save(petal1);
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findDandelion = petalRepository.findDandelionBySeq(savedPetal.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion).isNull();
+    }
 }
