@@ -1,12 +1,8 @@
-import ContentsMain from 'containers/Contents/ContentsList/ContentsMain/ContentsMain';
-import React from 'react';
+// import ContentsMain from 'containers/Contents/ContentsList/ContentsMain/ContentsMain';
+import React from "react";
 
 const ContentsListPage = () => {
-  return (
-    <>
-      <ContentsMain />
-    </>
-  );
+  return <>{/* <ContentsMain /> */}</>;
 };
 
 export default ContentsListPage;
