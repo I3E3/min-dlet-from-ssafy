@@ -1,4 +1,4 @@
-package com.i3e3.mindlet.domain.member.service.dto;
+package com.i3e3.mindlet.domain.member.service.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
