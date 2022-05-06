@@ -17,4 +17,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE m.seq = :seq AND m.isDeleted = FALSE")
     Optional<Member> findBySeq(@Param("seq") Long seq);
+
+    @Query("SELECT m FROM Member m WHERE m.id = :id AND m.isDeleted = FALSE")
+    Optional<Member> findById(@Param("id") String id);
 }
