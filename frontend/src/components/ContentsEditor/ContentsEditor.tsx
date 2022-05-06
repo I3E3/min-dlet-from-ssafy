@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import petal from 'assets/images/img_petal_1.png';
-import iconimg from 'assets/images/icon/icon_dandelion.png';
 import classNames from 'classnames/bind';
 import styles from './ContentsEditor.module.scss';
 import { ReactComponent as ImageIcon } from 'assets/images/icon/image_white.svg';
 import { ReactComponent as DeleteImg } from 'assets/images/icon/icon_img_delete.svg';
 const cx = classNames.bind(styles);
 
-const ContentsEditor = () => {
+const ContentsEditor = ({ form, img, msg, onSend }: any) => {
   const [letters, SetLetters] = useState(0);
   const [imgFile, setImgFile] = useState('');
   const [text, SetText] = useState<string>('');
@@ -16,6 +15,7 @@ const ContentsEditor = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     SetText(e.target.value);
+    msg(e.target.value);
   };
   const getByte = (str: string) => {
     const byte: number = str
@@ -28,6 +28,7 @@ const ContentsEditor = () => {
       // TODO : hot toast alert 적용 및 넘김 처리
       alert('150자 초과!');
       SetText(text.substring(0, text.length - 1));
+      msg(text.substring(0, text.length - 1));
     }
   };
 
@@ -37,24 +38,32 @@ const ContentsEditor = () => {
 
   const handleUploadImage = async (event: any) => {
     const file = event.target.files;
+    img(URL.createObjectURL(file[0]));
     setImgFile(URL.createObjectURL(file[0]));
   };
 
   const sendData = () => {
+    onSend();
     console.log(imgFile);
     console.log(text);
   };
 
   const deleteImg = () => {
+    img('');
     setImgFile('');
   };
+
   useEffect(() => {
     getByte(text);
   }, [text]);
 
+  useEffect(() => {
+    SetText(form.message);
+    setImgFile(form.image);
+  }, []);
+
   return (
     <div className={cx('container')}>
-      <img className={cx('out-icon')} src={iconimg} alt="out" />
       <div className={cx('inner-container')}>
         <div className={cx('petal-img')}>
           <img className={cx('petal')} src={petal} alt="petal" />
@@ -107,18 +116,7 @@ const ContentsEditor = () => {
             </div>
           )}
         </div>
-        {/* <input
-          placeholder="날짜 선택"
-          type="date"
-          onChange={setTime}
-          min={fDateDash(date.toString())}
-        /> */}
       </div>
-      {/* <Calendar
-        className={cx('react-calendar')}
-        onChange={setDate}
-        value={landdate}
-      /> */}
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import { useRoutes } from 'react-router';
 import LandingPage from 'pages/LandingPage/LandingPage';
 import MainPage from 'pages/MainPage/MainPage';
-import ContentsEditPage from 'pages/ContentsPage/ContentsEditPage';
+import ContentsCreatePage from 'pages/ContentsCreatePage/ContentsCreatePage';
+import ContentsListPage from 'pages/ContentsListPage/ContentsListPage';
 
 export default function Router() {
   return useRoutes([
@@ -16,9 +17,8 @@ export default function Router() {
     {
       path: '/contents',
       children: [
-        { path: 'create', element: <ContentsEditPage /> },
-        { path: 'list', element: <ContentsEditPage /> },
-        { path: 'write', element: <ContentsEditPage /> },
+        { path: 'create', element: <ContentsCreatePage /> },
+        { path: 'list', element: <ContentsListPage /> },
       ],
     },
   ]);
