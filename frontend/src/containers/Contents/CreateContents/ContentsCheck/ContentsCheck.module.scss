@@ -1,0 +1,174 @@
+@import 'assets/styles/main';
+$color: blue;
+
+.container {
+  height: 100vh;
+  .out-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .petal-img {
+    position: relative;
+    margin: 20vh 0 0 0;
+    text-align: center;
+    .petal {
+      -webkit-filter: blur(3px);
+      -moz-filter: blur(3px);
+      -o-filter: blur(3px);
+      -ms-filter: blur(3px);
+      filter: blur(2px);
+    }
+    .editor {
+      border: 2px solid white;
+      box-shadow: 0px 2px 2px 1px rgb(199, 199, 199) inset;
+      top: 35%;
+      left: 50%;
+      height: 220px;
+      width: 250px;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      padding: 30px 20px;
+      margin: 20px 0 0 0;
+      background-color: rgba(255, 255, 255, 0.514);
+      border-radius: 15px;
+      .date {
+        margin: -20px 0 0 80px;
+        color: gray;
+      }
+      textarea {
+        font-size: 15px;
+        width: 100%;
+        height: 100px;
+        resize: none;
+      }
+      // TODO : center 안먹히는 이유 찾기
+      .default {
+        height: 70px;
+        width: 200px;
+        box-shadow: 0px 2px 2px 1px rgb(199, 199, 199) inset;
+        background-color: rgba(255, 255, 255, 0.514);
+        border: 2px solid rgb(255, 255, 255);
+        border-radius: 20px;
+        cursor: pointer;
+
+        .upload-image {
+          display: none;
+        }
+
+        .preview-img {
+          width: 100%;
+          height: 100%;
+          border-radius: 20px;
+          overflow: hidden;
+        }
+      }
+      img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .byte-limit {
+      color: gray;
+      font-size: 0.8em;
+      padding: 10px 0 0px 100px;
+    }
+  }
+  .minsize-msg {
+    color: gray;
+    font-size: 0.8em;
+    text-align: center;
+  }
+  .write-btn {
+    margin: 20px 0 0 0;
+    font-size: 1.5em;
+    text-align: center;
+  }
+
+  .react-calendar {
+    text-align: center;
+    width: 400px;
+    max-width: 500px;
+    background-color: #fff;
+    color: #222;
+    border-radius: 8px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 2em;
+  }
+  .react-calendar__navigation button {
+    color: #6f48eb;
+    min-width: 44px;
+    background: none;
+    font-size: 16px;
+    margin-top: 8px;
+  }
+  .react-calendar__navigation button:enabled:hover,
+  .react-calendar__navigation button:enabled:focus {
+    background-color: #f8f8fa;
+  }
+  .react-calendar__navigation button[disabled] {
+    background-color: #f0f0f0;
+  }
+  abbr[title] {
+    text-decoration: none;
+  }
+  .react-calendar__tile:enabled:hover,
+  .react-calendar__tile:enabled:focus {
+    background: #f8f8fa;
+    color: #6f48eb;
+    border-radius: 6px;
+  }
+  .react-calendar__tile--now {
+    background: #6f48eb33;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #6f48eb;
+  }
+  .react-calendar__tile--now:enabled:hover,
+  .react-calendar__tile--now:enabled:focus {
+    background: #6f48eb33;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #6f48eb;
+  }
+  .react-calendar__tile--hasActive:enabled:hover,
+  .react-calendar__tile--hasActive:enabled:focus {
+    background: #f8f8fa;
+  }
+  .react-calendar__tile--active {
+    background: #6f48eb;
+    border-radius: 6px;
+    font-weight: bold;
+    color: white;
+  }
+  .react-calendar__tile--active:enabled:hover,
+  .react-calendar__tile--active:enabled:focus {
+    background: #6f48eb;
+    color: white;
+  }
+  .react-calendar--selectRange .react-calendar__tile--hover {
+    background-color: #f8f8fa;
+  }
+  .react-calendar__tile--range {
+    background: #f8f8fa;
+    color: #6f48eb;
+    border-radius: 0;
+  }
+  .react-calendar__tile--rangeStart {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    background: #6f48eb;
+    color: white;
+  }
+  .react-calendar__tile--rangeEnd {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    background: #6f48eb;
+    color: white;
+  }
+}

@@ -1,8 +1,12 @@
-import React from 'react';
-// import ReactDOM from 'react-dom';
-import './index.module.css';
-import App from './App';
-import { BrowserRouter } from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.module.css";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { createRoot } from 'react-dom/client';
+
+const client = new QueryClient();
 
 // ReactDOM.render(
 //   <React.StrictMode>
@@ -13,7 +17,6 @@ import { BrowserRouter } from 'react-router-dom';
 //   document.getElementById('root')
 // );
 
-import { createRoot } from 'react-dom/client';
 
 const rootNode = document.getElementById('root')
 
@@ -21,8 +24,10 @@ const root = createRoot(rootNode!)
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <QueryClientProvider client={client}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </QueryClientProvider>
   </React.StrictMode>,
 );

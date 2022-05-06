@@ -1,7 +1,16 @@
-import React from 'react';
+import MyGardenBody from "containers/MyGarden/MyGardenBody";
+import MyGardenFooter from "containers/MyGarden/MyGardenFooter";
+import MyGardenHeader from "containers/MyGarden/MyGardenHeader";
+import React from "react";
 
-const MyGardenPage = () => {
-  return <div></div>;
-};
+function MyGardenPage() {
+  return (
+    <div>
+      <MyGardenHeader />
+      <MyGardenBody />
+      <MyGardenFooter />
+    </div>
+  );
+}
 
 export default MyGardenPage;

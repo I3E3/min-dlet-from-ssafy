@@ -1,16 +1,45 @@
-import { useRoutes } from 'react-router';
-import LandingPage from 'pages/LandingPage/LandingPage';
-import MainPage from 'pages/MainPage/MainPage';
+import MyGardenPage from "pages/MyGardenPage/MyGardenPage";
+import SettingsPage from "pages/SettingsPage/SettingsPage";
+import MyAlbumPage from "pages/MyAlbumPage/MyAlbumPage";
+import MyCabinetPage from "pages/MyCabinetPage/MyCabinetPage";
+import { useRoutes } from "react-router";
+import LandingPage from "pages/LandingPage/LandingPage";
+import MainPage from "pages/MainPage/MainPage";
+import ContentsCreatePage from "pages/ContentsCreatePage/ContentsCreatePage";
+import ContentsListPage from "pages/ContentsListPage/ContentsListPage";
 
 export default function Router() {
   return useRoutes([
     {
-      path: '/',
+      path: "/",
       element: <LandingPage />,
     },
     {
-      path: '/main',
+      path: "/main",
       element: <MainPage />,
+    },
+    {
+      path: "/mygarden",
+      element: <MyGardenPage />,
+    },
+    {
+      path: "/settings",
+      element: <SettingsPage />,
+    },
+    {
+      path: "/mygarden/album",
+      element: <MyAlbumPage />,
+    },
+    {
+      path: "/mygarden/cabinet",
+      element: <MyCabinetPage />,
+    },
+    {
+      path: "/contents",
+      children: [
+        { path: "create", element: <ContentsCreatePage /> },
+        { path: "list", element: <ContentsListPage /> },
+      ],
     },
   ]);
 }
