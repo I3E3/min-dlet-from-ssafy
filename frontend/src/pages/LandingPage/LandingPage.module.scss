@@ -5,3 +5,21 @@ $color: blue;
 .main {
   color: $color;
 }
+
+.menu-button {
+  position: absolute;
+  right: 10px; 
+  top: 10px; 
+  border-radius: 20%;
+  border: 1px solid white;
+  z-index: 3;
+  padding: 4px;
+  padding-top: 8px;
+}
+
+
+.menu-svg {
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+}
