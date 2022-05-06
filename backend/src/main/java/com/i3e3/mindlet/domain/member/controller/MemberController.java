@@ -10,6 +10,7 @@ import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.dto.BaseResponseDto;
 import com.i3e3.mindlet.global.dto.ErrorResponseDto;
 import com.i3e3.mindlet.global.enums.Community;
+import com.i3e3.mindlet.global.util.AuthenticationUtil;
 import com.i3e3.mindlet.global.util.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -105,9 +106,6 @@ public class MemberController {
                 .build(), status);
     }
 
-    /**
-     * @TODO OAuth
-     */
     @Operation(
             summary = "커뮤니티 변경 API",
             description = "인증 토큰, 회원 식별키, 커뮤니티 값을 받아 커뮤니티를 수정합니다.",
@@ -135,15 +133,11 @@ public class MemberController {
                     description = "서버 에러",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @PatchMapping("/{memberSeq}/community")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto<Void> changeCommunity(@PathVariable Long memberSeq, @Validated @RequestBody CommunityModifyDto modifyDto) {
-
-        Long findMemberSeq = memberSeq;
-
-        if (findMemberSeq == null || !findMemberSeq.equals(memberSeq)) {
-            throw new AccessDeniedException(ErrorMessage.INVALID_REQUEST.getMessage());
-        }
+        AuthenticationUtil.verityMember(memberSeq);
 
         Community community = null;
         try {
@@ -185,14 +179,11 @@ public class MemberController {
                     description = "서버 에러",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @PatchMapping("/{memberSeq}/sound-off")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto<Void> changeSound(@PathVariable Long memberSeq, @Validated @RequestBody SoundModifyDto modifyDto) {
-        Long findMemberSeq = memberSeq;
-
-        if (findMemberSeq == null || !findMemberSeq.equals(memberSeq)) {
-            throw new AccessDeniedException(ErrorMessage.INVALID_REQUEST.getMessage());
-        }
+        AuthenticationUtil.verityMember(memberSeq);
 
         memberService.changeSound(memberSeq, modifyDto.isSoundOff());
 
