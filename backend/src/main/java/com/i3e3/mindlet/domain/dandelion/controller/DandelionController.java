@@ -76,7 +76,7 @@ public class DandelionController {
         return BaseResponseDto.<Void>builder()
                 .build();
     }
-    
+
     /**
      * @TODO OAuth
      */
@@ -160,7 +160,7 @@ public class DandelionController {
 
         if (dandelionService.isOwner(dandelionSeq, memberSeq)) {
             if (status.equals(Dandelion.Status.ALBUM) && dandelionService.isBlossomed(dandelionSeq)
-            || status.equals(Dandelion.Status.BLOSSOMED) && dandelionService.isReturn(dandelionSeq)) {
+                    || status.equals(Dandelion.Status.BLOSSOMED) && dandelionService.isReturn(dandelionSeq)) {
                 dandelionService.changeStatus(dandelionSeq, status);
             } else {
                 throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
@@ -168,6 +168,49 @@ public class DandelionController {
         } else {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         }
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
+
+    /**
+     * @TODO JWT
+     */
+    @Operation(
+            summary = "민들레 태그 삭제 API 기능 추가",
+            description = "인증 토큰, 민들레 식별키, 태그 식별키를 전달받고 민들레 태그를 삭제합니다.",
+            tags = {"dandelion"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "태그 삭제 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @DeleteMapping("/{dandelionSeq}/tags/{tagSeq}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public BaseResponseDto<Void> deleteDandelionTag(@PathVariable Long dandelionSeq, @PathVariable Long tagSeq) {
+        /**
+         * 회원 식별키는 JWT 토큰에서 뽑아야 한다.
+         */
+        Long memberSeq = null;
+
+        dandelionService.deleteTag(tagSeq, memberSeq);
 
         return BaseResponseDto.<Void>builder()
                 .build();
