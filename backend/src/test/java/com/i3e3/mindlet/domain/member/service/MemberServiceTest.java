@@ -261,4 +261,57 @@ class MemberServiceTest {
         assertThat(findAppConfig.getCommunity()).isEqualTo(Community.KOREA);
         assertThat(findAppConfig.getMember().getSeq()).isEqualTo(savedMember.getSeq());
     }
+
+    @Test
+    @DisplayName("언어 변경 - 성공")
+    void changeLanguageSuccess() {
+
+        //given
+        Member savedMember = memberRepository.save(member1);
+        AppConfig savedAppConfig = appConfigRepository.save(appConfig1);
+        savedAppConfig.changeLanguage(AppConfig.Language.ENGLISH);
+        em.flush();
+        em.clear();
+
+        //when
+        memberService.changeLanguage(savedMember.getSeq(), AppConfig.Language.KOREAN);
+        AppConfig findAppConfig = appConfigRepository.findByMemberSeq(savedMember.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(findAppConfig.getLanguage()).isEqualTo(AppConfig.Language.KOREAN);
+    }
+
+    @Test
+    @DisplayName("언어 변경 - 실패 / 회원이 null")
+    void changeLanguageFailNotExistMember() {
+        //given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeLanguage(0L, AppConfig.Language.KOREAN))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("언어 변경 - 실패 / 회원이 deleted")
+    void changeLanguageFailExistMemberDeleted(){
+        //given
+        Member savedMember = memberRepository.save(member1);
+        appConfigRepository.save(appConfig1);
+        savedMember.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> memberService.changeLanguage(savedMember.getSeq(), AppConfig.Language.KOREAN))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+    }
 }

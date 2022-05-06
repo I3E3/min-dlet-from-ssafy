@@ -1,8 +1,10 @@
 package com.i3e3.mindlet.domain.member.controller;
 
 import com.i3e3.mindlet.domain.member.controller.dto.CommunityModifyDto;
+import com.i3e3.mindlet.domain.member.controller.dto.LanguageModifyDto;
 import com.i3e3.mindlet.domain.member.controller.dto.RegisterRequestDto;
 import com.i3e3.mindlet.domain.member.controller.dto.SoundModifyDto;
+import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.service.MemberService;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.dto.BaseResponseDto;
@@ -199,4 +201,61 @@ public class MemberController {
         return BaseResponseDto.<Void>builder()
                 .build();
     }
+
+    /**
+     * @TODO OAuth
+     */
+    @Operation(
+            summary = "언어 변경 API",
+            description = "인증 토큰, 회원 식별키, 선택 언어 값을 받아 언어를 변경 합니다.",
+            tags = {"member"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "언어 변경 완료",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PatchMapping("/{memberSeq}/language")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseDto<Void> changeLanguage(@PathVariable Long memberSeq, @Validated @RequestBody LanguageModifyDto modifyDto) {
+        /**
+         * 회원 식별키는 JWT 토큰에서 뽑아야 한다.
+         */
+        Long findMemberSeq = null;
+
+        if (findMemberSeq == null || !findMemberSeq.equals(memberSeq)) {
+            throw new AccessDeniedException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        AppConfig.Language language = null;
+
+        try {
+            language = AppConfig.Language.valueOf(modifyDto.getLanguage());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        memberService.changeLanguage(memberSeq, language);
+
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
+
 }
