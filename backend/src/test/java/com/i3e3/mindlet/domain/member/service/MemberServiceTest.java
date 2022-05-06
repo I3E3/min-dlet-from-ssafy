@@ -1,10 +1,12 @@
 package com.i3e3.mindlet.domain.member.service;
 
+import com.i3e3.mindlet.domain.member.controller.dto.LoginRequestDto;
 import com.i3e3.mindlet.domain.member.controller.dto.RegisterRequestDto;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
+import com.i3e3.mindlet.domain.member.service.dto.response.MemberInfoDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
@@ -260,5 +262,22 @@ class MemberServiceTest {
         assertThat(findAppConfig.getLanguage()).isEqualTo(AppConfig.Language.KOREAN);
         assertThat(findAppConfig.getCommunity()).isEqualTo(Community.KOREA);
         assertThat(findAppConfig.getMember().getSeq()).isEqualTo(savedMember.getSeq());
+    }
+
+    @Test
+    @DisplayName("로그인 - 성공")
+    void loginSuccess() {
+        // given
+        memberService.register(registerRequestDto1.toServiceDto());
+        LoginRequestDto newLoginRequestDto = LoginRequestDto.builder()
+                .id(registerRequestDto1.getId())
+                .password(registerRequestDto1.getPassword())
+                .build();
+
+        // when
+        boolean isLogin = memberService.login(newLoginRequestDto.toServiceDto());
+
+        // then
+        assertThat(isLogin).isTrue();
     }
 }
