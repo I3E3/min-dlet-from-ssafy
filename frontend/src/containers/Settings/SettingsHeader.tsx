@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function MyGardenHeader() {
+function SettingsHeader() {
   const navigate = useNavigate();
 
-  const onSettingsClick = () => {
-    navigate(`/settings`);
+  const onGardenClick = () => {
+    navigate(`/mygarden`);
   };
 
   const onAlbumClick = () => {
@@ -18,13 +18,12 @@ function MyGardenHeader() {
 
   return (
     <div>
-      <span>꽃밭header</span>
+      <div>
+        <span>설정header</span>
+      </div>
       <div>
         <div>
-          <button type="button" onClick={onSettingsClick}>
-            <img src="../../assets/images/gear.png" alt="설정" />
-            설정
-          </button>
+          <button onClick={onGardenClick}> 꽃밭</button>
         </div>
         <div>
           <button onClick={onAlbumClick}>앨범</button>
@@ -37,4 +36,4 @@ function MyGardenHeader() {
   );
 }
 
-export default MyGardenHeader;
+export default SettingsHeader;

@@ -1,26 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function MyCabinetHeader() {
+function MyAlbumHeader() {
   const navigate = useNavigate();
 
   const onSettingsClick = () => {
     navigate(`/settings`);
   };
 
-  const onAlbumClick = () => {
-    navigate(`/mygarden/album`);
-  };
-
   const onGardenClick = () => {
     navigate(`/mygarden`);
   };
 
+  const onCabinetClick = () => {
+    navigate(`/mygarden/cabinet`);
+  };
+
   return (
     <div>
-      <div>
-        <span>기록 보관함header</span>
-      </div>
+      <span>앨범 header</span>
       <div>
         <div>
           <button onClick={onSettingsClick}>설정</button>
@@ -29,11 +27,11 @@ function MyCabinetHeader() {
           <button onClick={onGardenClick}>꽃밭</button>
         </div>
         <div>
-          <button onClick={onAlbumClick}>앨범</button>
+          <button onClick={onCabinetClick}>기록 보관함</button>
         </div>
       </div>
     </div>
   );
 }
 
-export default MyCabinetHeader;
+export default MyAlbumHeader;
