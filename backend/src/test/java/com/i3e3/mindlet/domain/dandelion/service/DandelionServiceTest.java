@@ -603,4 +603,17 @@ class DandelionServiceTest {
         // then
         assertThat(tagRepository.findBySeq(savedTag.getSeq())).isEmpty();
     }
+
+    @Test
+    @DisplayName("민들레 태그 삭제 실패 - Tag 없음")
+    void deleteDandelionTagFailNonTag() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.deleteTag(0L, 1L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
