@@ -329,4 +329,18 @@ class MemberServiceTest {
         assertThat(findMemberInfo.getLanguage()).isEqualTo(savedMember.getAppConfig().getLanguage());
         assertThat(findMemberInfo.getRole()).isEqualTo(savedMember.getRole());
     }
+
+    @Test
+    @DisplayName("회원 아이디로 회원 정보 조회 - 회원 데이터가 없는 경우")
+    void findMemberInfoFailWhenNotExistMember() {
+        // given
+
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.getMemberInfoById("id01"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_ID.getMessage());
+    }
 }
