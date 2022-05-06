@@ -93,4 +93,17 @@ public class PetalRepositoryTest {
         assertThat(findPetal.getMember().getSeq()).isEqualTo(petal1.getMember().getSeq());
         assertThat(findPetal.getDandelion().getSeq()).isEqualTo(petal1.getDandelion().getSeq());
     }
+
+    @Test
+    @DisplayName("꽃잎 식별키로 꽃잎 데이터 조회 - 없는 꽃잎 식별키를 입력했을 경우")
+    void findPetalBySeqNotExist() {
+        // given
+
+        // when
+        Petal findPetal = petalRepository.findBySeq(0L)
+                .orElse(null);
+
+        // then
+        assertThat(findPetal).isNull();
+    }
 }
