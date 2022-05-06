@@ -6,6 +6,7 @@ import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.domain.member.service.dto.request.MemberLoginDto;
 import com.i3e3.mindlet.domain.member.service.dto.request.MemberRegisterDto;
+import com.i3e3.mindlet.domain.member.service.dto.response.MemberInfoDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,23 @@ public class MemberServiceImpl implements MemberService {
         String password = memberLoginDto.getPassword();
         return findMember == null ?
                 false : passwordEncoder.matches(password, findMember.getPassword());
+    }
+
+    @Override
+    public MemberInfoDto getMemberInfoById(String id) {
+        Member findMember = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_ID.getMessage()));
+
+        AppConfig findAppConfig = findMember.getAppConfig();
+
+        return MemberInfoDto.builder()
+                .seq(findMember.getSeq())
+                .id(findMember.getId())
+                .language(findAppConfig.getLanguage())
+                .community(findAppConfig.getCommunity())
+                .soundOff(findAppConfig.isSoundOff())
+                .role(findMember.getRole())
+                .build();
     }
 
     @Transactional
