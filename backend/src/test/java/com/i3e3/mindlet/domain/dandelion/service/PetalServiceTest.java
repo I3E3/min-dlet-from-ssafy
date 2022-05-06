@@ -108,4 +108,35 @@ public class PetalServiceTest {
         assertThat(reports.get(0).getPetal().getSeq()).isEqualTo(petal1.getSeq());
         assertThat(reports.get(0).getReason()).isEqualTo(Report.Reason.AD);
     }
+
+    @Test
+    @DisplayName("신고 접수 - 리스트가 있을 경우 상태가 rejected 일 경우")
+    void PassWhenStatusRejected() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        Petal savedPetal = petalRepository.save(petal1);
+        Report newReport = Report.builder()
+                .reason(Report.Reason.AD)
+                .member(member2)
+                .petal(petal1)
+                .build();
+        newReport.changeStatus(Report.Status.REJECTED, null);
+        em.flush();
+        em.clear();
+
+        // when
+        petalService.reportPetal(member2.getSeq(), savedPetal.getSeq(), Report.Reason.AD);
+        Petal findPetal = petalRepository.findBySeq(savedPetal.getSeq())
+                .orElse(null);
+        List<Report> reports = findPetal.getReports();
+
+        // then
+        assertThat(reports.size()).isEqualTo(1);
+        assertThat(reports.get(0).getStatus()).isEqualTo(Report.Status.REJECTED);
+        assertThat(reports.get(0).getMember().getSeq()).isEqualTo(member2.getSeq());
+        assertThat(reports.get(0).getPetal().getSeq()).isEqualTo(petal1.getSeq());
+        assertThat(reports.get(0).getReason()).isEqualTo(Report.Reason.AD);
+    }
 }
