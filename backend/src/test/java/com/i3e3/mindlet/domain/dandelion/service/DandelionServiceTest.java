@@ -616,4 +616,34 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("민들레 태그 삭제 실패 - Seq 불 일치")
+    void deleteDandelionTagFailNotEqualsMemberSeq() {
+        // given
+        memberRepository.save(member1);
+        Member savedMember3 = memberRepository.save(member3);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        tag1 = Tag.builder()
+                .dandelion(savedDandelion)
+                .name("2022년 팬 미팅")
+                .member(savedMember3)
+                .build();
+
+        Tag savedTag = tagRepository.save(tag1);
+
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.deleteTag(savedTag.getSeq(), savedMember2.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
