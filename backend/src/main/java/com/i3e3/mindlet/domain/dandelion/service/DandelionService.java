@@ -16,4 +16,6 @@ public interface DandelionService {
     boolean isReturn(Long dandelionSeq);
 
     void changeStatus(Long dandelionSeq, Dandelion.Status status);
+
+    void deleteTag(Long tagSeq, Long memberSeq);
 }

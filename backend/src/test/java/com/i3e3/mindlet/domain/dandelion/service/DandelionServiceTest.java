@@ -1,7 +1,9 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
@@ -37,14 +39,21 @@ class DandelionServiceTest {
     @Autowired
     private DandelionService dandelionService;
 
-    private Member member1, member2;
+    @Autowired
+    private TagRepository tagRepository;
+
+    private Member member1, member2, member3;
 
     private Dandelion dandelion1, dandelion2;
+
+    private Tag tag1;
 
     @BeforeEach
     void setUp() {
         memberRepository.deleteAll();
         dandelionRepository.deleteAll();
+        tagRepository.deleteAll();
+
         em.flush();
         em.clear();
 
@@ -56,6 +65,11 @@ class DandelionServiceTest {
         member2 = Member.builder()
                 .id("아이디2")
                 .password("패스워드2")
+                .build();
+
+        member3 = Member.builder()
+                .id("아이디3")
+                .password("패스워드3")
                 .build();
 
         dandelion1 = Dandelion.builder()
@@ -558,6 +572,77 @@ class DandelionServiceTest {
 
         // then
         assertThatThrownBy(() -> dandelionService.changeStatus(0L, Dandelion.Status.FLYING))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레 태그 삭제 성공")
+    void deleteDandelionTagSuccess() {
+        // given
+        memberRepository.save(member1);
+        Member savedMember3 = memberRepository.save(member3);
+        Dandelion savedDandelion = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        tag1 = Tag.builder()
+                .dandelion(savedDandelion)
+                .name("2022년 팬 미팅")
+                .member(savedMember3)
+                .build();
+
+        Tag savedTag = tagRepository.save(tag1);
+
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionService.deleteTag(savedTag.getSeq(), member3.getSeq());
+
+        // then
+        assertThat(tagRepository.findBySeq(savedTag.getSeq())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("민들레 태그 삭제 실패 - Tag 없음")
+    void deleteDandelionTagFailNonTag() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.deleteTag(0L, 1L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레 태그 삭제 실패 - Seq 불 일치")
+    void deleteDandelionTagFailNotEqualsMemberSeq() {
+        // given
+        memberRepository.save(member1);
+        Member savedMember3 = memberRepository.save(member3);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        tag1 = Tag.builder()
+                .dandelion(savedDandelion)
+                .name("2022년 팬 미팅")
+                .member(savedMember3)
+                .build();
+
+        Tag savedTag = tagRepository.save(tag1);
+
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.deleteTag(savedTag.getSeq(), savedMember2.getSeq()))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
