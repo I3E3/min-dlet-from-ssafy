@@ -4,7 +4,8 @@ import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
-import com.i3e3.mindlet.domain.member.service.dto.MemberRegisterDto;
+import com.i3e3.mindlet.domain.member.service.dto.request.MemberLoginDto;
+import com.i3e3.mindlet.domain.member.service.dto.request.MemberRegisterDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,16 @@ public class MemberServiceImpl implements MemberService {
     private final AppConfigRepository appConfigRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public boolean login(MemberLoginDto memberLoginDto) {
+        Member findMember = memberRepository.findById(memberLoginDto.getId())
+                .orElse(null);
+
+        String password = memberLoginDto.getPassword();
+        return findMember == null ?
+                false : passwordEncoder.matches(password, findMember.getPassword());
+    }
 
     @Transactional
     @Override
