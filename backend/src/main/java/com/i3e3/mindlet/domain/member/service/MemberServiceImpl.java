@@ -99,4 +99,14 @@ public class MemberServiceImpl implements MemberService {
             appConfig.soundOn();
         }
     }
+
+    @Transactional
+    @Override
+    public void changeLanguage(Long memberSeq, AppConfig.Language changeLanguage) {
+        AppConfig appConfig = appConfigRepository.findByMemberSeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        appConfig.changeLanguage(changeLanguage);
+    }
+
 }
