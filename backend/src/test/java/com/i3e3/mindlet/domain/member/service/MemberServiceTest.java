@@ -280,4 +280,20 @@ class MemberServiceTest {
         // then
         assertThat(isLogin).isTrue();
     }
+
+    @Test
+    @DisplayName("로그인 - 실패 : 회원 데이터가 없는 경우")
+    void loginFailWhenNotExistMember() {
+        // given
+        LoginRequestDto newLoginRequestDto = LoginRequestDto.builder()
+                .id(registerRequestDto1.getId())
+                .password(registerRequestDto1.getPassword())
+                .build();
+
+        // when
+        boolean isLogin = memberService.login(newLoginRequestDto.toServiceDto());
+
+        // then
+        assertThat(isLogin).isFalse();
+    }
 }
