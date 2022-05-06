@@ -1,5 +1,6 @@
 package com.i3e3.mindlet.domain.member.service;
 
+import com.i3e3.mindlet.domain.member.controller.dto.RegisterRequestDto;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -35,9 +37,14 @@ class MemberServiceTest {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private Member member1;
 
     private AppConfig appConfig1;
+
+    private RegisterRequestDto registerRequestDto1;
 
     @BeforeEach
     void setUp() {
@@ -55,6 +62,11 @@ class MemberServiceTest {
         appConfig1 = AppConfig.builder()
                 .member(member1)
                 .language(AppConfig.Language.ENGLISH)
+                .build();
+
+        registerRequestDto1 = RegisterRequestDto.builder()
+                .id("id01")
+                .password("pass12#$")
                 .build();
     }
 
@@ -228,5 +240,25 @@ class MemberServiceTest {
 
         // then
         assertThat(isExist).isFalse();
+    }
+
+    @Test
+    @DisplayName("회원가입 - 성공")
+    void registerSuccess() {
+        // given
+
+        // when
+        Member savedMember = memberService.register(registerRequestDto1.toServiceDto());
+
+        // then
+        Member findMember = memberRepository.findBySeq(savedMember.getSeq())
+                .orElse(null);
+        assertThat(findMember.getId()).isEqualTo(registerRequestDto1.getId());
+        assertThat(passwordEncoder.matches(registerRequestDto1.getPassword(), findMember.getPassword())).isTrue();
+
+        AppConfig findAppConfig = findMember.getAppConfig();
+        assertThat(findAppConfig.getLanguage()).isEqualTo(AppConfig.Language.KOREAN);
+        assertThat(findAppConfig.getCommunity()).isEqualTo(Community.KOREA);
+        assertThat(findAppConfig.getMember().getSeq()).isEqualTo(savedMember.getSeq());
     }
 }

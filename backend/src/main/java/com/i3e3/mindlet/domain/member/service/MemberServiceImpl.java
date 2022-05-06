@@ -1,12 +1,15 @@
 package com.i3e3.mindlet.domain.member.service;
 
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
+import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
+import com.i3e3.mindlet.domain.member.service.dto.MemberRegisterDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,27 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     private final AppConfigRepository appConfigRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    @Transactional
+    @Override
+    public Member register(MemberRegisterDto memberRegisterDto) {
+        Member newMember = Member.builder()
+                .id(memberRegisterDto.getId())
+                .password(passwordEncoder.encode(memberRegisterDto.getPassword()))
+                .build();
+
+        AppConfig newAppConfig = AppConfig.builder()
+                .language(AppConfig.Language.KOREAN)
+                .member(newMember)
+                .build();
+
+        Member savedMember = memberRepository.save(newMember);
+        appConfigRepository.save(newAppConfig);
+
+        return savedMember;
+    }
 
     @Override
     public boolean isExistsId(String id) {

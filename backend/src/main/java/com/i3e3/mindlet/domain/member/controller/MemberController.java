@@ -1,6 +1,7 @@
 package com.i3e3.mindlet.domain.member.controller;
 
 import com.i3e3.mindlet.domain.member.controller.dto.CommunityModifyDto;
+import com.i3e3.mindlet.domain.member.controller.dto.RegisterRequestDto;
 import com.i3e3.mindlet.domain.member.controller.dto.SoundModifyDto;
 import com.i3e3.mindlet.domain.member.service.MemberService;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
@@ -25,7 +26,44 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/members")
 public class MemberController {
+
     private final MemberService memberService;
+
+    @Operation(
+            summary = "회원가입 API",
+            description = "아이디, 패스워드를 받아 회원가입을 수행합니다.",
+            tags = {"member"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "회원가입 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public BaseResponseDto<Void> register(@Validated @RequestBody RegisterRequestDto registerRequestDto) {
+        String id = registerRequestDto.getId();
+        String password = registerRequestDto.getPassword();
+        if (password.contains(id)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        } else if (memberService.isExistsId(id)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_ID.getMessage());
+        }
+
+        memberService.register(registerRequestDto.toServiceDto());
+
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
 
     @Operation(
             summary = "아이디 중복 확인 API",
