@@ -6,6 +6,7 @@ application-server.yml
 application-springdoc.yml
 application-file.yml
 application-log.yml
+application-aws.yml
 
 *.css
 *.js
