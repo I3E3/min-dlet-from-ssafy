@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: database,file,jpa,jwt,server,springdoc,log
+    include: database,file,jpa,jwt,server,springdoc,log,aws
 
   devtools:
     restart:
