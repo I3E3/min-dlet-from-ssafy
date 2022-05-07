@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
 	// p6spy
-가	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 
 	// jwt
 	implementation('com.auth0:java-jwt:3.19.1')
