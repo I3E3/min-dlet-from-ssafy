@@ -1,6 +1,7 @@
 package com.i3e3.mindlet.global.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,14 @@ public class S3UploadUtil {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    private void removeNewFile(File targetFile) {
+        if (targetFile.delete()) {
+            return;
+        }
+
+        throw new IllegalStateException(ErrorMessage.FILE_DELETE_FAIL.getMessage());
+    }
 
     public Optional<File> convert(MultipartFile file) throws IOException {
         File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
