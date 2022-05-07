@@ -4,6 +4,9 @@ import com.i3e3.mindlet.global.util.S3UploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -13,4 +16,9 @@ public class FileServiceImpl implements FileService {
 
     @Value("${path.files.images.content}")
     private String dirPath;
+
+    @Override
+    public String s3Upload(MultipartFile multipartFile) throws IOException {
+        return s3UploadUtil.upload(multipartFile, dirPath);
+    }
 }
