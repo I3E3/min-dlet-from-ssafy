@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +23,20 @@ public class S3UploadUtil {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    public String upload(MultipartFile multipartFile, String dirPath) throws IOException {
+        File uploadFile = convert(multipartFile)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.FILE_CONVERT_FAIL.getMessage()));
+
+        return upload(uploadFile, dirPath);
+    }
+
+    private String upload(File uploadFile, String dirPath) {
+        String fileName = dirPath + "/" + UUID.randomUUID() + "." + extractExt(uploadFile.getName());
+        String uploadImageUrl = putS3(uploadFile, fileName);
+        removeNewFile(uploadFile);
+        return uploadImageUrl;
+    }
 
     private String putS3(File uploadFile, String filename) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, filename, uploadFile)
