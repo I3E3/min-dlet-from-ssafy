@@ -13,4 +13,9 @@ public class S3UploadUtil {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    private String extractExt(String originalFilename) {
+        int pos = originalFilename.lastIndexOf(".");
+        return originalFilename.substring(pos + 1);
+    }
 }
