@@ -716,4 +716,37 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("꽃밭 정보 반환 - 삭제된 민들레 시도")
+    void getGardenInfoListContainIsDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(2)
+                .member(member1)
+                .build();
+        dandelion3 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(3)
+                .member(member1)
+                .build();
+        dandelion2.delete();
+        dandelion3.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        Dandelion savedDandelion3 = dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        // when
+        List<ResponseGardenInfoDto> responseGardenInfos = dandelionService.getGardenInfoList(savedMember.getSeq());
+        // then
+        assertThat(responseGardenInfos.size()).isEqualTo(1);
+        assertThat(responseGardenInfos.get(0).getStatus()).isEqualTo("FLYING");
+        assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
+    }
 }
