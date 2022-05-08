@@ -1,8 +1,10 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.entity.Petal;
 import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
+import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.member.entity.Member;
@@ -41,6 +43,9 @@ class DandelionServiceTest {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private PetalRepository petalRepository;
 
     private Member member1, member2, member3;
 
@@ -645,5 +650,49 @@ class DandelionServiceTest {
         assertThatThrownBy(() -> dandelionService.deleteTag(savedTag.getSeq(), savedMember2.getSeq()))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레 삭제 성공")
+    void deleteDandelionSuccess() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        Petal savedPetal1 = petalRepository.save(
+                Petal.builder()
+                        .member(savedMember1)
+                        .dandelion(savedDandelion1)
+                        .message("안녕하세요!!!")
+                        .nation("Korea")
+                        .city("SEOUL")
+                        .nationalFlagImagePath("/static/files/images/national-flag/korea.png")
+                        .build());
+
+        em.flush();
+        em.clear();
+
+
+        Petal savedPetal2 = petalRepository.save(
+                Petal.builder()
+                        .member(savedMember2)
+                        .dandelion(savedDandelion1)
+                        .message("Nice to see ya")
+                        .nation("CANADA")
+                        .city("OTTAWA")
+                        .nationalFlagImagePath("/static/files/images/national-flag/canada.png")
+                        .build());
+
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionService.deleteDandelion(savedDandelion1.getSeq(), savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionRepository.findBySeq(dandelion1.getSeq())).isEmpty();
+        assertThat(petalRepository.findBySeq(savedPetal1.getSeq())).isEmpty();
+        assertThat(petalRepository.findBySeq(savedPetal2.getSeq())).isEmpty();
     }
 }
