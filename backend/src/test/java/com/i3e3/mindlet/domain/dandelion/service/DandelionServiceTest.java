@@ -739,4 +739,32 @@ class DandelionServiceTest {
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 
+    @Test
+    @DisplayName("민들레 삭제 실패 - 회원이 deleted")
+    void deleteDandelionFailMemberDeleted() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        savedMember1.delete();
+        petalRepository.save(
+                Petal.builder()
+                        .member(savedMember1)
+                        .dandelion(savedDandelion1)
+                        .message("안녕하세요!!!")
+                        .nation("Korea")
+                        .city("SEOUL")
+                        .nationalFlagImagePath("/static/files/images/national-flag/korea.png")
+                        .build());
+
+        em.flush();
+        em.clear();
+
+        // when
+
+
+        // then
+        assertThatThrownBy(() -> dandelionService.deleteDandelion(savedDandelion1.getSeq(), savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
