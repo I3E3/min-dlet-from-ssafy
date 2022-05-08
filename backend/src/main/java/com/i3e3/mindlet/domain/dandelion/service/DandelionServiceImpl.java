@@ -4,6 +4,7 @@ import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
+import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.constant.dandelion.DandelionConst;
@@ -12,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -115,5 +119,31 @@ public class DandelionServiceImpl implements DandelionService {
             findDandelion.delete();
             findDandelion.getPetals().forEach((petal -> petal.delete()));
         }
+    }
+
+    @Transactional
+    @Override
+    public List<ResponseGardenInfoDto> getGardenInfoList(Long memberSeq) {
+
+        if (!memberRepository.existsBySeq(memberSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(memberSeq);
+        List<ResponseGardenInfoDto> responseGardenInfos = new ArrayList<ResponseGardenInfoDto>();
+
+        for (Dandelion dandelion : dandelions) {
+            responseGardenInfos.add(
+                    ResponseGardenInfoDto.builder()
+                            .blossomDate(dandelion.getBlossomedDate())
+                            .description(dandelion.getDescription())
+                            .flowerSignNumber(dandelion.getFlowerSignNumber())
+                            .seq(dandelion.getSeq())
+                            .status(String.valueOf(dandelion.getStatus()))
+                            .build()
+            );
+        }
+
+        return responseGardenInfos;
     }
 }

@@ -1,6 +1,7 @@
 package com.i3e3.mindlet.domain.dandelion.repository;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.enums.Community;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +34,7 @@ class DandelionRepositoryTest {
 
     private Member member1;
 
-    private Dandelion dandelion1;
+    private Dandelion dandelion1, dandelion2, dandelion3;
 
     @BeforeEach
     void setUp() {
@@ -297,5 +300,141 @@ class DandelionRepositoryTest {
         int countUsingSeed = dandelionRepository.countUsingSeed(savedMember.getSeq());
         // then
         assertThat(countUsingSeed).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("꽃밭 민들레 리스트 조회 - 조회 성공")
+    void getDandelionListInTheGarden() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(2)
+                .member(member1)
+                .build();
+        dandelion3 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(3)
+                .member(member1)
+                .build();
+        dandelion2.changeStatus(Dandelion.Status.HOLD);
+        dandelion3.changeStatus(Dandelion.Status.BLOSSOMED);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        Dandelion savedDandelion3 = dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        // when
+        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        // then
+        assertThat(dandelions.size()).isEqualTo(3);
+        assertThat(dandelions.get(0).getStatus()).isEqualTo(Dandelion.Status.FLYING);
+        assertThat(dandelions.get(1).getStatus()).isEqualTo(Dandelion.Status.HOLD);
+        assertThat(dandelions.get(2).getStatus()).isEqualTo(Dandelion.Status.BLOSSOMED);
+        assertThat(dandelions.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
+        assertThat(dandelions.get(1).getSeq()).isEqualTo(savedDandelion2.getSeq());
+        assertThat(dandelions.get(2).getSeq()).isEqualTo(savedDandelion3.getSeq());
+    }
+
+    @Test
+    @DisplayName("꽃밭 민들레 리스트 조회 - 삭제된 민들레 조회 시도")
+    void getDandelionListInTheGardenIsDeleted() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(2)
+                .member(member1)
+                .build();
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+
+        // then
+        assertThat(dandelions.size()).isEqualTo(1);
+        assertThat(dandelions.get(0).getStatus()).isEqualTo(Dandelion.Status.FLYING);
+        assertThat(dandelions.get(0).getSeq()).isEqualTo(savedDandelion2.getSeq());
+    }
+
+    @Test
+    @DisplayName("꽃밭 민들레 리스트 조회 - album 상태의 민들레 조회 시도")
+    void getDandelionListInTheGardenAlbum() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(2)
+                .member(member1)
+                .build();
+        dandelion1.changeStatus(Dandelion.Status.ALBUM);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        // then
+        assertThat(dandelions.size()).isEqualTo(1);
+        assertThat(dandelions.get(0).getStatus()).isEqualTo(Dandelion.Status.FLYING);
+        assertThat(dandelions.get(0).getSeq()).isEqualTo(savedDandelion2.getSeq());
+    }
+
+    @Test
+    @DisplayName("꽃밭 민들레 리스트 조회 - block 상태의 민들레 조회 시도")
+    void getDandelionListInTheGardenBlock() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(2)
+                .member(member1)
+                .build();
+        dandelion1.changeStatus(Dandelion.Status.BLOCKED);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        // then
+        assertThat(dandelions.size()).isEqualTo(1);
+        assertThat(dandelions.get(0).getStatus()).isEqualTo(Dandelion.Status.FLYING);
+        assertThat(dandelions.get(0).getSeq()).isEqualTo(savedDandelion2.getSeq());
+    }
+
+    @Test
+    @DisplayName("꽃밭 민들레 리스트 조회 - 삭제된 유저의 민들레 조회 시도")
+    void getDandelionListInTheGardenMemberIsDeleted() {
+        // given
+        member1.delete();
+        Member savedMember = memberRepository.save(member1);
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(2)
+                .member(member1)
+                .build();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        // then
+        assertThat(dandelions.size()).isEqualTo(0);
     }
 }

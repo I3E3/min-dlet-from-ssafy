@@ -1,7 +1,10 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
+
+import java.util.List;
 
 public interface DandelionService {
 
@@ -18,6 +21,8 @@ public interface DandelionService {
     void changeStatus(Long dandelionSeq, Dandelion.Status status);
 
     void deleteTag(Long tagSeq, Long memberSeq);
+
+    List<ResponseGardenInfoDto> getGardenInfoList(Long memberSeq);
 
     void deleteDandelion(Long dandelionSeq, Long memberSeq);
 }
