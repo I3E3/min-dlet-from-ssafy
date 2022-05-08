@@ -699,4 +699,21 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("꽃밭 정보 반환 - 삭제된 회원 시도")
+    void getGardenInfoListMemberIsDeleted() {
+        // given
+        member1.delete();
+        Member savedMember = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.getGardenInfoList(savedMember.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
