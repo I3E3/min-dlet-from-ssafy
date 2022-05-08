@@ -695,4 +695,19 @@ class DandelionServiceTest {
         assertThat(petalRepository.findBySeq(savedPetal1.getSeq())).isEmpty();
         assertThat(petalRepository.findBySeq(savedPetal2.getSeq())).isEmpty();
     }
+
+    @Test
+    @DisplayName("민들레 삭제 실패 - 민들레 없음")
+    void deleteDandelionFailNotExistDandelion() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.deleteDandelion(0L, savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+
 }
