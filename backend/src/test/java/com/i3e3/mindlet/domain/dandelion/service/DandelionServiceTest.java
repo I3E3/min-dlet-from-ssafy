@@ -784,4 +784,39 @@ class DandelionServiceTest {
         assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
         assertThat(responseGardenInfos.get(1).getSeq()).isEqualTo(savedDandelion2.getSeq());
     }
+
+    @Test
+    @DisplayName("꽃밭 정보 반환 - album 상태의 민들레 시도")
+    void getGardenInfoListContainAlbum() {
+        // given
+        Member savedMember = memberRepository.save(member1);
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(2)
+                .member(member1)
+                .build();
+        dandelion3 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(3)
+                .member(member1)
+                .build();
+        dandelion3.changeStatus(Dandelion.Status.ALBUM);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        Dandelion savedDandelion3 = dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        // when
+        List<ResponseGardenInfoDto> responseGardenInfos = dandelionService.getGardenInfoList(savedMember.getSeq());
+
+        // then
+        assertThat(responseGardenInfos.size()).isEqualTo(2);
+        assertThat(responseGardenInfos.get(0).getStatus()).isEqualTo("FLYING");
+        assertThat(responseGardenInfos.get(1).getStatus()).isEqualTo("FLYING");
+        assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
+        assertThat(responseGardenInfos.get(1).getSeq()).isEqualTo(savedDandelion2.getSeq());
+    }
 }
