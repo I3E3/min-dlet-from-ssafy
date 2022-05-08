@@ -108,6 +108,21 @@ public class DandelionServiceImpl implements DandelionService {
 
     @Transactional
     @Override
+    public void deleteDandelion(Long dandelionSeq, Long memberSeq) {
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        if (!findDandelion.getMember().getSeq().equals(memberSeq) ||
+                findDandelion.getMember().isDeleted()) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        } else {
+            findDandelion.delete();
+            findDandelion.getPetals().forEach((petal -> petal.delete()));
+        }
+    }
+
+    @Transactional
+    @Override
     public List<ResponseGardenInfoDto> getGardenInfoList(Long memberSeq) {
 
         if (!memberRepository.existsBySeq(memberSeq)) {

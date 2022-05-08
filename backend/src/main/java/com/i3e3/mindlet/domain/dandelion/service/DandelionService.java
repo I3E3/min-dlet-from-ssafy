@@ -23,4 +23,6 @@ public interface DandelionService {
     void deleteTag(Long tagSeq, Long memberSeq);
 
     List<ResponseGardenInfoDto> getGardenInfoList(Long memberSeq);
+
+    void deleteDandelion(Long dandelionSeq, Long memberSeq);
 }

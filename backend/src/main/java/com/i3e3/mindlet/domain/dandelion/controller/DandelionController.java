@@ -195,4 +195,48 @@ public class DandelionController {
         return BaseResponseDto.<Void>builder()
                 .build();
     }
+
+
+    @Operation(
+            summary = "민들레 삭제 API 기능 추가",
+            description = "인증 토큰, 민들레 식별키를 전달받고 민들레를 삭제합니다.",
+            tags = {"dandelion"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "민들레 삭제 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+    @DeleteMapping("/{dandelionSeq}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public BaseResponseDto<Void> deleteDandelion(@PathVariable Long dandelionSeq) {
+        Long memberSeq = AuthenticationUtil.getMemberSeq();
+
+        if (!dandelionService.isOwner(dandelionSeq, memberSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        dandelionService.deleteDandelion(dandelionSeq, memberSeq);
+
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
 }
