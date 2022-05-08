@@ -18,4 +18,6 @@ public interface DandelionService {
     void changeStatus(Long dandelionSeq, Dandelion.Status status);
 
     void deleteTag(Long tagSeq, Long memberSeq);
+
+    void deleteDandelion(Long dandelionSeq, Long memberSeq);
 }
