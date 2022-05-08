@@ -686,4 +686,17 @@ class DandelionServiceTest {
         assertThat(responseGardenInfos.get(1).getSeq()).isEqualTo(savedDandelion2.getSeq());
         assertThat(responseGardenInfos.get(2).getSeq()).isEqualTo(savedDandelion3.getSeq());
     }
+
+    @Test
+    @DisplayName("꽃밭 정보 반환 - 없는 회원 시도")
+    void getGardenInfoListNoneMember() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.getGardenInfoList(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
