@@ -3,6 +3,7 @@ package com.i3e3.mindlet.domain.dandelion.service;
 import com.i3e3.mindlet.domain.admin.entity.Report;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.entity.Petal;
+import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.member.entity.Member;
@@ -68,5 +69,22 @@ public class PetalServiceImpl implements PetalService {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
 
         return dandelion.getMember().getSeq().equals(memberSeq);
+    }
+
+    @Override
+    @Transactional
+    public void deletePetal(Long petalSeq) {
+
+        Petal petal = petalRepository.findBySeq(petalSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        petal.delete();
+
+        List<Tag> tags = tagRepository.findTagListByMemberSeq(petal.getMember().getSeq(), petal.getDandelion().getSeq())
+                .orElse(null);
+
+        for (Tag tag : tags) {
+            tagRepository.delete(tag);
+        }
     }
 }
