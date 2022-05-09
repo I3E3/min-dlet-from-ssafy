@@ -135,7 +135,7 @@ public class DandelionServiceImpl implements DandelionService {
         for (Dandelion dandelion : dandelions) {
             responseGardenInfos.add(
                     ResponseGardenInfoDto.builder()
-                            .blossomDate(dandelion.getBlossomedDate())
+                            .blossomedDate(dandelion.getBlossomedDate())
                             .description(dandelion.getDescription())
                             .flowerSignNumber(dandelion.getFlowerSignNumber())
                             .seq(dandelion.getSeq())
