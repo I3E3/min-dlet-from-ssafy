@@ -224,4 +224,36 @@ public class PetalRepositoryTest {
         assertThat(isParticipated).isTrue();
 
     }
+
+    @Test
+    @DisplayName("민들레 식별키와 회원 식별키로 꽃잎 조회 - 실패(petal 이 deleted)")
+    void existPetalByDandelionSeqAndMemberSeqFalseNotExistPetal() {
+        //given
+        memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(petal1);
+
+        Petal savedPetal2 = petalRepository.save(Petal.builder()
+                .message("hello2")
+                .imagePath("imagePath")
+                .nation("CANADA")
+                .city("OTTAWA")
+                .nationalFlagImagePath("nationalFlagImagePath2")
+                .dandelion(savedDandelion1)
+                .member(savedMember2)
+                .build());
+
+        savedPetal2.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        boolean isParticipated = petalRepository.existsPetalByDandelionSeqAndMemberSeq(savedDandelion1.getSeq(), savedMember2.getSeq());
+
+        //then
+        assertThat(isParticipated).isFalse();
+    }
 }
