@@ -15,4 +15,7 @@ public interface PetalRepository extends JpaRepository<Petal, Long> {
 
     @Query("SELECT p.dandelion FROM Petal p WHERE p.seq = :seq AND p.isDeleted = FALSE")
     Optional<Dandelion> findDandelionBySeq(@Param("seq") Long seq);
+
+    @Query("SELECT COUNT(p) > 0 FROM Petal p WHERE p.dandelion.seq = :dandelionSeq AND p.member.seq = :memberSeq AND p.isDeleted = FALSE")
+    boolean existsPetalByDandelionSeqAndMemberSeq(@Param("dandelionSeq") Long dandelionSeq, @Param("memberSeq") Long memberSeq);
 }
