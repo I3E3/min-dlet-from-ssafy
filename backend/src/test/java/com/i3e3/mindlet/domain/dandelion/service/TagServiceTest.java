@@ -201,4 +201,25 @@ class TagServiceTest {
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 
+    @Test
+    @DisplayName("민들레 태그 추가 - 실패(민들레 deleted)")
+    void registerDandelionTagFailDeletedDandelion() {
+        //given
+        memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        savedDandelion1.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> tagService.registerDandelionTag(savedDandelion1.getSeq(), savedMember2.getSeq(), "태그 입니다."))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
 }
