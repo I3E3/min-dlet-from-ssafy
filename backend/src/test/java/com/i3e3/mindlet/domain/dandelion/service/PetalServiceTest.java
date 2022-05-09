@@ -296,4 +296,62 @@ public class PetalServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("꽃잎 삭제 - 성공")
+    void deletePetalSuccess() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        petal2 = Petal.builder()
+                .message("hello")
+                .imagePath("imagePath")
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("nationalFlagImagePath")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+        petalRepository.save(petal1);
+        petalRepository.save(petal2);
+
+        tag1 = Tag.builder()
+                .name("first Tag")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+
+        tag2 = Tag.builder()
+                .name("second Tag")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+
+        tag3 = Tag.builder()
+                .name("third Tag")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+
+        tagRepository.save(tag1);
+        tagRepository.save(tag2);
+        tagRepository.save(tag3);
+        em.flush();
+        em.clear();
+
+        //when
+
+        petalService.deletePetal(petal2.getSeq());
+
+        Petal petal = petalRepository.findBySeq(petal2.getSeq())
+                .orElse(null);
+
+        List<Tag> tags = tagRepository.findTagListByMemberSeq(petal2.getMember().getSeq(), dandelion1.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(petal).isNull();
+        assertThat(tags.size()).isEqualTo(0);
+    }
 }
