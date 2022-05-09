@@ -80,11 +80,9 @@ public class PetalServiceImpl implements PetalService {
 
         petal.delete();
 
-        List<Tag> tags = tagRepository.findTagListByMemberSeq(petal.getMember().getSeq(), petal.getDandelion().getSeq())
+        List<Tag> tags = tagRepository.findTagListByMemberSeqAndDandelionSeq(petal.getMember().getSeq(), petal.getDandelion().getSeq())
                 .orElse(null);
 
-        for (Tag tag : tags) {
-            tagRepository.delete(tag);
-        }
+        tags.forEach(tag -> tagRepository.delete(tag));
     }
 }

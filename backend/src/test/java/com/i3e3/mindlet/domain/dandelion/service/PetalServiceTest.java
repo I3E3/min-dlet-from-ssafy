@@ -347,7 +347,7 @@ public class PetalServiceTest {
         Petal petal = petalRepository.findBySeq(petal2.getSeq())
                 .orElse(null);
 
-        List<Tag> tags = tagRepository.findTagListByMemberSeq(petal2.getMember().getSeq(), dandelion1.getSeq())
+        List<Tag> tags = tagRepository.findTagListByMemberSeqAndDandelionSeq(petal2.getMember().getSeq(), dandelion1.getSeq())
                 .orElse(null);
 
         //then
