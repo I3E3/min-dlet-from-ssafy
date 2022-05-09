@@ -4,6 +4,7 @@ import com.i3e3.mindlet.domain.admin.entity.Report;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.entity.Petal;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.constant.Report.ReportConst;
@@ -23,6 +24,8 @@ public class PetalServiceImpl implements PetalService {
 
     private final MemberRepository memberRepository;
     private final PetalRepository petalRepository;
+
+    private final TagRepository tagRepository;
 
     @Override
     @Transactional
@@ -56,5 +59,14 @@ public class PetalServiceImpl implements PetalService {
             dandelion.changeStatus(Dandelion.Status.PENDING);
         }
         return newReport;
+    }
+
+    @Override
+    public boolean isDandelionOwnerByPetal(Long memberSeq, Long petalSeq) {
+
+        Dandelion dandelion = petalRepository.findDandelionBySeq(petalSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        return dandelion.getMember().getSeq().equals(memberSeq);
     }
 }
