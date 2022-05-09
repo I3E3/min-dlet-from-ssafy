@@ -276,4 +276,47 @@ public class PetalRepositoryTest {
         //then
         assertThat(isParticipated).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 식별키와 회원 식별키로 꽃잎 조회 - 실패(민들레가 deleted)")
+    void existPetalByDandelionSeqAndMemberSeqFalseDeletedDandelion() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Member savedMember3 = memberRepository.save(member3);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(petal1);
+
+        petalRepository.save(Petal.builder()
+                .message("hello2")
+                .imagePath("imagePath")
+                .nation("CANADA")
+                .city("OTTAWA")
+                .nationalFlagImagePath("nationalFlagImagePath2")
+                .dandelion(savedDandelion1)
+                .member(savedMember2)
+                .build());
+
+        petalRepository.save(Petal.builder()
+                .message("호우 샷")
+                .imagePath("/test/img1.jpg")
+                .nation("ENGLAND")
+                .city("LONDON")
+                .nationalFlagImagePath("awsS3/test/2.jpg")
+                .dandelion(savedDandelion1)
+                .member(savedMember3)
+                .build());
+
+        em.flush();
+        em.clear();
+
+        //when
+        dandelionService.deleteDandelion(savedDandelion1.getSeq(), savedMember1.getSeq());
+        boolean isParticipated2 = petalRepository.existsPetalByDandelionSeqAndMemberSeq(savedDandelion1.getSeq(), savedMember2.getSeq());
+        boolean isParticipated3 = petalRepository.existsPetalByDandelionSeqAndMemberSeq(savedDandelion1.getSeq(), savedMember3.getSeq());
+
+        //then
+        assertThat(isParticipated2).isFalse();
+        assertThat(isParticipated3).isFalse();
+    }
 }
