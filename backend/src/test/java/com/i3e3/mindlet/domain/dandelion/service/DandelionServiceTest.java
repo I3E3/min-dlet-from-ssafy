@@ -1027,4 +1027,32 @@ class DandelionServiceTest {
         // then
         assertThat(isParticipated).isTrue();
     }
+
+    @Test
+    @DisplayName("민들레 참여여부 확인 - 실패 (회원 존재X)")
+    void checkDandelionParticipatedFalseNotExistMember() {
+        // given
+        memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        petalRepository.save(Petal.builder()
+                .message("와우 멋있어요")
+                .imagePath("/test/img")
+                .member(savedMember2)
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("awsS3/test")
+                .dandelion(savedDandelion1)
+                .build());
+
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isParticipated = dandelionService.isParticipated(savedDandelion1.getSeq(), 0L);
+
+        // then
+        assertThat(isParticipated).isFalse();
+    }
 }
