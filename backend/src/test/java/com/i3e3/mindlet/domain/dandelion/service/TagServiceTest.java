@@ -150,13 +150,16 @@ class TagServiceTest {
         Tag registeredTag1 = tagService.registerDandelionTag(savedDandelion1.getSeq(), savedMember3.getSeq(), name1);
         Tag registeredTag2 = tagService.registerDandelionTag(savedDandelion2.getSeq(), savedMember3.getSeq(), name2);
 
+        Tag findTag1 = tagRepository.findBySeq(registeredTag1.getSeq()).orElse(null);
+        Tag findTag2 = tagRepository.findBySeq(registeredTag2.getSeq()).orElse(null);
+
         // then
-        assertThat(registeredTag1.getName()).isEqualTo(name1);
-        assertThat(registeredTag2.getName()).isEqualTo(name2);
-        assertThat(registeredTag1.getMember().getSeq()).isEqualTo(savedMember3.getSeq());
-        assertThat(registeredTag2.getMember().getSeq()).isEqualTo(savedMember3.getSeq());
-        assertThat(registeredTag1.getDandelion().getSeq()).isEqualTo(savedDandelion1.getSeq());
-        assertThat(registeredTag2.getDandelion().getSeq()).isEqualTo(savedDandelion2.getSeq());
+        assertThat(findTag1.getName()).isEqualTo(name1);
+        assertThat(findTag2.getName()).isEqualTo(name2);
+        assertThat(findTag1.getMember().getSeq()).isEqualTo(savedMember3.getSeq());
+        assertThat(findTag2.getMember().getSeq()).isEqualTo(savedMember3.getSeq());
+        assertThat(findTag1.getDandelion().getSeq()).isEqualTo(savedDandelion1.getSeq());
+        assertThat(findTag2.getDandelion().getSeq()).isEqualTo(savedDandelion2.getSeq());
     }
 
     @Test
