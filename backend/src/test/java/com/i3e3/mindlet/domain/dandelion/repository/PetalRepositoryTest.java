@@ -43,6 +43,7 @@ public class PetalRepositoryTest {
     void setUp() {
         memberRepository.deleteAll();
         dandelionRepository.deleteAll();
+        petalRepository.deleteAll();
         em.flush();
         em.clear();
 
