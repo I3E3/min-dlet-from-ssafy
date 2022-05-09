@@ -986,4 +986,17 @@ class DandelionServiceTest {
         // then
         assertThat(isAlbum).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 상태(Album) 확인 - 예외 발생")
+    void checkAlbumException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isAlbum(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
