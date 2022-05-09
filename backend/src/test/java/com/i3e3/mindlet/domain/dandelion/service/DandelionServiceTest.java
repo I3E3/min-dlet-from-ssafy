@@ -999,4 +999,32 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("민들레 참여여부 확인 - 성공")
+    void checkDandelionParticipatedTrue() {
+        // given
+        memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        petalRepository.save(Petal.builder()
+                .message("와우 멋있어요")
+                .imagePath("/test/img")
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("awsS3/test")
+                .member(savedMember2)
+                .dandelion(savedDandelion1)
+                .build());
+
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isParticipated = dandelionService.isParticipated(savedDandelion1.getSeq(), savedMember2.getSeq());
+
+        // then
+        assertThat(isParticipated).isTrue();
+    }
 }
