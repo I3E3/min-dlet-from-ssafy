@@ -70,4 +70,44 @@ public class PetalController {
         return BaseResponseDto.<Void>builder()
                 .build();
     }
+
+    @Operation(
+            summary = "꽃잎 삭제 API",
+            description = "인증 토큰, 꽃잎 식별키를 전달받고 꽃잎을 삭제합니다.",
+            tags = {"dandelion"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "신고 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+    @DeleteMapping("/{petalSeq}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public BaseResponseDto<Void> deletePetal(@PathVariable Long petalSeq) {
+
+        Long memberSeq = AuthenticationUtil.getMemberSeq();
+
+        if (!petalService.isDandelionOwnerByPetal(memberSeq, petalSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        petalService.deletePetal(petalSeq);
+
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
 }

@@ -3,10 +3,13 @@ package com.i3e3.mindlet.domain.dandelion.service;
 import com.i3e3.mindlet.domain.admin.entity.Report;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.entity.Petal;
+import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
+import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -38,14 +42,18 @@ public class PetalServiceTest {
     private PetalRepository petalRepository;
 
     @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
     private PetalService petalService;
 
     private Member member1, member2;
 
     private Dandelion dandelion1;
 
-    private Petal petal1;
+    private Petal petal1, petal2;
 
+    private Tag tag1, tag2, tag3;
 
     @BeforeEach
     void setUp() {
@@ -205,5 +213,177 @@ public class PetalServiceTest {
         assertThat(reports.get(0).getStatus()).isEqualTo(Report.Status.PENDING);
         assertThat(reports.get(1).getStatus()).isEqualTo(Report.Status.PENDING);
         assertThat(reports.get(2).getStatus()).isEqualTo(Report.Status.PENDING);
+    }
+
+    @Test
+    @DisplayName("꽃잎의 민들레 주인 확인 - 주인이 맞을경우")
+    void checkDandelionOwnerContainPetalTrue() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        petal2 = Petal.builder()
+                .message("hello")
+                .imagePath("imagePath")
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("nationalFlagImagePath")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+        petalRepository.save(petal1);
+        petalRepository.save(petal2);
+
+        //when
+        boolean isOwner = petalService.isDandelionOwnerByPetal(member1.getSeq(), petal2.getSeq());
+
+        //then
+        assertThat(isOwner).isTrue();
+    }
+
+    @Test
+    @DisplayName("꽃잎의 민들레 주인 확인 - 주인이 아닐경우")
+    void checkDandelionOwnerContainPetalFalse() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        petal2 = Petal.builder()
+                .message("hello")
+                .imagePath("imagePath")
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("nationalFlagImagePath")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+        petalRepository.save(petal1);
+        petalRepository.save(petal2);
+
+        //when
+        boolean isOwner = petalService.isDandelionOwnerByPetal(member2.getSeq(), petal2.getSeq());
+
+        //then
+        assertThat(isOwner).isFalse();
+    }
+
+    @Test
+    @DisplayName("꽃잎의 민들레 주인 확인 - 없는 꽃잎일 경우")
+    void checkDandelionOwnerNotExistPetal() {
+        // given
+        memberRepository.save(member1);
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> petalService.isDandelionOwnerByPetal(member1.getSeq(), 0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("꽃잎의 민들레 주인 확인 - 삭제된 꽃잎일 경우")
+    void checkDandelionOwnerPetalIsDeleted() {
+        // given
+        memberRepository.save(member1);
+        petal1.delete();
+        petalRepository.save(petal1);
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> petalService.isDandelionOwnerByPetal(member1.getSeq(), petal1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("꽃잎 삭제 - 성공")
+    void deletePetalSuccess() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        petal2 = Petal.builder()
+                .message("hello")
+                .imagePath("imagePath")
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("nationalFlagImagePath")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+        petalRepository.save(petal1);
+        petalRepository.save(petal2);
+
+        tag1 = Tag.builder()
+                .name("first Tag")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+
+        tag2 = Tag.builder()
+                .name("second Tag")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+
+        tag3 = Tag.builder()
+                .name("third Tag")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+
+        tagRepository.save(tag1);
+        tagRepository.save(tag2);
+        tagRepository.save(tag3);
+        em.flush();
+        em.clear();
+
+        //when
+
+        petalService.deletePetal(petal2.getSeq());
+
+        Petal petal = petalRepository.findBySeq(petal2.getSeq())
+                .orElse(null);
+
+        List<Tag> tags = tagRepository.findTagListByMemberSeqAndDandelionSeq(petal2.getMember().getSeq(), dandelion1.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(petal).isNull();
+        assertThat(tags.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("꽃잎 삭제 - 없는 꽃잎일 경우")
+    void deletePetalNotExist() {
+        // given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> petalService.deletePetal(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("꽃잎 삭제 - 이미 삭제된 꽃잎일 경우")
+    void deletePetalIsDeleted() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        petal1.delete();
+        petalRepository.save(petal1);
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> petalService.deletePetal(petal1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 }
