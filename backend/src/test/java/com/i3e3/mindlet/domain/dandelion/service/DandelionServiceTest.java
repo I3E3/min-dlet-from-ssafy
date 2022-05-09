@@ -940,4 +940,27 @@ class DandelionServiceTest {
         assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
         assertThat(responseGardenInfos.get(1).getSeq()).isEqualTo(savedDandelion2.getSeq());
     }
+
+    @Test
+    @DisplayName("민들레 상태(Album) 확인 - True")
+    void checkAlbumTrue() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.ALBUM);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isAlbum = dandelionService.isAlbum(savedDandelion.getSeq());
+
+        // then
+        assertThat(isAlbum).isTrue();
+    }
 }
