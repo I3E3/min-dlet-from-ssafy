@@ -3,8 +3,10 @@ package com.i3e3.mindlet.domain.dandelion.service;
 import com.i3e3.mindlet.domain.admin.entity.Report;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.entity.Petal;
+import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.enums.Community;
@@ -38,14 +40,18 @@ public class PetalServiceTest {
     private PetalRepository petalRepository;
 
     @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
     private PetalService petalService;
 
     private Member member1, member2;
 
     private Dandelion dandelion1;
 
-    private Petal petal1;
+    private Petal petal1, petal2;
 
+    private Tag tag1, tag2, tag3;
 
     @BeforeEach
     void setUp() {
@@ -205,5 +211,31 @@ public class PetalServiceTest {
         assertThat(reports.get(0).getStatus()).isEqualTo(Report.Status.PENDING);
         assertThat(reports.get(1).getStatus()).isEqualTo(Report.Status.PENDING);
         assertThat(reports.get(2).getStatus()).isEqualTo(Report.Status.PENDING);
+    }
+
+    @Test
+    @DisplayName("꽃잎의 민들레 주인 확인 - 주인이 맞을경우")
+    void checkDandelionOwnerContainPetalTrue() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        petal2 = Petal.builder()
+                .message("hello")
+                .imagePath("imagePath")
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("nationalFlagImagePath")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+        petalRepository.save(petal1);
+        petalRepository.save(petal2);
+
+        //when
+        boolean isOwner = petalService.isDandelionOwnerByPetal(member1.getSeq(), petal2.getSeq());
+
+        //then
+        assertThat(isOwner).isTrue();
     }
 }
