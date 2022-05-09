@@ -93,6 +93,7 @@ class TagServiceTest {
                 .build();
     }
 
+
     @Test
     @DisplayName("민들레 태그 추가 - 성공")
     void registerDandelionTagSuccess() {
@@ -163,6 +164,23 @@ class TagServiceTest {
         assertThat(registeredTag2.getMember().getSeq()).isEqualTo(savedMember3.getSeq());
         assertThat(registeredTag1.getDandelion().getSeq()).isEqualTo(savedDandelion1.getSeq());
         assertThat(registeredTag2.getDandelion().getSeq()).isEqualTo(savedDandelion2.getSeq());
+    }
+
+    @Test
+    @DisplayName("민들레 태그 추가 - 실패(민들레 존재 X)")
+    void registerDandelionTagFailNotExistDandelion() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> tagService.registerDandelionTag(0L, savedMember1.getSeq(), "태그 입니다."))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 
 }
