@@ -367,4 +367,23 @@ public class PetalServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("꽃잎 삭제 - 이미 삭제된 꽃잎일 경우")
+    void deletePetalIsDeleted() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        petal1.delete();
+        petalRepository.save(petal1);
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> petalService.deletePetal(petal1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
