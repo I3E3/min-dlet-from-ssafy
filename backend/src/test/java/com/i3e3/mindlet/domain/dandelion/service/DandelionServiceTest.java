@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -1113,5 +1114,47 @@ class DandelionServiceTest {
 
         // then
         assertThat(isParticipated).isFalse();
+    }
+
+    @Test
+    @DisplayName("민들레 참여여부 확인 - 실패 (민들레가 deleted")
+    void checkDandelionParticipatedFalseDeletedDandelion() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Member savedMember3 = memberRepository.save(member3);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        petalRepository.save(Petal.builder()
+                .message("와우 멋있어요")
+                .imagePath("/test/img.jpg")
+                .member(savedMember2)
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("awsS3/test/1.jpg")
+                .dandelion(savedDandelion1)
+                .build());
+
+        petalRepository.save(Petal.builder()
+                .message("호우 샷")
+                .imagePath("/test/img1.jpg")
+                .member(savedMember3)
+                .nation("CANADA")
+                .city("OTTAWA")
+                .nationalFlagImagePath("awsS3/test/2.jpg")
+                .dandelion(savedDandelion1)
+                .build());
+
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionService.deleteDandelion(savedDandelion1.getSeq(), savedMember1.getSeq());
+        boolean isParticipated2 = dandelionService.isParticipated(savedDandelion1.getSeq(), savedMember2.getSeq());
+        boolean isParticipated3 = dandelionService.isParticipated(savedDandelion1.getSeq(), savedMember3.getSeq());
+
+        // then
+        assertThat(isParticipated2).isFalse();
+        assertThat(isParticipated3).isFalse();
     }
 }
