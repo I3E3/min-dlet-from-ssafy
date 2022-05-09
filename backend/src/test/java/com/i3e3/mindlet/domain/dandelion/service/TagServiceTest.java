@@ -183,4 +183,22 @@ class TagServiceTest {
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 
+    @Test
+    @DisplayName("민들레 태그 추가 - 실패(회원 존재 X)")
+    void registerDandelionTagFailNotExistMember() {
+        //given
+        memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> tagService.registerDandelionTag(savedDandelion1.getSeq(), 0L, "태그 입니다."))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
 }
