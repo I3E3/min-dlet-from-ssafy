@@ -354,4 +354,17 @@ public class PetalServiceTest {
         assertThat(petal).isNull();
         assertThat(tags.size()).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("꽃잎 삭제 - 없는 꽃잎일 경우")
+    void deletePetalNotExist() {
+        // given
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> petalService.deletePetal(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
