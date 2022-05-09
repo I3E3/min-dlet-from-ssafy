@@ -280,4 +280,20 @@ public class PetalServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("꽃잎의 민들레 주인 확인 - 삭제된 꽃잎일 경우")
+    void checkDandelionOwnerPetalIsDeleted() {
+        // given
+        memberRepository.save(member1);
+        petal1.delete();
+        petalRepository.save(petal1);
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> petalService.isDandelionOwnerByPetal(member1.getSeq(), petal1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
