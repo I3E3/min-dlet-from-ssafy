@@ -35,10 +35,6 @@ class TagServiceTest {
     @Autowired
     private DandelionRepository dandelionRepository;
 
-
-    @Autowired
-    private DandelionService dandelionService;
-
     @Autowired
     private TagRepository tagRepository;
 
@@ -51,8 +47,6 @@ class TagServiceTest {
     private Member member1, member2, member3;
 
     private Dandelion dandelion1, dandelion2;
-
-    private Tag tag1;
 
     @BeforeEach
     void setUp() {
@@ -92,7 +86,6 @@ class TagServiceTest {
                 .member(member2)
                 .build();
     }
-
 
     @Test
     @DisplayName("민들레 태그 추가 - 성공")
@@ -168,7 +161,7 @@ class TagServiceTest {
 
     @Test
     @DisplayName("민들레 태그 추가 - 실패(민들레 존재 X)")
-    void registerDandelionTagFailNotExistDandelion() {
+    void registerDandelionTagFailNotExistDandelion(){
         //given
         Member savedMember1 = memberRepository.save(member1);
 
@@ -185,7 +178,7 @@ class TagServiceTest {
 
     @Test
     @DisplayName("민들레 태그 추가 - 실패(회원 존재 X)")
-    void registerDandelionTagFailNotExistMember() {
+    void registerDandelionTagFailNotExistMember(){
         //given
         memberRepository.save(member1);
         Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
@@ -203,7 +196,7 @@ class TagServiceTest {
 
     @Test
     @DisplayName("민들레 태그 추가 - 실패(민들레 deleted)")
-    void registerDandelionTagFailDeletedDandelion() {
+    void registerDandelionTagFailDeletedDandelion(){
         //given
         memberRepository.save(member1);
         Member savedMember2 = memberRepository.save(member2);
@@ -222,4 +215,24 @@ class TagServiceTest {
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 
+    @Test
+    @DisplayName("민들레 태그 추가 - 실패(회원 deleted)")
+    void registerDandelionTagFailDeletedMember(){
+        //given
+        memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        savedMember2.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> tagService.registerDandelionTag(savedDandelion1.getSeq(), savedMember2.getSeq(), "태그 입니다."))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
