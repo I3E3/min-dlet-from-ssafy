@@ -963,4 +963,27 @@ class DandelionServiceTest {
         // then
         assertThat(isAlbum).isTrue();
     }
+
+    @Test
+    @DisplayName("민들레 상태(Album) 확인 - False")
+    void checkAlbumFalse() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isAlbum = dandelionService.isAlbum(savedDandelion.getSeq());
+
+        // then
+        assertThat(isAlbum).isFalse();
+    }
 }
