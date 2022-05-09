@@ -5,11 +5,18 @@ import Plant from '../Plant/Plant';
 import NewContentsEdit from '../NewContentsEdit/NewContentsEdit';
 import ContentsCheck from '../ContentsCheck/ContentsCheck';
 import Blow from '../Blow/Blow';
+import ContentsSetDate from '../ContentsSetDate/ContentsSetDate';
 const cx = classNames.bind(styles);
 
 const ContentsMain = () => {
   const [formSteps, setFormStep] = useState(0);
-  const [form, setForm] = useState({ image: '', message: '', date: '' });
+  const [form, setForm] = useState({
+    image: '',
+    message: '',
+    date: Date(),
+    latitude: 0,
+    longitude: 0,
+  });
   const handleformStep = (step: number) => {
     setFormStep(step);
   };
@@ -41,7 +48,25 @@ const ContentsMain = () => {
               />
             );
           case 3:
-            return <Blow onClick={handleformStep} form={form} />;
+            return (
+              <div>
+                <ContentsSetDate
+                  onClick={handleformStep}
+                  form={form}
+                  setForm={handleFormSet}
+                />
+              </div>
+            );
+          case 4:
+            return (
+              <div>
+                <Blow
+                  onClick={handleformStep}
+                  form={form}
+                  setForm={handleFormSet}
+                />
+              </div>
+            );
         }
       })()}
     </div>

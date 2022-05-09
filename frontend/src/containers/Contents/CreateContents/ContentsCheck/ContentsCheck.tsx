@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import petal from 'assets/images/img_petal_1.png';
 import classNames from 'classnames/bind';
+
+import 'react-day-picker/dist/style.css';
 import styles from './ContentsCheck.module.scss';
 import { fDateDash } from 'utils/formatTime';
-import { ReactComponent as ImageIcon } from 'assets/images/icon/image_white.svg';
-import { ReactComponent as DeleteImg } from 'assets/images/icon/icon_img_delete.svg';
+import iconimg from 'assets/images/icon/icon_dandelion.png';
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 const ContentsCheck = ({ onClick, form, setForm }: any) => {
@@ -12,7 +14,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
   const [letters, SetLetters] = useState(0);
   const [imgFile, setImgFile] = useState('');
   const [text, SetText] = useState<string>('');
-
+  const navigate = useNavigate();
   const back = () => {
     onClick(1);
   };
@@ -21,6 +23,9 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
 
   const handleUploadBtnClick = () => {
     inputRef.current?.click();
+  };
+  const home = () => {
+    navigate('/');
   };
 
   const sendData = () => {
@@ -35,61 +40,44 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
   }, []);
 
   const popupOn = () => {
-    console.log('ㅇㅅㅇ');
+    //todo popup 실행
   };
 
   return (
     <div className={cx('container')}>
-      {/* <div
-        className={
-          open ? [styles.openModal, styles.modal].join(' ') : styles['modal']
-        }
-      >
-        {open ? (
-          <section>
-            <header>
-              프로필 수정
-              <button className={cx('close')} onClick={close}>
-                &times;
-              </button>
-            </header>
-            <main>
-              <div className={cx('title')}>닉네임 수정</div>
-            
-              <div className={cx('title')}>프로필 사진 변경</div>
-          
-            </main>
-          </section>
-        ) : null}
-      </div> */}
-
       <div className={cx('inner-container')}>
+        <img
+          className={cx('back-btn')}
+          src={iconimg}
+          onClick={home}
+          alt="home"
+        />
         <div className={cx('petal-img')}>
           <img className={cx('petal')} src={petal} alt="petal" />
           <div className={cx('editor')}>
             <div className={cx('date')}> {fDateDash(date)}</div>
-            <div className={cx('thumbnail')}>
-              <div className={cx('default')} onClick={handleUploadBtnClick}>
-                {imgFile ? (
-                  <>
-                    <div onClick={popupOn} className={cx('preview-img')}>
-                      <img src={imgFile} alt="preview" />
-                    </div>
-                  </>
-                ) : (
-                  <div className={cx('upload')}>
-                    <ImageIcon width={42} height={42} />
-                  </div>
-                )}
+            <div className={cx('scrollBar')}>
+              <div className={cx('thumbnail')}>
+                <div className={cx('default')}>
+                  {imgFile ? (
+                    <>
+                      <div onClick={popupOn} className={cx('preview-img')}>
+                        <img src={imgFile} alt="preview" />
+                      </div>
+                    </>
+                  ) : null}
+                </div>
               </div>
+              <textarea value={text} disabled />
             </div>
-            <textarea value={text} disabled />
           </div>
         </div>
         <div>
-          <button onClick={back}>back</button>
-          <div className={cx('write-btn')} onClick={sendData}>
+          <div className={cx('btn')} onClick={sendData}>
             Send
+          </div>
+          <div className={cx('btn')} onClick={back}>
+            Back
           </div>
         </div>
       </div>
@@ -98,3 +86,6 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
 };
 
 export default ContentsCheck;
+function moment(date: Date) {
+  throw new Error('Function not implemented.');
+}
