@@ -7,4 +7,6 @@ public interface PetalService {
     Report reportPetal(Long memberSeq, Long petalSeq, Report.Reason reason);
 
     boolean isDandelionOwnerByPetal(Long memberSeq, Long petalSeq);
+
+    void deletePetal(Long petalSeq);
 }
