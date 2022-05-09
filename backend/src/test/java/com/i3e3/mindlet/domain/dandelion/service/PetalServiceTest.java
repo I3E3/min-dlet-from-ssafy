@@ -238,4 +238,30 @@ public class PetalServiceTest {
         //then
         assertThat(isOwner).isTrue();
     }
+
+    @Test
+    @DisplayName("꽃잎의 민들레 주인 확인 - 주인이 아닐경우")
+    void checkDandelionOwnerContainPetalFalse() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        petal2 = Petal.builder()
+                .message("hello")
+                .imagePath("imagePath")
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("nationalFlagImagePath")
+                .dandelion(dandelion1)
+                .member(member2)
+                .build();
+        petalRepository.save(petal1);
+        petalRepository.save(petal2);
+
+        //when
+        boolean isOwner = petalService.isDandelionOwnerByPetal(member2.getSeq(), petal2.getSeq());
+
+        //then
+        assertThat(isOwner).isFalse();
+    }
 }
