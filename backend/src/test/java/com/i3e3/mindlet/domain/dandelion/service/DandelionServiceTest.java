@@ -1055,4 +1055,35 @@ class DandelionServiceTest {
         // then
         assertThat(isParticipated).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 참여여부 확인 - 실패 (회원이 deleted)")
+    void checkDandelionParticipatedFalseDeletedMember() {
+        // given
+        memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        petalRepository.save(Petal.builder()
+                .message("와우 멋있어요")
+                .imagePath("/test/img")
+                .member(savedMember2)
+                .nation("KOREA")
+                .city("SEOUL")
+                .nationalFlagImagePath("awsS3/test")
+                .dandelion(savedDandelion1)
+                .build());
+
+        savedMember2.delete();
+        savedMember2.getPetals().forEach(petal -> petal.delete());
+
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isParticipated = dandelionService.isParticipated(savedDandelion1.getSeq(), savedMember2.getSeq());
+
+        // then
+        assertThat(isParticipated).isFalse();
+    }
 }
