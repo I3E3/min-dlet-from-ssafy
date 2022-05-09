@@ -34,7 +34,7 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
   return (
     <div className={cx('container')}>
       <div className={cx('calendar')}>
-        <div className={cx('calendar-font')}>도착 할 날짜를 입력해주세요.</div>
+        <div className={cx('calendar-title')}>도착 할 날짜를 입력해주세요.</div>
         <Calendar
           className={cx('react-calendar')}
           formatDay={(locale, date) => moment(date).format('DD')}
@@ -43,13 +43,19 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
           value={dateState}
           onChange={changeDate}
         />
-        <div>Selected: {moment(dateState).format('MMMM Do, YYYY')}</div>
-        <button className={cx('back')} onClick={back}>
-          Back
-        </button>
-        <button className={cx('calendar-btn')} onClick={setData}>
-          완료
-        </button>
+        <div className={cx('selected-date')}>
+          Selected: {moment(dateState).format('MMMM Do, YYYY')}
+        </div>
+        <div>
+          <button className={cx('calendar-btn')} onClick={setData}>
+            Send
+          </button>
+        </div>
+        <div>
+          <button className={cx('calendar-btn')} onClick={back}>
+            Back
+          </button>
+        </div>
       </div>
     </div>
   );

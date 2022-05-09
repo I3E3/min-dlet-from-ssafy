@@ -3,9 +3,12 @@ $color: blue;
 
 .container {
   height: 100vh;
-  .out-icon {
-    width: 50px;
-    height: 50px;
+  .back-btn {
+    position: absolute;
+    width: 10vw;
+    right: 10vw;
+    top: 10vh;
+    padding: 0 0 50px 0;
   }
   .petal-img {
     position: relative;
@@ -105,9 +108,10 @@ $color: blue;
     font-size: 0.8em;
     text-align: center;
   }
-  .write-btn {
+  .btn {
     margin: 20px 0 0 0;
     font-size: 1.5em;
     text-align: center;
+    color: #5f5f5f;
   }
 }

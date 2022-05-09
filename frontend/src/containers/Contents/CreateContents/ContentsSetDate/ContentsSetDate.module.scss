@@ -8,6 +8,12 @@
   justify-content: center;
 
   .calendar {
+    .calendar-title {
+      font-size: 1.3em;
+    }
+    .selected-date {
+      font-size: 0.9em;
+    }
     .react-calendar {
       color: #6f48eb;
     }

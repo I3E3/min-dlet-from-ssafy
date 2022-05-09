@@ -5,8 +5,8 @@ import classNames from 'classnames/bind';
 import 'react-day-picker/dist/style.css';
 import styles from './ContentsCheck.module.scss';
 import { fDateDash } from 'utils/formatTime';
-import { ReactComponent as ImageIcon } from 'assets/images/icon/image_white.svg';
-import { ReactComponent as DeleteImg } from 'assets/images/icon/icon_img_delete.svg';
+import iconimg from 'assets/images/icon/icon_dandelion.png';
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 const ContentsCheck = ({ onClick, form, setForm }: any) => {
@@ -14,7 +14,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
   const [letters, SetLetters] = useState(0);
   const [imgFile, setImgFile] = useState('');
   const [text, SetText] = useState<string>('');
-
+  const navigate = useNavigate();
   const back = () => {
     onClick(1);
   };
@@ -23,6 +23,9 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
 
   const handleUploadBtnClick = () => {
     inputRef.current?.click();
+  };
+  const home = () => {
+    navigate('/');
   };
 
   const sendData = () => {
@@ -43,6 +46,12 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
   return (
     <div className={cx('container')}>
       <div className={cx('inner-container')}>
+        <img
+          className={cx('back-btn')}
+          src={iconimg}
+          onClick={home}
+          alt="home"
+        />
         <div className={cx('petal-img')}>
           <img className={cx('petal')} src={petal} alt="petal" />
           <div className={cx('editor')}>
@@ -64,9 +73,11 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
           </div>
         </div>
         <div>
-          <button onClick={back}>back</button>
-          <div className={cx('write-btn')} onClick={sendData}>
+          <div className={cx('btn')} onClick={sendData}>
             Send
+          </div>
+          <div className={cx('btn')} onClick={back}>
+            Back
           </div>
         </div>
       </div>

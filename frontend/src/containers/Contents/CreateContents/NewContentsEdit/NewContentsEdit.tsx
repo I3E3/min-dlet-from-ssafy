@@ -20,15 +20,19 @@ const NewContentsEdit = ({ onClick, form, setForm }: any) => {
     onClick(2);
   };
 
-  const back = () => {
+  const home = () => {
     navigate('/');
   };
 
   return (
     <>
-      {' '}
-      <div>
-        <button onClick={back}>back</button>
+      <div className={cx('')}>
+        <img
+          className={cx('back-btn')}
+          src={iconimg}
+          onClick={home}
+          alt="home"
+        />
       </div>
       <ContentsEditor form={form} img={SetImg} msg={SetMsg} onSend={check} />
     </>
