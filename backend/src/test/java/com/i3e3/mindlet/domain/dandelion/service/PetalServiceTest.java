@@ -9,6 +9,7 @@ import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
+import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -263,5 +265,19 @@ public class PetalServiceTest {
 
         //then
         assertThat(isOwner).isFalse();
+    }
+
+    @Test
+    @DisplayName("꽃잎의 민들레 주인 확인 - 없는 꽃잎일 경우")
+    void checkDandelionOwnerNotExistPetal() {
+        // given
+        memberRepository.save(member1);
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> petalService.isDandelionOwnerByPetal(member1.getSeq(), 0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 }
