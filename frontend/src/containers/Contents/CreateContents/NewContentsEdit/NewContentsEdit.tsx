@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './NewContentsEdit.module.scss';
 import iconimg from 'assets/images/icon/icon_dandelion.png';
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 const NewContentsEdit = ({ onClick, form, setForm }: any) => {
   const [msg, SetMsg] = useState();
   const [img, SetImg] = useState();
-
+  const navigate = useNavigate();
   useEffect(() => {
     SetMsg(form.message);
     SetImg(form.image);
@@ -19,9 +20,16 @@ const NewContentsEdit = ({ onClick, form, setForm }: any) => {
     onClick(2);
   };
 
+  const back = () => {
+    navigate('/');
+  };
+
   return (
     <>
-      {/* <img className={cx('out-icon')} src={iconimg} alt="out" /> */}
+      {' '}
+      <div>
+        <button onClick={back}>back</button>
+      </div>
       <ContentsEditor form={form} img={SetImg} msg={SetMsg} onSend={check} />
     </>
   );
