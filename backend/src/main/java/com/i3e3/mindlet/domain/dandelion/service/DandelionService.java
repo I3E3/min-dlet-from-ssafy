@@ -25,4 +25,8 @@ public interface DandelionService {
     List<ResponseGardenInfoDto> getGardenInfoList(Long memberSeq);
 
     void deleteDandelion(Long dandelionSeq, Long memberSeq);
+
+    boolean isParticipated(Long dandelionSeq, Long memberSeq);
+
+    boolean isAlbum(Long dandelionSeq);
 }
