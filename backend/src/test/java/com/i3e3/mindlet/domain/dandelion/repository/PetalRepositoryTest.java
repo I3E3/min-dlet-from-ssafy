@@ -319,4 +319,23 @@ public class PetalRepositoryTest {
         assertThat(isParticipated2).isFalse();
         assertThat(isParticipated3).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 식별키와 회원 식별키로 꽃잎 조회 - 실패(회원이 존재 X)")
+    void existPetalByDandelionSeqAndMemberSeqFalseNotExistMember() {
+        //given
+        memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(petal1);
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        boolean isParticipated = petalRepository.existsPetalByDandelionSeqAndMemberSeq(savedDandelion1.getSeq(), 0L);
+
+        //then
+        assertThat(isParticipated).isFalse();
+    }
 }
