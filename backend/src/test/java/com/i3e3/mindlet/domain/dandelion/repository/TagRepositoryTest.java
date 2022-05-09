@@ -163,7 +163,7 @@ public class TagRepositoryTest {
 
         //when
 
-        List<Tag> tags = tagRepository.findTagListByMemberSeq(member2.getSeq(), dandelion1.getSeq())
+        List<Tag> tags = tagRepository.findTagListByMemberSeqAndDandelionSeq(member2.getSeq(), dandelion1.getSeq())
                 .orElse(null);
 
         //then
@@ -176,8 +176,6 @@ public class TagRepositoryTest {
     @DisplayName("태그 리스트 가져오기 - 데이터가 없는경우")
     void getTagListNoneData() {
         // given
-
-
         memberRepository.save(member1);
         memberRepository.save(member2);
         dandelionRepository.save(dandelion1);
@@ -199,7 +197,7 @@ public class TagRepositoryTest {
 
         //when
 
-        List<Tag> tags = tagRepository.findTagListByMemberSeq(member2.getSeq(), dandelion1.getSeq())
+        List<Tag> tags = tagRepository.findTagListByMemberSeqAndDandelionSeq(member2.getSeq(), dandelion1.getSeq())
                 .orElse(null);
 
         //then
