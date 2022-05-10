@@ -1,14 +1,10 @@
-import MyGardenBody from "containers/MyGarden/MyGardenBody";
-import MyGardenFooter from "containers/MyGarden/MyGardenFooter";
-import MyGardenHeader from "containers/MyGarden/MyGardenHeader";
+import MyGardenMain from "containers/MyGarden/MyGardenMain";
 import React from "react";
 
 function MyGardenPage() {
   return (
     <div>
-      <MyGardenHeader />
-      <MyGardenBody />
-      <MyGardenFooter />
+      <MyGardenMain />
     </div>
   );
 }

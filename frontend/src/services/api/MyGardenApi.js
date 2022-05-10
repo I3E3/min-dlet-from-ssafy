@@ -1,5 +1,5 @@
-const BASE_PATH = "http://localhost:8080/";
-const SERVER = "";
+const BASE_PATH = "http://localhost:8080";
+const SERVER = "http://k6a106.p.ssafy.io:8080";
 
 // 꽃밭 보기
 export function getGarden() {

@@ -1,0 +1,17 @@
+.container {
+  height: 100vh;
+  background-image: url("../../assets/images/garden_back.png");
+  background-size: cover;
+  .inner-container {
+  }
+  .btns {
+    margin-left: auto;
+    margin-top: 30px;
+    margin-right: 30px;
+  }
+  .btn {
+    height: 30px;
+    width: 30px;
+    margin-bottom: 15px;
+  }
+}

@@ -1,13 +1,9 @@
-import MyAlbumHeader from "containers/MyAlbum/MyAlbumHeader";
-import MyAlbumBody from "containers/MyAlbum/MyAlbumBody";
-import MyAlbumFooter from "containers/MyAlbum/MyAlbumFooter";
+import MyAlbumMain from "containers/MyAlbum/MyAlbumMain";
 
 function MyAlbumPage() {
   return (
     <div>
-      <MyAlbumHeader />
-      <MyAlbumBody />
-      <MyAlbumFooter />
+      <MyAlbumMain />
     </div>
   );
 }
