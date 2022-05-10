@@ -4,6 +4,7 @@ import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.entity.Petal;
 import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
+import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
@@ -33,6 +34,8 @@ public class DandelionServiceImpl implements DandelionService {
     private final MemberRepository memberRepository;
 
     private final TagRepository tagRepository;
+
+    private final PetalRepository petalRepository;
 
     private final MemberDandelionHistoryRepository memberDandelionHistoryRepository;
 
@@ -126,7 +129,21 @@ public class DandelionServiceImpl implements DandelionService {
         } else {
             findDandelion.delete();
             findDandelion.getPetals().forEach((petal -> petal.delete()));
+            findDandelion.getTags().forEach(tag -> tagRepository.delete(tag));
         }
+    }
+
+    @Override
+    public boolean isParticipated(Long dandelionSeq, Long memberSeq) {
+        return petalRepository.existsPetalByDandelionSeqAndMemberSeq(dandelionSeq, memberSeq);
+    }
+
+    @Override
+    public boolean isAlbum(Long dandelionSeq) {
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        return findDandelion.getStatus() == Dandelion.Status.ALBUM;
     }
 
     @Transactional
@@ -143,7 +160,7 @@ public class DandelionServiceImpl implements DandelionService {
         for (Dandelion dandelion : dandelions) {
             responseGardenInfos.add(
                     ResponseGardenInfoDto.builder()
-                            .blossomDate(dandelion.getBlossomedDate())
+                            .blossomedDate(dandelion.getBlossomedDate())
                             .description(dandelion.getDescription())
                             .flowerSignNumber(dandelion.getFlowerSignNumber())
                             .seq(dandelion.getSeq())

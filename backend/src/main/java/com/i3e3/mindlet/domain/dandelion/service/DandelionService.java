@@ -27,5 +27,9 @@ public interface DandelionService {
 
     void deleteDandelion(Long dandelionSeq, Long memberSeq);
 
+    boolean isParticipated(Long dandelionSeq, Long memberSeq);
+
+    boolean isAlbum(Long dandelionSeq);
+
     DandelionSeedDto getDandelionSeedDto(Long memberSeq);
 }

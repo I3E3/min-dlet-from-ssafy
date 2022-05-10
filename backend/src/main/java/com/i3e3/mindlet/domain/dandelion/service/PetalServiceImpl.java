@@ -3,7 +3,9 @@ package com.i3e3.mindlet.domain.dandelion.service;
 import com.i3e3.mindlet.domain.admin.entity.Report;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.entity.Petal;
+import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.constant.Report.ReportConst;
@@ -23,6 +25,8 @@ public class PetalServiceImpl implements PetalService {
 
     private final MemberRepository memberRepository;
     private final PetalRepository petalRepository;
+
+    private final TagRepository tagRepository;
 
     @Override
     @Transactional
@@ -56,5 +60,29 @@ public class PetalServiceImpl implements PetalService {
             dandelion.changeStatus(Dandelion.Status.PENDING);
         }
         return newReport;
+    }
+
+    @Override
+    public boolean isDandelionOwnerByPetal(Long memberSeq, Long petalSeq) {
+
+        Dandelion dandelion = petalRepository.findDandelionBySeq(petalSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        return dandelion.getMember().getSeq().equals(memberSeq);
+    }
+
+    @Override
+    @Transactional
+    public void deletePetal(Long petalSeq) {
+
+        Petal petal = petalRepository.findBySeq(petalSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        petal.delete();
+
+        List<Tag> tags = tagRepository.findTagListByMemberSeqAndDandelionSeq(petal.getMember().getSeq(), petal.getDandelion().getSeq())
+                .orElse(null);
+
+        tags.forEach(tag -> tagRepository.delete(tag));
     }
 }
