@@ -1092,4 +1092,27 @@ class DandelionServiceTest {
         // then
         assertThat(dandelionSeedDto).isNull();
     }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 상태가 FLYING 인 민들레가 없는 경우")
+    void findRandomDandelionSeedWhenAllDandelionNotFlying() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        dandelion1.changeStatus(Dandelion.Status.HOLD);
+        dandelion2.changeStatus(Dandelion.Status.HOLD);
+        dandelion3.changeStatus(Dandelion.Status.HOLD);
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
 }
