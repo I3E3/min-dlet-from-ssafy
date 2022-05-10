@@ -641,4 +641,44 @@ class DandelionRepositoryTest {
         // then
         assertThat(findRandomDandelion).isNull();
     }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 모든 민들레가 삭제된 경우")
+    void findRandomDandelionExceptMemberWhenAllDandelionDeleted() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            Dandelion newDandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build();
+
+            newDandelion.delete();
+            dandelionRepository.save(newDandelion);
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion).isNull();
+    }
 }
