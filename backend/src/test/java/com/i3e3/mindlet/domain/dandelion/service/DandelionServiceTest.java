@@ -1115,4 +1115,32 @@ class DandelionServiceTest {
         // then
         assertThat(dandelionSeedDto).isNull();
     }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 모든 민들레의 소유자가 요청한 사람인 경우")
+    void findRandomDandelionSeedWhenAllDandelionOwner() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(member1.getAppConfig().getCommunity())
+                .flowerSignNumber(2)
+                .member(member1)
+                .build());
+        dandelionRepository.save(Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(member1.getAppConfig().getCommunity())
+                .flowerSignNumber(3)
+                .member(member1)
+                .build());
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
 }
