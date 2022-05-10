@@ -1069,4 +1069,27 @@ class DandelionServiceTest {
         // then
         assertThat(dandelionSeedDto).isNull();
     }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 모든 민들레가 삭제된 경우")
+    void findRandomDandelionSeedWhenAllDandelionDeleted() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        dandelion1.delete();
+        dandelion2.delete();
+        dandelion3.delete();
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
 }
