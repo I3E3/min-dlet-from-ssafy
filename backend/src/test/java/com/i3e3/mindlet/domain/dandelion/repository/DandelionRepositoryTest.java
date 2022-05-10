@@ -1,8 +1,10 @@
 package com.i3e3.mindlet.domain.dandelion.repository;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
-import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
+import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
+import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
+import com.i3e3.mindlet.domain.member.repository.MemberDandelionHistoryRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +34,15 @@ class DandelionRepositoryTest {
     @Autowired
     private DandelionRepository dandelionRepository;
 
-    private Member member1;
+    @Autowired
+    private AppConfigRepository appConfigRepository;
+
+    @Autowired
+    private MemberDandelionHistoryRepository memberDandelionHistoryRepository;
+
+    private Member member1, member2, member3;
+
+    private AppConfig appConfig1, appConfig2, appConfig3;
 
     private Dandelion dandelion1, dandelion2, dandelion3;
 
@@ -48,11 +58,50 @@ class DandelionRepositoryTest {
                 .password("패스워드1")
                 .build();
 
+        member2 = Member.builder()
+                .id("아이디2")
+                .password("패스워드2")
+                .build();
+
+        member3 = Member.builder()
+                .id("아이디3")
+                .password("패스워드3")
+                .build();
+
+        appConfig1 = AppConfig.builder()
+                .member(member1)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
+        appConfig2 = AppConfig.builder()
+                .member(member2)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
+        appConfig3 = AppConfig.builder()
+                .member(member3)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
         dandelion1 = Dandelion.builder()
                 .blossomedDate(LocalDate.parse("2022-04-30"))
-                .community(Community.WORLD)
+                .community(member1.getAppConfig().getCommunity())
                 .flowerSignNumber(1)
                 .member(member1)
+                .build();
+
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-01"))
+                .community(member2.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member2)
+                .build();
+
+        dandelion3 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-02"))
+                .community(member3.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member3)
                 .build();
     }
 
@@ -436,5 +485,42 @@ class DandelionRepositoryTest {
         List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
         // then
         assertThat(dandelions.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 성공")
+    void findRandomDandelionExceptMemberSuccess() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build());
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion.getSeq()).isEqualTo(members.get(1).getDandelions().get(0).getSeq());
     }
 }
