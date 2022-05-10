@@ -1,12 +1,17 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.entity.Petal;
 import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
+import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
+import com.i3e3.mindlet.domain.member.entity.Member;
+import com.i3e3.mindlet.domain.member.entity.MemberDandelionHistory;
+import com.i3e3.mindlet.domain.member.repository.MemberDandelionHistoryRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.constant.dandelion.DandelionConst;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
@@ -16,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -30,6 +36,8 @@ public class DandelionServiceImpl implements DandelionService {
     private final TagRepository tagRepository;
 
     private final PetalRepository petalRepository;
+
+    private final MemberDandelionHistoryRepository memberDandelionHistoryRepository;
 
     @Override
     public boolean isBlossomed(Long dandelionSeq) {
@@ -162,5 +170,46 @@ public class DandelionServiceImpl implements DandelionService {
         }
 
         return responseGardenInfos;
+    }
+
+    @Transactional
+    @Override
+    public DandelionSeedDto getDandelionSeedDto(Long memberSeq) {
+        Member findMember = memberRepository.findBySeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+        Dandelion findDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(findMember)
+                .orElse(null);
+
+        if (findDandelion == null) {
+            return null;
+        }
+
+        List<Petal> petals = findDandelion.getPetals();
+        List<DandelionSeedDto.PetalInfo> petalInfos = new ArrayList<>();
+        for (Petal petal : petals) {
+            if (petal.isDeleted()) continue;
+
+            petalInfos.add(DandelionSeedDto.PetalInfo.builder()
+                    .seq(petal.getSeq())
+                    .message(petal.getMessage())
+                    .imageUrlPath(petal.getImagePath())
+                    .nation(petal.getNation())
+                    .city(petal.getCity())
+                    .createdDate(petal.getCreatedDate())
+                    .build());
+        }
+        petalInfos.sort(Comparator.comparing(DandelionSeedDto.PetalInfo::getCreatedDate));
+
+        MemberDandelionHistory.builder()
+                .member(findMember)
+                .dandelion(findDandelion)
+                .build();
+
+        findDandelion.changeStatus(Dandelion.Status.HOLD);
+
+        return DandelionSeedDto.builder()
+                .seq(findDandelion.getSeq())
+                .petalInfos(petalInfos)
+                .build();
     }
 }

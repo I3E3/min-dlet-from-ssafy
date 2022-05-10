@@ -1,8 +1,11 @@
 package com.i3e3.mindlet.domain.dandelion.repository;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
-import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
+import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
+import com.i3e3.mindlet.domain.member.entity.MemberDandelionHistory;
+import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
+import com.i3e3.mindlet.domain.member.repository.MemberDandelionHistoryRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.enums.Community;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +35,15 @@ class DandelionRepositoryTest {
     @Autowired
     private DandelionRepository dandelionRepository;
 
-    private Member member1;
+    @Autowired
+    private AppConfigRepository appConfigRepository;
+
+    @Autowired
+    private MemberDandelionHistoryRepository memberDandelionHistoryRepository;
+
+    private Member member1, member2, member3;
+
+    private AppConfig appConfig1, appConfig2, appConfig3;
 
     private Dandelion dandelion1, dandelion2, dandelion3;
 
@@ -48,11 +59,50 @@ class DandelionRepositoryTest {
                 .password("패스워드1")
                 .build();
 
+        member2 = Member.builder()
+                .id("아이디2")
+                .password("패스워드2")
+                .build();
+
+        member3 = Member.builder()
+                .id("아이디3")
+                .password("패스워드3")
+                .build();
+
+        appConfig1 = AppConfig.builder()
+                .member(member1)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
+        appConfig2 = AppConfig.builder()
+                .member(member2)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
+        appConfig3 = AppConfig.builder()
+                .member(member3)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
         dandelion1 = Dandelion.builder()
                 .blossomedDate(LocalDate.parse("2022-04-30"))
-                .community(Community.WORLD)
+                .community(member1.getAppConfig().getCommunity())
                 .flowerSignNumber(1)
                 .member(member1)
+                .build();
+
+        dandelion2 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-01"))
+                .community(member2.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member2)
+                .build();
+
+        dandelion3 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-05-02"))
+                .community(member3.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member3)
                 .build();
     }
 
@@ -436,5 +486,443 @@ class DandelionRepositoryTest {
         List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
         // then
         assertThat(dandelions.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 성공")
+    void findRandomDandelionExceptMemberSuccess() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build());
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion.getSeq()).isEqualTo(members.get(1).getDandelions().get(0).getSeq());
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 성공 : 이미 잡은 민들레가 있을 경우")
+    void findRandomDandelionExceptMemberWhenCatchOneBefore() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build());
+        }
+
+        em.persist(MemberDandelionHistory.builder()
+                .member(members.get(0))
+                .dandelion(members.get(1).getDandelions().get(0))
+                .build());
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion.getSeq()).isEqualTo(members.get(2).getDandelions().get(0).getSeq());
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 성공 : 이미 잡은 민들레가 있고 중간에 HOLD 인 민들레가 1개 있을 경우")
+    void findRandomDandelionExceptMemberWhenCatchOneBeforeAndHoldOne() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            Dandelion savedDandelion = dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build());
+            if (i == 3) {
+                savedDandelion.changeStatus(Dandelion.Status.HOLD);
+            }
+        }
+
+        em.persist(MemberDandelionHistory.builder()
+                .member(members.get(0))
+                .dandelion(members.get(1).getDandelions().get(0))
+                .build());
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion.getSeq()).isEqualTo(members.get(3).getDandelions().get(0).getSeq());
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 민들레 데이터가 없는 경우")
+    void findRandomDandelionExceptMemberWhenNotExistDandelion() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion).isNull();
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 모든 민들레가 삭제된 경우")
+    void findRandomDandelionExceptMemberWhenAllDandelionDeleted() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            Dandelion newDandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build();
+
+            newDandelion.delete();
+            dandelionRepository.save(newDandelion);
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion).isNull();
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 상태가 FLYING 인 민들레가 없는 경우")
+    void findRandomDandelionExceptMemberWhenAllDandelionNoFlying() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            Dandelion newDandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build();
+
+            newDandelion.changeStatus(Dandelion.Status.HOLD);
+            dandelionRepository.save(newDandelion);
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion).isNull();
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 모든 민들레의 소유자가 요청한 사람인 경우")
+    void findRandomDandelionExceptMemberWhenAllDandelionOwner() {
+        // given
+        Member newMember = Member.builder()
+                .id("아이디1")
+                .password("패스워드1")
+                .build();
+        memberRepository.save(newMember);
+        appConfigRepository.save(AppConfig.builder()
+                .member(newMember)
+                .language(AppConfig.Language.ENGLISH)
+                .build());
+        for (int i = 1; i <= 5; i++) {
+            Dandelion newDandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(newMember)
+                    .build();
+
+            dandelionRepository.save(newDandelion);
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(newMember)
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion).isNull();
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 모든 민들레를 잡아본 경우")
+    void findRandomDandelionExceptMemberWhenAllDandelionCatch() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            Dandelion newDandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build();
+
+            dandelionRepository.save(newDandelion);
+        }
+
+        for (int i = 1; i < 5; i++) {
+            em.persist(MemberDandelionHistory.builder()
+                    .member(members.get(0))
+                    .dandelion(members.get(i).getDandelions().get(0))
+                    .build());
+        }
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion).isNull();
+    }
+
+    @Test
+    @DisplayName("경과 시간이 지난 HOLD 상태인 민들레를 FLYING 상태로 업데이트 - 성공")
+    void updateHoldingDandelionToFlying() throws InterruptedException {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        dandelionRepository.save(dandelion1);
+
+        dandelion2.changeStatus(Dandelion.Status.HOLD);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        Thread.sleep(65000);
+        dandelionRepository.updateHoldingDandelionToFlying(1L);
+        Dandelion findDandelion2 = dandelionRepository.findBySeq(savedDandelion2.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion2.getStatus()).isEqualTo(Dandelion.Status.FLYING);
+    }
+
+    @Test
+    @DisplayName("경과 시간이 지난 HOLD 상태인 민드렐를 FLYING 상태로 업데이트 - 경과 시간이 지나지 않은 경우")
+    void updateHoldingDandelionToFlyingWhenBeforeTime() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        dandelionRepository.save(dandelion1);
+
+        dandelion2.changeStatus(Dandelion.Status.HOLD);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionRepository.updateHoldingDandelionToFlying(1L);
+        Dandelion findDandelion2 = dandelionRepository.findBySeq(savedDandelion2.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion2.getStatus()).isEqualTo(Dandelion.Status.HOLD);
+    }
+
+    @Test
+    @DisplayName("경과 시간이 지난 HOLD 상태인 민들레를 FLYING 상태로 업데이트 - 민들레가 경과 시간이 지났는데 Deleted 된 경우")
+    void updateHoldingDandelionToFlyingWhenDandelionDeleted() throws InterruptedException {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        dandelionRepository.save(dandelion1);
+
+        dandelion2.changeStatus(Dandelion.Status.HOLD);
+        dandelion2.delete();
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        Thread.sleep(65000);
+        dandelionRepository.updateHoldingDandelionToFlying(1L);
+        Dandelion findDandelion2 = dandelionRepository.findBySeqContainsDeleted(savedDandelion2.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion2.getStatus()).isEqualTo(Dandelion.Status.HOLD);
+    }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 엔티티(삭제 포함) 조회 - 데이터가 없는 경우")
+    void findDandelionBySeqContainsDeleted() {
+        // given
+
+
+        // when
+        Dandelion findDandelion = dandelionRepository.findBySeqContainsDeleted(0L)
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion).isNull();
+    }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 엔티티(삭제 포함) 조회 - 데이터가 있는 경우")
+    void findDandelionBySeqContainsDeletedWhenExist() {
+        // given
+        memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findDandelion = dandelionRepository.findBySeqContainsDeleted(savedDandelion1.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion1.getSeq());
+        assertThat(findDandelion.isDeleted()).isFalse();
+    }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 엔티티(삭제 포함) 조회 - 데이터가 있고 삭제 처리된 경우")
+    void findDandelionBySeqContainsDeletedWhenExistAndDeleted() {
+        // given
+        memberRepository.save(member1);
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findDandelion = dandelionRepository.findBySeqContainsDeleted(savedDandelion1.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion1.getSeq());
+        assertThat(findDandelion.isDeleted()).isTrue();
     }
 }

@@ -5,6 +5,7 @@ import com.i3e3.mindlet.domain.dandelion.controller.dto.DandelionStatusChangeDto
 import com.i3e3.mindlet.domain.dandelion.controller.dto.DandelionTagRegisterDto;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.service.DandelionService;
+import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.TagService;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -286,5 +288,45 @@ public class DandelionController {
 
         return BaseResponseDto.<Void>builder()
                 .build();
+    }
+
+    @Operation(
+            summary = "민들레씨 잡기 API 기능 추가",
+            description = "인증 토큰을 전달받고 민들레씨 정보를 반환합니다.",
+            tags = {"dandelion"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "민들레씨 조회 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "민들레씨 없음",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+    @GetMapping("/random")
+    public ResponseEntity<BaseResponseDto<DandelionSeedDto>> catchDandelionSeed() {
+        Long findMemberSeq = AuthenticationUtil.getMemberSeq();
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(findMemberSeq);
+
+        HttpStatus status = dandelionSeedDto == null ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return new ResponseEntity<>(BaseResponseDto.<DandelionSeedDto>builder()
+                .data(dandelionSeedDto)
+                .build(), status);
     }
 }

@@ -11,4 +11,7 @@ public interface DandelionRepository extends JpaRepository<Dandelion, Long>, Dan
 
     @Query("SELECT d FROM Dandelion d WHERE d.seq = :seq AND d.isDeleted = FALSE")
     Optional<Dandelion> findBySeq(@Param("seq") Long seq);
+
+    @Query("SELECT d FROM Dandelion d WHERE d.seq = :seq")
+    Optional<Dandelion> findBySeqContainsDeleted(@Param("seq") Long seq);
 }

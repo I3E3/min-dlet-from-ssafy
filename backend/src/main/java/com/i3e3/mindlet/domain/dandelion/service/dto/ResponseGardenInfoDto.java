@@ -7,7 +7,7 @@ import lombok.ToString;
 import java.time.LocalDate;
 
 @Getter
-@ToString(of = {"blossomedDate", "description", "flowerSingNumber", "seq", "status"})
+@ToString(of = {"blossomedDate", "description", "flowerSignNumber", "seq", "status"})
 public class ResponseGardenInfoDto {
     private LocalDate blossomedDate;
 

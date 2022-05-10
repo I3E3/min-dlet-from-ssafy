@@ -6,9 +6,13 @@ import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
+import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
+import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
+import com.i3e3.mindlet.domain.member.entity.MemberDandelionHistory;
+import com.i3e3.mindlet.domain.member.repository.MemberDandelionHistoryRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
 import com.i3e3.mindlet.global.constant.dandelion.DandelionConst;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
@@ -50,7 +54,12 @@ class DandelionServiceTest {
     @Autowired
     private PetalRepository petalRepository;
 
+    @Autowired
+    private MemberDandelionHistoryRepository memberDandelionHistoryRepository;
+
     private Member member1, member2, member3;
+
+    private AppConfig appConfig1, appConfig2, appConfig3;
 
     private Dandelion dandelion1, dandelion2, dandelion3;
 
@@ -80,18 +89,40 @@ class DandelionServiceTest {
                 .password("패스워드3")
                 .build();
 
+        appConfig1 = AppConfig.builder()
+                .member(member1)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
+        appConfig2 = AppConfig.builder()
+                .member(member2)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
+        appConfig3 = AppConfig.builder()
+                .member(member3)
+                .language(AppConfig.Language.ENGLISH)
+                .build();
+
         dandelion1 = Dandelion.builder()
                 .blossomedDate(LocalDate.parse("2022-04-30"))
-                .community(Community.WORLD)
+                .community(member1.getAppConfig().getCommunity())
                 .flowerSignNumber(1)
                 .member(member1)
                 .build();
 
         dandelion2 = Dandelion.builder()
                 .blossomedDate(LocalDate.parse("2022-04-30"))
-                .community(Community.WORLD)
+                .community(member2.getAppConfig().getCommunity())
                 .flowerSignNumber(1)
                 .member(member2)
+                .build();
+
+        dandelion3 = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(member3.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member3)
                 .build();
     }
 
@@ -940,6 +971,207 @@ class DandelionServiceTest {
         assertThat(responseGardenInfos.get(1).getStatus()).isEqualTo("FLYING");
         assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
         assertThat(responseGardenInfos.get(1).getSeq()).isEqualTo(savedDandelion2.getSeq());
+    }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 성공")
+    void findRandomDandelionSeed() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+        Member savedMember3 = memberRepository.save(member3);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        Petal savedPetal1 = petalRepository.save(Petal.builder()
+                .message("메시지1")
+                .imagePath("이미지1")
+                .nation("국가1")
+                .city("도시1")
+                .nationalFlagImagePath("국가이미지1")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .build());
+        Petal savedPetal2 = petalRepository.save(Petal.builder()
+                .message("메시지2")
+                .imagePath("이미지2")
+                .nation("국가2")
+                .city("도시2")
+                .nationalFlagImagePath("국가이미지2")
+                .dandelion(savedDandelion1)
+                .member(savedMember2)
+                .build());
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember3.getSeq());
+        Long findDandelionSeq = dandelionSeedDto.getSeq();
+        Dandelion findDandelion = dandelionRepository.findBySeq(findDandelionSeq)
+                .orElse(null);
+        MemberDandelionHistory findMemberDandelionHistory = memberDandelionHistoryRepository.findByMemberAndDandelion(savedMember3, savedDandelion1)
+                .orElse(null);
+
+        // then
+
+        /**
+         * DTO 민들레 식별키 검증
+         */
+        assertThat(dandelionSeedDto.getSeq()).isEqualTo(savedDandelion1.getSeq());
+
+        /**
+         * 꽃잎 데이터 검증
+         */
+        List<DandelionSeedDto.PetalInfo> petalInfos = dandelionSeedDto.getPetalInfos();
+        assertThat(petalInfos.size()).isEqualTo(2);
+
+        DandelionSeedDto.PetalInfo findPetal1 = petalInfos.get(0);
+        assertThat(findPetal1.getSeq()).isEqualTo(savedPetal1.getSeq());
+        assertThat(findPetal1.getMessage()).isEqualTo(savedPetal1.getMessage());
+        assertThat(findPetal1.getCity()).isEqualTo(savedPetal1.getCity());
+        assertThat(findPetal1.getNation()).isEqualTo(savedPetal1.getNation());
+        assertThat(findPetal1.getImageUrlPath()).isEqualTo(savedPetal1.getImagePath());
+
+        DandelionSeedDto.PetalInfo findPetal2 = petalInfos.get(1);
+        assertThat(findPetal2.getSeq()).isEqualTo(savedPetal2.getSeq());
+        assertThat(findPetal2.getMessage()).isEqualTo(savedPetal2.getMessage());
+        assertThat(findPetal2.getCity()).isEqualTo(savedPetal2.getCity());
+        assertThat(findPetal2.getNation()).isEqualTo(savedPetal2.getNation());
+        assertThat(findPetal2.getImageUrlPath()).isEqualTo(savedPetal2.getImagePath());
+
+        /**
+         * 민들레 데이터 검증
+         */
+        assertThat(findDandelion.getStatus()).isEqualTo(Dandelion.Status.HOLD);
+        assertThat(findDandelion.getCommunity()).isEqualTo(savedMember3.getAppConfig().getCommunity());
+        assertThat(findDandelion.getMember().getSeq()).isNotEqualTo(savedMember3.getSeq());
+
+        /**
+         * 민들레 조회 이력 데이터 검증
+         */
+        assertThat(findMemberDandelionHistory.getMember().getSeq()).isEqualTo(savedMember3.getSeq());
+        assertThat(findMemberDandelionHistory.getDandelion().getSeq()).isEqualTo(savedDandelion1.getSeq());
+    }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 민들레 데이터가 없는 경우")
+    void findRandomDandelionSeedWhenNotExistDandelion() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 모든 민들레가 삭제된 경우")
+    void findRandomDandelionSeedWhenAllDandelionDeleted() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        dandelion1.delete();
+        dandelion2.delete();
+        dandelion3.delete();
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 상태가 FLYING 인 민들레가 없는 경우")
+    void findRandomDandelionSeedWhenAllDandelionNotFlying() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        dandelion1.changeStatus(Dandelion.Status.HOLD);
+        dandelion2.changeStatus(Dandelion.Status.HOLD);
+        dandelion3.changeStatus(Dandelion.Status.HOLD);
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 모든 민들레의 소유자가 요청한 사람인 경우")
+    void findRandomDandelionSeedWhenAllDandelionOwner() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(member1.getAppConfig().getCommunity())
+                .flowerSignNumber(2)
+                .member(member1)
+                .build());
+        dandelionRepository.save(Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(member1.getAppConfig().getCommunity())
+                .flowerSignNumber(3)
+                .member(member1)
+                .build());
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 모든 민들레를 잡아본 경우")
+    void findRandomDandelionSeedWhenAllDandelionCatchBefore() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        dandelionRepository.save(dandelion3);
+        em.persist(MemberDandelionHistory.builder()
+                .member(member1)
+                .dandelion(dandelion2)
+                .build());
+        em.persist(MemberDandelionHistory.builder()
+                .member(member1)
+                .dandelion(dandelion3)
+                .build());
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
     }
 
     @Test
