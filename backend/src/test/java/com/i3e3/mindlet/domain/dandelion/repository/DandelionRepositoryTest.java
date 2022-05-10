@@ -849,4 +849,29 @@ class DandelionRepositoryTest {
         // then
         assertThat(findDandelion2.getStatus()).isEqualTo(Dandelion.Status.HOLD);
     }
+
+    @Test
+    @DisplayName("경과 시간이 지난 HOLD 상태인 민들레를 FLYING 상태로 업데이트 - 민들레가 경과 시간이 지났는데 Deleted 된 경우")
+    void updateHoldingDandelionToFlyingWhenDandelionDeleted() throws InterruptedException {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        dandelionRepository.save(dandelion1);
+
+        dandelion2.changeStatus(Dandelion.Status.HOLD);
+        dandelion2.delete();
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        Thread.sleep(65000);
+        dandelionRepository.updateHoldingDandelionToFlying(1L);
+        Dandelion findDandelion2 = dandelionRepository.findBySeqContainsDeleted(savedDandelion2.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion2.getStatus()).isEqualTo(Dandelion.Status.HOLD);
+    }
 }
