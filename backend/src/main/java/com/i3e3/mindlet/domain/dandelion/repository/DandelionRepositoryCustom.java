@@ -13,4 +13,6 @@ public interface DandelionRepositoryCustom {
     List<Dandelion> findDandelionListByMemberSeq(Long memberSeq);
 
     Optional<Dandelion> findRandomFlyingDandelionExceptMember(Member member);
+
+    void updateHoldingDandelionToFlying(long minute);
 }

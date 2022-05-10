@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,5 +83,17 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
                 .orderBy(dandelion.lastModifiedDate.asc())
                 .limit(1L)
                 .fetchOne());
+    }
+
+    @Override
+    public void updateHoldingDandelionToFlying(long elapsedMinute) {
+        queryFactory
+                .update(dandelion)
+                .set(dandelion.status, Dandelion.Status.FLYING)
+                .where(
+                        dandelion.status.eq(Dandelion.Status.HOLD),
+                        dandelion.lastModifiedDate.before(LocalDateTime.now().minusMinutes(elapsedMinute)),
+                        dandelion.isDeleted.isFalse())
+                .execute();
     }
 }
