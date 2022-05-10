@@ -1143,4 +1143,33 @@ class DandelionServiceTest {
         // then
         assertThat(dandelionSeedDto).isNull();
     }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 모든 민들레를 잡아본 경우")
+    void findRandomDandelionSeedWhenAllDandelionCatchBefore() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        dandelionRepository.save(dandelion3);
+        em.persist(MemberDandelionHistory.builder()
+                .member(member1)
+                .dandelion(dandelion2)
+                .build());
+        em.persist(MemberDandelionHistory.builder()
+                .member(member1)
+                .dandelion(dandelion3)
+                .build());
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
 }
