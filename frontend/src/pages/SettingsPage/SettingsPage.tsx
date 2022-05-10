@@ -1,10 +1,8 @@
-import SettingsHeader from "containers/Settings/SettingsHeader";
-import SettingsBody from "containers/Settings/SettingsBody";
+import SettingsMain from "containers/Settings/SettingsMain";
 function SettingsPage() {
   return (
     <div>
-      <SettingsHeader />
-      <SettingsBody />
+      <SettingsMain />
     </div>
   );
 }
