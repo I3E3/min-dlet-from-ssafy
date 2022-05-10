@@ -17,6 +17,7 @@ const LandingPage = () => {
     xStart = e.touches[0].clientX
     yStart = e.touches[0].clientY
   }
+
   const handleTouchEnd = (e:TouchEvent) => {
     if (howManyTouches > 1) {
       return
@@ -32,7 +33,6 @@ const LandingPage = () => {
         setIsShowing(true)
       }
     }
-  
   }
 
   const [isShowing, setIsShowing] = useState(true)
@@ -41,13 +41,11 @@ const LandingPage = () => {
     () => {
       window.addEventListener('touchstart', handleTouchStart)
       window.addEventListener('touchend', handleTouchEnd)
-
       return () => {
         window.removeEventListener('touchstart', handleTouchStart)
         window.removeEventListener('touchend', handleTouchEnd)
       }
     }
-
   , [])
 
   return (
