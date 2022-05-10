@@ -79,6 +79,10 @@ public class Dandelion extends BaseLastModifiedEntity {
         this.isDeleted = true;
     }
 
+    public void changeCommunity(Community community) {
+        this.community = community;
+    }
+
     public enum Status {
 
         FLYING("can fly"),
