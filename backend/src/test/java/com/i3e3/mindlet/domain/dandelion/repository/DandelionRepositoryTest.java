@@ -874,4 +874,18 @@ class DandelionRepositoryTest {
         // then
         assertThat(findDandelion2.getStatus()).isEqualTo(Dandelion.Status.HOLD);
     }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 엔티티(삭제 포함) 조회 - 데이터가 없는 경우")
+    void findDandelionBySeqContainsDeleted() {
+        // given
+
+
+        // when
+        Dandelion findDandelion = dandelionRepository.findBySeqContainsDeleted(0L)
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion).isNull();
+    }
 }
