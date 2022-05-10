@@ -1,12 +1,12 @@
 import ContentsEditor from 'components/ContentsEditor/ContentsEditor';
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
-import styles from './NewContentsEdit.module.scss';
+import styles from './ContentsEdit.module.scss';
 import iconimg from 'assets/images/icon/icon_dandelion.png';
 import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
-const NewContentsEdit = ({ onClick, form, setForm }: any) => {
+const ContentsEdit = ({ onClick, form, setForm }: any) => {
   const [msg, SetMsg] = useState();
   const [img, SetImg] = useState();
   const navigate = useNavigate();
@@ -17,7 +17,11 @@ const NewContentsEdit = ({ onClick, form, setForm }: any) => {
 
   const check = () => {
     setForm({ ...form, image: img, message: msg });
-    onClick(2);
+    onClick(3);
+  };
+
+  const back = () => {
+    onClick(1);
   };
 
   const home = () => {
@@ -28,15 +32,18 @@ const NewContentsEdit = ({ onClick, form, setForm }: any) => {
     <>
       <div className={cx('')}>
         <img
-          className={cx('back-btn')}
+          className={cx('home-btn')}
           src={iconimg}
           onClick={home}
           alt="home"
         />
-      </div>
+      </div>{' '}
       <ContentsEditor form={form} img={SetImg} msg={SetMsg} onSend={check} />
+      <button onClick={back} className={cx('back-btn')}>
+        Back
+      </button>
     </>
   );
 };
 
-export default NewContentsEdit;
+export default ContentsEdit;

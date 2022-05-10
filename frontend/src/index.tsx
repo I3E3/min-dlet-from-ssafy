@@ -1,9 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.module.css";
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import React from 'react';
+import './index.module.css';
+import App from './App';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { createRoot } from 'react-dom/client';
 
 const client = new QueryClient();
@@ -17,10 +16,9 @@ const client = new QueryClient();
 //   document.getElementById('root')
 // );
 
+const rootNode = document.getElementById('root');
 
-const rootNode = document.getElementById('root')
-
-const root = createRoot(rootNode!)
+const root = createRoot(rootNode!);
 
 root.render(
   <React.StrictMode>
@@ -29,5 +27,5 @@ root.render(
         <App />
       </BrowserRouter>
     </QueryClientProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

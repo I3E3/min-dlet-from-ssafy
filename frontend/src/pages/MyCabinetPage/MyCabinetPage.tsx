@@ -1,11 +1,9 @@
-import MyCabinetHeader from "containers/MyCabinet/MyCabinetHeader";
-import MyCabinetBody from "containers/MyCabinet/MyCabinetBody";
+import MyCabinetMain from "containers/MyCabinet/MyCabinetMain";
 
 function MyCabinetPage() {
   return (
     <div>
-      <MyCabinetHeader />
-      <MyCabinetBody />
+      <MyCabinetMain />
     </div>
   );
 }

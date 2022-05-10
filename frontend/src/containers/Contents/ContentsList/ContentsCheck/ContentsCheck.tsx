@@ -16,7 +16,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
   const [text, SetText] = useState<string>('');
   const navigate = useNavigate();
   const back = () => {
-    onClick(1);
+    onClick(2);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,7 +31,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
   const sendData = () => {
     console.log(imgFile);
     console.log(text);
-    onClick(3);
+    onClick(4);
   };
 
   useEffect(() => {

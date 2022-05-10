@@ -1,9 +1,17 @@
 @import 'assets/styles/main';
 
-.back-btn {
+.home-btn {
   position: absolute;
   width: 10vw;
   right: 10vw;
+  top: 10vh;
+  padding: 0 0 50px 0;
+}
+
+.back-btn {
+  position: absolute;
+  width: 10vw;
+  left: 10vw;
   top: 10vh;
   padding: 0 0 50px 0;
 }

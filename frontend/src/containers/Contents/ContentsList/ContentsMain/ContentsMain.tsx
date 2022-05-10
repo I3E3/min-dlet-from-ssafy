@@ -2,21 +2,15 @@ import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentsMain.module.scss';
 import Plant from '../Plant/Plant';
-import NewContentsEdit from '../NewContentsEdit/NewContentsEdit';
-import ContentsCheck from '../ContentsCheck/ContentsCheck';
 import Blow from '../Blow/Blow';
-import ContentsSetDate from '../ContentsSetDate/ContentsSetDate';
+import ContentsListing from '../ContentsListing/ContentsListing';
+import ContentsEdit from '../ContentsEdit/ContentsEdit';
+import ContentsCheck from '../ContentsCheck/ContentsCheck';
 const cx = classNames.bind(styles);
 
 const ContentsMain = () => {
   const [formSteps, setFormStep] = useState(0);
-  const [form, setForm] = useState({
-    image: '',
-    message: '',
-    date: Date(),
-    latitude: 0,
-    longitude: 0,
-  });
+  const [form, setForm] = useState({ image: '', message: '', date: '' });
   const handleformStep = (step: number) => {
     setFormStep(step);
   };
@@ -33,7 +27,7 @@ const ContentsMain = () => {
             return <Plant onClick={handleformStep} />;
           case 1:
             return (
-              <NewContentsEdit
+              <ContentsListing
                 onClick={handleformStep}
                 form={form}
                 setForm={handleFormSet}
@@ -41,7 +35,7 @@ const ContentsMain = () => {
             );
           case 2:
             return (
-              <ContentsCheck
+              <ContentsEdit
                 onClick={handleformStep}
                 form={form}
                 setForm={handleFormSet}
@@ -49,13 +43,11 @@ const ContentsMain = () => {
             );
           case 3:
             return (
-              <div>
-                <ContentsSetDate
-                  onClick={handleformStep}
-                  form={form}
-                  setForm={handleFormSet}
-                />
-              </div>
+              <ContentsCheck
+                onClick={handleformStep}
+                form={form}
+                setForm={handleFormSet}
+              />
             );
           case 4:
             return (

@@ -9,6 +9,7 @@ import ContentsCreatePage from "pages/ContentsCreatePage/ContentsCreatePage";
 import ContentsListPage from "pages/ContentsListPage/ContentsListPage";
 import LoginPage from "pages/LandingPage/LoginPage";
 import SignupPage from "pages/LandingPage/SignupPage";
+import MyGardenDandelionDetail from "containers/MyGarden/MyGardenDandelionDetail";
 
 export default function Router() {
   return useRoutes([
@@ -35,6 +36,10 @@ export default function Router() {
     {
       path: "/mygarden/cabinet",
       element: <MyCabinetPage />,
+    },
+    {
+      path: "/mygarden/dandelions/:id",
+      element: <MyGardenDandelionDetail />,
     },
     {
       path: "/contents",
