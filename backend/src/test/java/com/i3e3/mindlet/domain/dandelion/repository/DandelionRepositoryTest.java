@@ -3,6 +3,7 @@ package com.i3e3.mindlet.domain.dandelion.repository;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
+import com.i3e3.mindlet.domain.member.entity.MemberDandelionHistory;
 import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberDandelionHistoryRepository;
 import com.i3e3.mindlet.domain.member.repository.MemberRepository;
@@ -522,5 +523,47 @@ class DandelionRepositoryTest {
 
         // then
         assertThat(findRandomDandelion.getSeq()).isEqualTo(members.get(1).getDandelions().get(0).getSeq());
+    }
+
+    @Test
+    @DisplayName("특정 회원의 민들레를 제외하고 민들레 데이터 랜덤 조회 - 성공 : 이미 잡은 민들레가 있을 경우")
+    void findRandomDandelionExceptMemberWhenCatchOneBefore() {
+        // given
+        List<Member> members = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Member member = Member.builder()
+                    .id("아이디" + i)
+                    .password("패스워드" + i)
+                    .build();
+            members.add(member);
+            memberRepository.save(member);
+
+            appConfigRepository.save(AppConfig.builder()
+                    .member(member)
+                    .language(AppConfig.Language.ENGLISH)
+                    .build());
+
+            dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-2" + i))
+                    .community(Community.KOREA)
+                    .flowerSignNumber(1)
+                    .member(member)
+                    .build());
+        }
+
+        em.persist(MemberDandelionHistory.builder()
+                .member(members.get(0))
+                .dandelion(members.get(1).getDandelions().get(0))
+                .build());
+
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findRandomDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(members.get(0))
+                .orElse(null);
+
+        // then
+        assertThat(findRandomDandelion.getSeq()).isEqualTo(members.get(2).getDandelions().get(0).getSeq());
     }
 }
