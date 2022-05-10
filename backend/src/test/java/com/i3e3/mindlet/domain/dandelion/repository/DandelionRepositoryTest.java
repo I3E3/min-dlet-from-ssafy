@@ -826,4 +826,27 @@ class DandelionRepositoryTest {
         // then
         assertThat(findDandelion2.getStatus()).isEqualTo(Dandelion.Status.FLYING);
     }
+
+    @Test
+    @DisplayName("경과 시간이 지난 HOLD 상태인 민드렐를 FLYING 상태로 업데이트 - 경과 시간이 지나지 않은 경우")
+    void updateHoldingDandelionToFlyingWhenBeforeTime() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        dandelionRepository.save(dandelion1);
+
+        dandelion2.changeStatus(Dandelion.Status.HOLD);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionRepository.updateHoldingDandelionToFlying(1L);
+        Dandelion findDandelion2 = dandelionRepository.findBySeq(savedDandelion2.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion2.getStatus()).isEqualTo(Dandelion.Status.HOLD);
+    }
 }
