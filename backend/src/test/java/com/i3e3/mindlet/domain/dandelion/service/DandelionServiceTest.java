@@ -1054,4 +1054,19 @@ class DandelionServiceTest {
         assertThat(findMemberDandelionHistory.getMember().getSeq()).isEqualTo(savedMember3.getSeq());
         assertThat(findMemberDandelionHistory.getDandelion().getSeq()).isEqualTo(savedDandelion1.getSeq());
     }
+
+    @Test
+    @DisplayName("랜덤 민들레씨 정보 조회 - 민들레 데이터가 없는 경우")
+    void findRandomDandelionSeedWhenNotExistDandelion() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // then
+        assertThat(dandelionSeedDto).isNull();
+    }
 }
