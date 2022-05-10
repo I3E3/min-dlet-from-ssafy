@@ -6,10 +6,21 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
-@ToString(of = {})
+@ToString(of = {"seq", "petalInfos"})
 public class DandelionSeedDto {
+
+    Long seq;
+
+    List<DandelionSeedDto.PetalInfo> petalInfos;
+
+    @Builder
+    public DandelionSeedDto(Long seq, List<DandelionSeedDto.PetalInfo> petalInfos) {
+        this.seq = seq;
+        this.petalInfos = petalInfos;
+    }
 
     @Getter
     @ToString(of = {"seq", "message", "imageUrlPath", "nation", "city", "createdDate"})
