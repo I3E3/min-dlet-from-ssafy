@@ -888,4 +888,22 @@ class DandelionRepositoryTest {
         // then
         assertThat(findDandelion).isNull();
     }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 엔티티(삭제 포함) 조회 - 데이터가 있는 경우")
+    void findDandelionBySeqContainsDeletedWhenExist() {
+        // given
+        memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        Dandelion findDandelion = dandelionRepository.findBySeqContainsDeleted(savedDandelion1.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion1.getSeq());
+        assertThat(findDandelion.isDeleted()).isFalse();
+    }
 }
