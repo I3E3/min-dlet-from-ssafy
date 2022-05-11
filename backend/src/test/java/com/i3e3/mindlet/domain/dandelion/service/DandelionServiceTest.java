@@ -1460,4 +1460,20 @@ class DandelionServiceTest {
         assertThat(albumListPageSvcDto.getDandelionInfos().size()).isEqualTo(1);
         assertThat(albumListPageSvcDto.getDandelionInfos().get(0).getDescription()).isEqualTo("9");
     }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 데이터가 없는 경우")
+    void getAlbumPageWhenNotExistData() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        AlbumListPageSvcDto albumListPageSvcDto = dandelionService.getAlbumInfo(member1.getSeq(), 1, 1);
+
+        // then
+        assertThat(albumListPageSvcDto).isNull();
+    }
 }
