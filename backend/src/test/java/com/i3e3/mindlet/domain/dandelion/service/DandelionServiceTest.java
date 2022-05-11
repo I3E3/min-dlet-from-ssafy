@@ -1476,4 +1476,20 @@ class DandelionServiceTest {
         // then
         assertThat(albumListPageSvcDto).isNull();
     }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 없는 회원일 경우")
+    void getAlbumPageWhenNotExistMember() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        AlbumListPageSvcDto albumListPageSvcDto = dandelionService.getAlbumInfo(0L, 1, 1);
+
+        // then
+        assertThat(albumListPageSvcDto).isNull();
+    }
 }
