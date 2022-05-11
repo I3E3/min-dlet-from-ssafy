@@ -445,4 +445,17 @@ class MemberServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("회원 아이디로 회원 정보 조회 - 회원 데이터가 없는 경우")
+    void findMemberInfoFailWhenNotExistMember() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.getMemberInfoBySeq(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
