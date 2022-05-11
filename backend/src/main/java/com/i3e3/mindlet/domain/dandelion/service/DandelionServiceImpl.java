@@ -196,7 +196,7 @@ public class DandelionServiceImpl implements DandelionService {
             petalInfos.add(DandelionSeedDto.PetalInfo.builder()
                     .seq(petal.getSeq())
                     .message(petal.getMessage())
-                    .imageUrlPath(petal.getImagePath())
+                    .imageUrlPath(petal.getImageFilename())
                     .nation(petal.getNation())
                     .createdDate(petal.getCreatedDate())
                     .build());
@@ -278,15 +278,15 @@ public class DandelionServiceImpl implements DandelionService {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         }
 
-        String fileName = null;
+        String filename = null;
         if (petalCreateSvcDto.getImageFile() != null) {
             String filePath = fileService.s3Upload(petalCreateSvcDto.getImageFile());
-            fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+            filename = filePath.substring(filePath.lastIndexOf("/") + 1);
         }
 
         return Petal.builder()
                 .message(petalCreateSvcDto.getMessage())
-                .imagePath(fileName)
+                .imageFilename(filename)
                 .nation("KOREA")
                 .dandelion(dandelion)
                 .member(member)
