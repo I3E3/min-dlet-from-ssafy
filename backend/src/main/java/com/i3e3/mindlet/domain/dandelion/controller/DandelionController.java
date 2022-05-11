@@ -21,12 +21,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 @Slf4j
 @RestController
@@ -401,18 +404,21 @@ public class DandelionController {
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
     @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponseDto<Void> registerDandelion(@Validated @ModelAttribute DandelionRegisterDto registerDto) throws IOException {
+    public BaseResponseDto<Void> registerDandelion(@Validated @RequestPart(value = "dandelionRegisterForm") DandelionRegisterDto dandelionRegisterDto,
+                                                   @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
         Long memberSeq = AuthenticationUtil.getMemberSeq();
 
-//        if ((registerDto.getMessage() == null && registerDto.getImageFile() == null) || !registerPossible(memberSeq)) {
-//            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
-//        } else if (!LocalDate.parse(registerDto.getBlossomedDate()).isAfter(LocalDate.now().plusDays(1))) {
-//            throw new IllegalStateException(ErrorMessage.INVALID_DATE_REQUEST.getMessage());
-//        } else {
-//            dandelionService.createDandelion(memberSeq, registerDto.toSvcDto());
-//        }
+        if (!LocalDate.parse(dandelionRegisterDto.getBlossomedDate()).isAfter(LocalDate.now().plusDays(1))) {
+            throw new IllegalStateException(ErrorMessage.INVALID_DATE_REQUEST.getMessage());
+        } else if ((dandelionRegisterDto.getMessage() == null && imageFile == null) || !registerPossible(memberSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        } else {
+            dandelionRegisterDto.addFile(imageFile);
+            dandelionService.createDandelion(memberSeq, dandelionRegisterDto.toSvcDto());
+        }
+
         return BaseResponseDto.<Void>builder()
                 .build();
     }
