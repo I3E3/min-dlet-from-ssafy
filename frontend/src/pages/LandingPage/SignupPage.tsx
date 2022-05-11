@@ -1,21 +1,17 @@
-import React, { useEffect ,useState } from 'react';
-import classNames from 'classnames/bind';
-import styles from './LandingPage.module.scss';
+import React from 'react';
 import Background from 'components/Landing/Background'
-import Login from 'components/Landing/Login'
+import Signup from 'components/Landing/Signup'
 
 // const cx = classNames.bind(styles);
 const SignupPage = () => {
-
 
   return (
     <section style={{
       width: "100%", 
       height: "100vh", 
-      overflow: "hidden",
-      display: "table"}}>
+      overflow: "hidden"}}>
       {/* <h1>제발!!</h1> */}
-      <Login / >
+      <Signup / >
       <Background />
     </section>
   );

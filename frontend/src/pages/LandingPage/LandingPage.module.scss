@@ -54,6 +54,7 @@ $color: blue;
     // gap: 32px;
     width: 70%;
     color: #224E8B;
+    line-height: 100%;
 
     button {
       // border: 1px solid green;
@@ -72,21 +73,23 @@ $color: blue;
     padding: 10px;
     margin-top: 8px;
     color: #224E8B;
-    border: 2px solid #224E8B;
-    border-radius: 2%;
-    font-size: 18px;
+    border: 1px solid #224E8B;
+    // border-radius: 3%;
+    font-size: 16px;
   }
   ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: #224E8B;
-    opacity: 1; /* Firefox */
+    opacity: 0.7; /* Firefox */
   }
   
   :-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #224E8B;
+    opacity: 0.7;
   }
   
   ::-ms-input-placeholder { /* Microsoft Edge */
     color: #224E8B;
+    opacity: 0.7;
   }
 
   button {
