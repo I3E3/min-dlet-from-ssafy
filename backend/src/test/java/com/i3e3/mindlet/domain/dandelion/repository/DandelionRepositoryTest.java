@@ -1000,4 +1000,22 @@ class DandelionRepositoryTest {
         assertThat(dandelionPage.getNumberOfElements()).isEqualTo(1); // 현재 페이지의 데이터 개수
         assertThat(dandelionPage.getContent().get(0).getDescription()).isEqualTo("9");
     }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 데이터가 없는경우")
+    void getAlbumPageWhenNotExistData() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        int page = 0;
+        int size = 1;
+        Page<Dandelion> dandelionPage = dandelionRepository.findAlbumByMemberSeq(member1.getSeq(), PageRequest.of(page, size));
+
+        // then
+        assertThat(dandelionPage.getTotalElements()).isEqualTo(0); // 총 데이터 개수
+    }
 }
