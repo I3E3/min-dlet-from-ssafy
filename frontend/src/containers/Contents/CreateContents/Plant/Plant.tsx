@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Plant.module.scss';
-import { animationEnd } from 'atoms/atoms';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router';
 import LandingModel from 'components/Landing/LandingModel';
 import { ReactComponent as Menu } from 'assets/images/menu.svg';
