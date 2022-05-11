@@ -428,4 +428,21 @@ class MemberServiceTest {
         assertThat(findMemberInfo.getLanguage()).isEqualTo(savedMember.getAppConfig().getLanguage());
         assertThat(findMemberInfo.getRole()).isEqualTo(savedMember.getRole());
     }
+
+    @Test
+    @DisplayName("회원 식별키로 회원 정보 조회 - 데이터가 있지만 삭제 처리된 경우")
+    void findMemberInfoBySeqWHenDeleted() {
+        // given
+        Member savedMember = memberService.register(registerRequestDto1.toServiceDto());
+        savedMember.delete();
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.getMemberInfoBySeq(savedMember.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
