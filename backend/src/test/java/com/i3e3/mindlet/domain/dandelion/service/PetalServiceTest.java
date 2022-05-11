@@ -83,7 +83,7 @@ public class PetalServiceTest {
 
         petal1 = Petal.builder()
                 .message("hello")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("KOREA")
                 .dandelion(dandelion1)
                 .member(member1)
@@ -222,7 +222,7 @@ public class PetalServiceTest {
         dandelionRepository.save(dandelion1);
         petal2 = Petal.builder()
                 .message("hello")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("KOREA")
                 .dandelion(dandelion1)
                 .member(member2)
@@ -246,7 +246,7 @@ public class PetalServiceTest {
         dandelionRepository.save(dandelion1);
         petal2 = Petal.builder()
                 .message("hello")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("KOREA")
                 .dandelion(dandelion1)
                 .member(member2)
@@ -300,7 +300,7 @@ public class PetalServiceTest {
         dandelionRepository.save(dandelion1);
         petal2 = Petal.builder()
                 .message("hello")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("KOREA")
                 .dandelion(dandelion1)
                 .member(member2)

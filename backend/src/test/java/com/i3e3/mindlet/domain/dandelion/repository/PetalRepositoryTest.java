@@ -75,7 +75,7 @@ public class PetalRepositoryTest {
 
         petal1 = Petal.builder()
                 .message("hello")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("KOREA")
                 .dandelion(dandelion1)
                 .member(member1)
@@ -99,7 +99,7 @@ public class PetalRepositoryTest {
         // then
         assertThat(findPetal).isNotNull();
         assertThat(findPetal.getMessage()).isEqualTo(petal1.getMessage());
-        assertThat(findPetal.getImagePath()).isEqualTo(petal1.getImagePath());
+        assertThat(findPetal.getImageFilename()).isEqualTo(petal1.getImageFilename());
         assertThat(findPetal.getNation()).isEqualTo(petal1.getNation());
         assertThat(findPetal.getMember().getSeq()).isEqualTo(petal1.getMember().getSeq());
         assertThat(findPetal.getDandelion().getSeq()).isEqualTo(petal1.getDandelion().getSeq());
@@ -202,7 +202,7 @@ public class PetalRepositoryTest {
 
         petalRepository.save(Petal.builder()
                 .message("hello2")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("CANADA")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
@@ -231,7 +231,7 @@ public class PetalRepositoryTest {
 
         Petal savedPetal2 = petalRepository.save(Petal.builder()
                 .message("hello2")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("CANADA")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
@@ -282,7 +282,7 @@ public class PetalRepositoryTest {
 
         petalRepository.save(Petal.builder()
                 .message("hello2")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("CANADA")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
@@ -290,7 +290,7 @@ public class PetalRepositoryTest {
 
         petalRepository.save(Petal.builder()
                 .message("호우 샷")
-                .imagePath("/test/img1.jpg")
+                .imageFilename("/test/img1.jpg")
                 .nation("ENGLAND")
                 .dandelion(savedDandelion1)
                 .member(savedMember3)
@@ -339,7 +339,7 @@ public class PetalRepositoryTest {
 
         petalRepository.save(Petal.builder()
                 .message("hello2")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("CANADA")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
