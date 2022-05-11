@@ -1018,4 +1018,18 @@ class DandelionRepositoryTest {
         // then
         assertThat(dandelionPage.getTotalElements()).isEqualTo(0); // 총 데이터 개수
     }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 없는 회원일 경우")
+    void getAlbumPageWhenNotExistMember() {
+        // given
+
+        // when
+        int page = 0;
+        int size = 1;
+        Page<Dandelion> dandelionPage = dandelionRepository.findAlbumByMemberSeq(0L, PageRequest.of(page, size));
+
+        // then
+        assertThat(dandelionPage.getTotalElements()).isEqualTo(0); // 총 데이터 개수
+    }
 }
