@@ -1,10 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from 'pages/LandingPage/LandingPage.module.scss';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
-import { useRecoilState } from 'recoil';
-import { communityState } from 'utils/memberAtom';
 
 const BaseURL = process.env.REACT_APP_BASE_URL
 
@@ -18,12 +16,6 @@ const Login = () => {
   const passwordInput = useRef<HTMLInputElement>(document.createElement("input"))
   const passwordConfirmInput = useRef<HTMLInputElement>(document.createElement("input"))
   const navigate = useNavigate();
-
-  const [community, setCommunity] = useRecoilState(communityState)
-
-  useEffect(() => {
-    console.log(community)
-  }, [])
 
   // 아이디 중복체크 함수
   const handleValidationClick = async () => {
@@ -53,11 +45,6 @@ const Login = () => {
       toast.error('비밀번호에 아이디가 포함되어 있어요.')
       return
     }
-
-    // if (!(isShow && isValidId)) {
-    //   toast.error('아이디 중복검사를 다시 진행해 주세요.')
-    //   return
-    // }
 
     if (passwordInput.current.value.length < 8 ||
       !/[a-z]/.test(passwordInput.current.value) ||
@@ -154,14 +141,6 @@ const Login = () => {
           </div>
           <button type="button" onClick={handleSignupClick}>회원가입</button>
         </form>
-        <button style={{display: "inline"}} onClick={(e) => {
-          e.preventDefault()
-          setCommunity('hihi')}
-          }>하이 하이</button>
-        <button style={{display: "inline"}} onClick={(e) => {
-          e.preventDefault()
-          console.log(community)
-          }}>확인</button>
     </div>
   );
 };
