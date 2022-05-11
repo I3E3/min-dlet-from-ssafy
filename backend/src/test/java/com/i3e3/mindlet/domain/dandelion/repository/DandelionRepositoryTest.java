@@ -1061,4 +1061,16 @@ class DandelionRepositoryTest {
         // then
         assertThat(isExists).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 데이터 존재 확인 - 데이터가 없는 경우")
+    void existsDandelionBySeqWhenNotExistsDandelion() {
+        // given
+
+        // when
+        boolean isExists = dandelionRepository.existsBySeq(0L);
+
+        // then
+        assertThat(isExists).isFalse();
+    }
 }
