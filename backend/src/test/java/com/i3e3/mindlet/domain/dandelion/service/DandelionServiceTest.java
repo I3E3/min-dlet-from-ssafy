@@ -1718,4 +1718,33 @@ class DandelionServiceTest {
         // then
         assertThat(isMostRecentParticipant).isTrue();
     }
+
+    @Test
+    @DisplayName("민들레씨 최근 참여 여부 확인 - 가장 최근에 참여한 민들레가 아닌 경우")
+    void checkRecentParticipantFalse() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+
+        memberRepository.save(member2);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+
+        memberRepository.save(member3);
+        dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        /**
+         * 민들레씨 잡기 -> HOLD 처리됨
+         * dandelion2 -> dandelion3 순으로 잡음
+         */
+        dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+        dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // when
+        boolean isMostRecentParticipant = dandelionService.isMostRecentParticipant(savedDandelion2.getSeq(), savedMember1.getSeq());
+
+        // then
+        assertThat(isMostRecentParticipant).isFalse();
+    }
 }
