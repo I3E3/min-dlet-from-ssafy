@@ -278,4 +278,39 @@ public class MemberController {
                 .data(memberInfo)
                 .build(), status);
     }
+
+    @Operation(
+            summary = "회원 정보 조회 API",
+            description = "인증 토큰, 회원 식별키를 받고 회원 정보를 반환합니다.",
+            tags = {"member"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{memberSeq}")
+    public BaseResponseDto<MemberInfoDto> memberInfo(@PathVariable Long memberSeq) {
+        AuthenticationUtil.verityMember(memberSeq);
+
+        MemberInfoDto memberInfo = memberService.getMemberInfoBySeq(memberSeq);
+
+        return BaseResponseDto.<MemberInfoDto>builder()
+                .data(memberInfo)
+                .build();
+    }
 }

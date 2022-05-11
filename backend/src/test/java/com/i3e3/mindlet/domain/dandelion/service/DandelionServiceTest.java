@@ -7,6 +7,7 @@ import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionCreateSvcDto;
+import com.i3e3.mindlet.domain.dandelion.service.dto.AlbumListPageSvcDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
@@ -29,6 +30,7 @@ import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -284,6 +286,7 @@ class DandelionServiceTest {
     void countLeftSeedWhenNotExistDandelion() {
         // given
         member1.getDandelions().clear();
+        dandelion1.delete();
         Member savedMember = memberRepository.save(member1);
         em.flush();
         em.clear();
@@ -1364,6 +1367,107 @@ class DandelionServiceTest {
         // then
         assertThat(isParticipated2).isFalse();
         assertThat(isParticipated3).isFalse();
+    }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 데이터가 있는 경우(첫번째 페이지)")
+    void getAlbumFirstPageWhenExistData() {
+        // given
+        memberRepository.save(member1);
+        List<Dandelion> dandelions = new ArrayList<>();
+        for (int i = 0; i < 13; i++) {
+            Dandelion dandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-1" + String.valueOf(i % 10)))
+                    .community(member1.getAppConfig().getCommunity())
+                    .flowerSignNumber(1)
+                    .member(member1)
+                    .build();
+            if (i < 10) {
+                dandelion.changeStatus(Dandelion.Status.ALBUM);
+            }
+            dandelion.changeDescription(String.valueOf(i));
+            dandelions.add(dandelion);
+            dandelionRepository.save(dandelion);
+        }
+        em.flush();
+        em.clear();
+
+        // when
+        AlbumListPageSvcDto albumListPageSvcDto = dandelionService.getAlbumInfo(member1.getSeq(), 1, 3);
+
+        // then
+        assertThat(albumListPageSvcDto.getTotalDandelionCount()).isEqualTo(10);
+        assertThat(albumListPageSvcDto.getTotalPageNum()).isEqualTo(4);
+        assertThat(albumListPageSvcDto.getNowPageNum()).isEqualTo(1);
+        assertThat(albumListPageSvcDto.getDandelionInfos().size()).isEqualTo(3);
+        assertThat(albumListPageSvcDto.getDandelionInfos().get(0).getDescription()).isEqualTo("9");
+        assertThat(albumListPageSvcDto.getDandelionInfos().get(1).getDescription()).isEqualTo("8");
+    }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 데이터가 있는 경우(마지막 페이지)")
+    void getAlbumLastPageWhenExistData() {
+        // given
+        memberRepository.save(member1);
+        List<Dandelion> dandelions = new ArrayList<>();
+        for (int i = 0; i < 13; i++) {
+            Dandelion dandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-1" + String.valueOf(i % 10)))
+                    .community(member1.getAppConfig().getCommunity())
+                    .flowerSignNumber(1)
+                    .member(member1)
+                    .build();
+            if (i < 10) {
+                dandelion.changeStatus(Dandelion.Status.ALBUM);
+            }
+            dandelion.changeDescription(String.valueOf(9 - i));
+            dandelions.add(dandelion);
+            dandelionRepository.save(dandelion);
+        }
+        em.flush();
+        em.clear();
+
+        // when
+
+        AlbumListPageSvcDto albumListPageSvcDto = dandelionService.getAlbumInfo(member1.getSeq(), 4, 3);
+
+        assertThat(albumListPageSvcDto.getTotalDandelionCount()).isEqualTo(10);
+        assertThat(albumListPageSvcDto.getTotalPageNum()).isEqualTo(4);
+        assertThat(albumListPageSvcDto.getNowPageNum()).isEqualTo(4);
+        assertThat(albumListPageSvcDto.getDandelionInfos().size()).isEqualTo(1);
+        assertThat(albumListPageSvcDto.getDandelionInfos().get(0).getDescription()).isEqualTo("9");
+    }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 데이터가 없는 경우")
+    void getAlbumPageWhenNotExistData() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        AlbumListPageSvcDto albumListPageSvcDto = dandelionService.getAlbumInfo(member1.getSeq(), 1, 1);
+
+        // then
+        assertThat(albumListPageSvcDto).isNull();
+    }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 없는 회원일 경우")
+    void getAlbumPageWhenNotExistMember() {
+        // given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        AlbumListPageSvcDto albumListPageSvcDto = dandelionService.getAlbumInfo(0L, 1, 1);
+
+        // then
+        assertThat(albumListPageSvcDto).isNull();
     }
 
     @Test

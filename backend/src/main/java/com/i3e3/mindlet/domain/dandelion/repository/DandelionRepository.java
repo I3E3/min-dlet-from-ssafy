@@ -1,6 +1,8 @@
 package com.i3e3.mindlet.domain.dandelion.repository;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +16,7 @@ public interface DandelionRepository extends JpaRepository<Dandelion, Long>, Dan
 
     @Query("SELECT d FROM Dandelion d WHERE d.seq = :seq")
     Optional<Dandelion> findBySeqContainsDeleted(@Param("seq") Long seq);
+
+    @Query("SELECT d FROM Dandelion d WHERE d.member.seq = :memberSeq AND d.status = 'ALBUM' AND d.isDeleted = FALSE ORDER BY d.blossomedDate DESC ")
+    Page<Dandelion> findAlbumByMemberSeq(@Param("memberSeq") Long memberSeq, Pageable pageable);
 }

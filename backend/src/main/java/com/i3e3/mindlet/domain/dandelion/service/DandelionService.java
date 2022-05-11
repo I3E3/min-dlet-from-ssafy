@@ -1,6 +1,10 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.service.dto.AlbumListPageSvcDto;
+import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
+import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
+import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.*;
 
 import java.io.IOException;
@@ -31,6 +35,8 @@ public interface DandelionService {
     boolean isAlbum(Long dandelionSeq);
 
     DandelionSeedDto getDandelionSeedDto(Long memberSeq);
+
+    AlbumListPageSvcDto getAlbumInfo(Long memberSeq, int page, int size);
 
     void createDandelion(Long memberSeq, DandelionCreateSvcDto dandelionCreateSvcDto) throws IOException;
 }
