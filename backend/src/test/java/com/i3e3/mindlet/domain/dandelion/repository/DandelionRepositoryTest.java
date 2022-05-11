@@ -964,4 +964,40 @@ class DandelionRepositoryTest {
         assertThat(dandelionPage.getContent().get(0).getDescription()).isEqualTo("9");
         assertThat(dandelionPage.getContent().get(1).getDescription()).isEqualTo("8");
     }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 데이터가 있는 경우(마지막 페이지)")
+    void getAlbumLastPageWhenExistData() {
+        // given
+        memberRepository.save(member1);
+        List<Dandelion> dandelions = new ArrayList<>();
+        for (int i = 0; i < 13; i++) {
+            Dandelion dandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-1" + String.valueOf(i % 10)))
+                    .community(member1.getAppConfig().getCommunity())
+                    .flowerSignNumber(1)
+                    .member(member1)
+                    .build();
+            if (i < 10) {
+                dandelion.changeStatus(Dandelion.Status.ALBUM);
+            }
+            dandelion.changeDescription(String.valueOf(9 - i));
+            dandelions.add(dandelion);
+            dandelionRepository.save(dandelion);
+        }
+        em.flush();
+        em.clear();
+
+        // when
+        int page = 3;
+        int size = 3;
+        Page<Dandelion> dandelionPage = dandelionRepository.findAlbumByMemberSeq(member1.getSeq(), PageRequest.of(page, size));
+
+        // then
+        assertThat(dandelionPage.getTotalElements()).isEqualTo(10); // 총 데이터 개수
+        assertThat(dandelionPage.getTotalPages()).isEqualTo(4); // 총 페이지 개수
+        assertThat(dandelionPage.getNumber()).isEqualTo(3);  // 현재 페이지 수
+        assertThat(dandelionPage.getNumberOfElements()).isEqualTo(1); // 현재 페이지의 데이터 개수
+        assertThat(dandelionPage.getContent().get(0).getDescription()).isEqualTo("9");
+    }
 }
