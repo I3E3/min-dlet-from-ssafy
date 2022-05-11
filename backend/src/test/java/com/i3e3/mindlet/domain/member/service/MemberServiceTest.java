@@ -412,4 +412,20 @@ class MemberServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("회원 식별키로 회원 정보 조회 - 데이터가 있는 경우")
+    void findMemberInfoBySeq() {
+        // given
+        Member savedMember = memberService.register(registerRequestDto1.toServiceDto());
+
+        // when
+        MemberInfoDto findMemberInfo = memberService.getMemberInfoBySeq(savedMember.getSeq());
+
+        // then
+        assertThat(findMemberInfo.getSeq()).isEqualTo(savedMember.getSeq());
+        assertThat(findMemberInfo.getCommunity()).isEqualTo(savedMember.getAppConfig().getCommunity());
+        assertThat(findMemberInfo.getLanguage()).isEqualTo(savedMember.getAppConfig().getLanguage());
+        assertThat(findMemberInfo.getRole()).isEqualTo(savedMember.getRole());
+    }
 }
