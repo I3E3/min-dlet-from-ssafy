@@ -318,4 +318,18 @@ public class DandelionServiceImpl implements DandelionService {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
         return findDandelion.getStatus() == Dandelion.Status.HOLD;
     }
+
+    @Override
+    public boolean isMostRecentParticipant(Long dandelionSeq, Long memberSeq) {
+        if (!dandelionRepository.existsBySeq(dandelionSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        Member findMember = memberRepository.findBySeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+        List<MemberDandelionHistory> memberDandelionHistories = findMember.getMemberDandelionHistories();
+        int size = memberDandelionHistories.size();
+
+        return memberDandelionHistories.get(size - 1).getDandelion().getSeq().equals(dandelionSeq);
+    }
 }

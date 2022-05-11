@@ -41,4 +41,6 @@ public interface DandelionService {
     void createDandelion(Long memberSeq, DandelionCreateSvcDto dandelionCreateSvcDto) throws IOException;
 
     boolean isHold(Long dandelionSeq);
+
+    boolean isMostRecentParticipant(Long dandelionSeq, Long memberSeq);
 }
