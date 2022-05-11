@@ -87,7 +87,7 @@ public class TagRepositoryTest {
 
         petal1 = Petal.builder()
                 .message("hello")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("KOREA")
                 .dandelion(dandelion1)
                 .member(member1)
@@ -95,7 +95,7 @@ public class TagRepositoryTest {
 
         petal2 = Petal.builder()
                 .message("hello")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("KOREA")
                 .dandelion(dandelion2)
                 .member(member2)
@@ -103,7 +103,7 @@ public class TagRepositoryTest {
 
         petal3 = Petal.builder()
                 .message("hello")
-                .imagePath("imagePath")
+                .imageFilename("imageFilename")
                 .nation("KOREA")
                 .dandelion(dandelion1)
                 .member(member2)

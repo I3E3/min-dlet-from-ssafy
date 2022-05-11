@@ -985,14 +985,14 @@ class DandelionServiceTest {
 
         Petal savedPetal1 = petalRepository.save(Petal.builder()
                 .message("메시지1")
-                .imagePath("이미지1")
+                .imageFilename("이미지1")
                 .nation("국가1")
                 .dandelion(savedDandelion1)
                 .member(savedMember1)
                 .build());
         Petal savedPetal2 = petalRepository.save(Petal.builder()
                 .message("메시지2")
-                .imagePath("이미지2")
+                .imageFilename("이미지2")
                 .nation("국가2")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
@@ -1025,13 +1025,13 @@ class DandelionServiceTest {
         assertThat(findPetal1.getSeq()).isEqualTo(savedPetal1.getSeq());
         assertThat(findPetal1.getMessage()).isEqualTo(savedPetal1.getMessage());
         assertThat(findPetal1.getNation()).isEqualTo(savedPetal1.getNation());
-        assertThat(findPetal1.getImageUrlPath()).isEqualTo(savedPetal1.getImagePath());
+        assertThat(findPetal1.getImageUrlPath()).isEqualTo(savedPetal1.getImageFilename());
 
         DandelionSeedDto.PetalInfo findPetal2 = petalInfos.get(1);
         assertThat(findPetal2.getSeq()).isEqualTo(savedPetal2.getSeq());
         assertThat(findPetal2.getMessage()).isEqualTo(savedPetal2.getMessage());
         assertThat(findPetal2.getNation()).isEqualTo(savedPetal2.getNation());
-        assertThat(findPetal2.getImageUrlPath()).isEqualTo(savedPetal2.getImagePath());
+        assertThat(findPetal2.getImageUrlPath()).isEqualTo(savedPetal2.getImageFilename());
 
         /**
          * 민들레 데이터 검증
@@ -1234,7 +1234,7 @@ class DandelionServiceTest {
 
         petalRepository.save(Petal.builder()
                 .message("와우 멋있어요")
-                .imagePath("/test/img")
+                .imageFilename("/test/img")
                 .nation("KOREA")
                 .member(savedMember2)
                 .dandelion(savedDandelion1)
@@ -1260,7 +1260,7 @@ class DandelionServiceTest {
 
         petalRepository.save(Petal.builder()
                 .message("와우 멋있어요")
-                .imagePath("/test/img")
+                .imageFilename("/test/img")
                 .member(savedMember2)
                 .nation("KOREA")
                 .dandelion(savedDandelion1)
@@ -1286,7 +1286,7 @@ class DandelionServiceTest {
 
         petalRepository.save(Petal.builder()
                 .message("와우 멋있어요")
-                .imagePath("/test/img")
+                .imageFilename("/test/img")
                 .member(savedMember2)
                 .nation("KOREA")
                 .dandelion(savedDandelion1)
@@ -1315,7 +1315,7 @@ class DandelionServiceTest {
 
         petalRepository.save(Petal.builder()
                 .message("와우 멋있어요")
-                .imagePath("/test/img")
+                .imageFilename("/test/img")
                 .member(savedMember2)
                 .nation("KOREA")
                 .dandelion(savedDandelion1)
@@ -1342,7 +1342,7 @@ class DandelionServiceTest {
 
         petalRepository.save(Petal.builder()
                 .message("와우 멋있어요")
-                .imagePath("/test/img.jpg")
+                .imageFilename("/test/img.jpg")
                 .member(savedMember2)
                 .nation("KOREA")
                 .dandelion(savedDandelion1)
@@ -1350,7 +1350,7 @@ class DandelionServiceTest {
 
         petalRepository.save(Petal.builder()
                 .message("호우 샷")
-                .imagePath("/test/img1.jpg")
+                .imageFilename("/test/img1.jpg")
                 .member(savedMember3)
                 .nation("CANADA")
                 .dandelion(savedDandelion1)
@@ -1503,7 +1503,7 @@ class DandelionServiceTest {
         assertThat(findActiveDandelions.size()).isEqualTo(2);
         assertThat(findPetals.size()).isEqualTo(1);
         assertThat(findPetal1.getMessage()).isEqualTo("안녕 나는 피나코야");
-        assertThat(findPetal1.getImagePath()).isNull();
+        assertThat(findPetal1.getImageFilename()).isNull();
     }
 
     @Test
