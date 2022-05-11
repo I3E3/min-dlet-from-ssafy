@@ -39,4 +39,6 @@ public interface DandelionService {
     AlbumListPageSvcDto getAlbumInfo(Long memberSeq, int page, int size);
 
     void createDandelion(Long memberSeq, DandelionCreateSvcDto dandelionCreateSvcDto) throws IOException;
+
+    boolean isHold(Long dandelionSeq);
 }
