@@ -1659,4 +1659,22 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("민들레씨 최근 참여 여부 확인 - 민들레가 삭제 처리된 경우")
+    void checkRecentParticipantWhenDandelionDeleted() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isMostRecentParticipant(savedDandelion1.getSeq(), savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
