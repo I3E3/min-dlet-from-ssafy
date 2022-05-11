@@ -1,18 +1,27 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from 'pages/LandingPage/LandingPage.module.scss';
 import { id } from 'date-fns/locale';
 import { Backdrop } from '@react-three/drei';
 import { useNavigate } from 'react-router';
 import toast, { Toaster } from 'react-hot-toast';
+import { useRecoilState } from 'recoil';
+import memberState from 'utils/memberState';
 
 const BaseURL = process.env.REACT_APP_BASE_URL
 
 const cx = classNames.bind(styles);
 const Login = () => {
+  const [, setMember] = useRecoilState(memberState)
   const idInput = useRef<HTMLInputElement>(document.createElement("input"))
   const passwordInput = useRef<HTMLInputElement>(document.createElement("input"))
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      navigate('/')
+    }
+  })
 
   // 로그인 함수
   const handleLoginClick = async () => {
@@ -29,16 +38,17 @@ const Login = () => {
 
     try {
       const res = await fetch(`${BaseURL}members/login`, loginData)
-      const data = await res.json()
+      const result = await res.json()
+      const data = result.data
       if (res.status === 200) {
         localStorage.setItem('token', data.jwtToken)
-        
-
+        delete data.jwtToken
+        setMember(data)
         navigate('/')
-        return
+      } else {
+        toast.error(`😥아이디가 존재하지 않거나 
+        잘못된 비밀번호입니다😥`)
       }
-      toast.error(`😥아이디가 존재하지 않거나 
-      잘못된 비밀번호입니다😥`)
 
     } catch {
       toast.error(`😥아이디가 존재하지 않거나 

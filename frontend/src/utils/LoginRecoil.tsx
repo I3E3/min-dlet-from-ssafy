@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { atom, useRecoilState } from 'recoil'
-import { useLocation } from 'react-router-dom'
-import { useNavigate } from 'react-router'
+import { useRecoilState } from 'recoil';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import memberState from 'utils/memberState';
 
 const BaseURL = process.env.REACT_APP_BASE_URL
