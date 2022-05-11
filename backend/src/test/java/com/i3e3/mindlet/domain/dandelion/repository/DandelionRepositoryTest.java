@@ -13,6 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -924,5 +926,42 @@ class DandelionRepositoryTest {
         // then
         assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion1.getSeq());
         assertThat(findDandelion.isDeleted()).isTrue();
+    }
+
+    @Test
+    @DisplayName("꽃밭 앨범 페이지 조회 - 데이터가 있는 경우(첫번째 페이지)")
+    void getAlbumFirstPageWhenExistData() {
+        // given
+        memberRepository.save(member1);
+        List<Dandelion> dandelions = new ArrayList<>();
+        for (int i = 0; i < 13; i++) {
+            Dandelion dandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-1" + String.valueOf(i % 10)))
+                    .community(member1.getAppConfig().getCommunity())
+                    .flowerSignNumber(1)
+                    .member(member1)
+                    .build();
+            if (i < 10) {
+                dandelion.changeStatus(Dandelion.Status.ALBUM);
+            }
+            dandelion.changeDescription(String.valueOf(i));
+            dandelions.add(dandelion);
+            dandelionRepository.save(dandelion);
+        }
+        em.flush();
+        em.clear();
+
+        // when
+        int page = 0;
+        int size = 3;
+        Page<Dandelion> dandelionPage = dandelionRepository.findAlbumByMemberSeq(member1.getSeq(), PageRequest.of(page, size));
+
+        // then
+        assertThat(dandelionPage.getTotalElements()).isEqualTo(10); // 총 데이터 개수
+        assertThat(dandelionPage.getTotalPages()).isEqualTo(4); // 총 페이지 개수
+        assertThat(dandelionPage.getNumber()).isEqualTo(0);  // 현재 페이지 수
+        assertThat(dandelionPage.getNumberOfElements()).isEqualTo(3); // 현재 페이지의 데이터 개수
+        assertThat(dandelionPage.getContent().get(0).getDescription()).isEqualTo("9");
+        assertThat(dandelionPage.getContent().get(1).getDescription()).isEqualTo("8");
     }
 }
