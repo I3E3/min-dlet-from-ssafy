@@ -315,8 +315,8 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원 아이디로 회원 정보 조회 - 성공")
-    void findMemberInfoSuccess() {
+    @DisplayName("회원 아이디로 회원 정보 조회 - 데이터가 있는 경우")
+    void findMemberInfoById() {
         // given
         Member savedMember = memberService.register(registerRequestDto1.toServiceDto());
 
@@ -331,8 +331,25 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("회원 아이디로 회원 정보 조회 - 데이터가 있지만 삭제 처리된 경우")
+    void findMemberInfoByIdWHenDeleted() {
+        // given
+        Member savedMember = memberService.register(registerRequestDto1.toServiceDto());
+        savedMember.delete();
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.getMemberInfoById(savedMember.getId()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_ID.getMessage());
+    }
+
+    @Test
     @DisplayName("회원 아이디로 회원 정보 조회 - 회원 데이터가 없는 경우")
-    void findMemberInfoFailWhenNotExistMember() {
+    void findMemberInfoByIdWhenNotExistMember() {
         // given
 
 
@@ -379,7 +396,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("언어 변경 - 실패 / 회원이 deleted")
-    void changeLanguageFailExistMemberDeleted(){
+    void changeLanguageFailExistMemberDeleted() {
         //given
         Member savedMember = memberRepository.save(member1);
         appConfigRepository.save(appConfig1);
@@ -394,6 +411,5 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.changeLanguage(savedMember.getSeq(), AppConfig.Language.KOREAN))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
-
     }
 }
