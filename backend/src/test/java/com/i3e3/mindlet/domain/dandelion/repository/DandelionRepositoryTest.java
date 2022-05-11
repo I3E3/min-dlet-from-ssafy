@@ -378,7 +378,7 @@ class DandelionRepositoryTest {
         em.clear();
 
         // when
-        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        List<Dandelion> dandelions = dandelionRepository.findActiveDandelionListByMemberSeq(savedMember.getSeq());
         // then
         assertThat(dandelions.size()).isEqualTo(3);
         assertThat(dandelions.get(0).getStatus()).isEqualTo(Dandelion.Status.FLYING);
@@ -407,7 +407,7 @@ class DandelionRepositoryTest {
         em.clear();
 
         // when
-        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        List<Dandelion> dandelions = dandelionRepository.findActiveDandelionListByMemberSeq(savedMember.getSeq());
 
         // then
         assertThat(dandelions.size()).isEqualTo(1);
@@ -433,7 +433,7 @@ class DandelionRepositoryTest {
         em.clear();
 
         // when
-        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        List<Dandelion> dandelions = dandelionRepository.findActiveDandelionListByMemberSeq(savedMember.getSeq());
         // then
         assertThat(dandelions.size()).isEqualTo(1);
         assertThat(dandelions.get(0).getStatus()).isEqualTo(Dandelion.Status.FLYING);
@@ -458,7 +458,7 @@ class DandelionRepositoryTest {
         em.clear();
 
         // when
-        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        List<Dandelion> dandelions = dandelionRepository.findActiveDandelionListByMemberSeq(savedMember.getSeq());
         // then
         assertThat(dandelions.size()).isEqualTo(1);
         assertThat(dandelions.get(0).getStatus()).isEqualTo(Dandelion.Status.FLYING);
@@ -483,7 +483,7 @@ class DandelionRepositoryTest {
         em.clear();
 
         // when
-        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(savedMember.getSeq());
+        List<Dandelion> dandelions = dandelionRepository.findActiveDandelionListByMemberSeq(savedMember.getSeq());
         // then
         assertThat(dandelions.size()).isEqualTo(0);
     }

@@ -77,8 +77,6 @@ public class PetalRepositoryTest {
                 .message("hello")
                 .imagePath("imagePath")
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("nationalFlagImagePath")
                 .dandelion(dandelion1)
                 .member(member1)
                 .build();
@@ -103,8 +101,6 @@ public class PetalRepositoryTest {
         assertThat(findPetal.getMessage()).isEqualTo(petal1.getMessage());
         assertThat(findPetal.getImagePath()).isEqualTo(petal1.getImagePath());
         assertThat(findPetal.getNation()).isEqualTo(petal1.getNation());
-        assertThat(findPetal.getCity()).isEqualTo(petal1.getCity());
-        assertThat(findPetal.getNationalFlagImagePath()).isEqualTo(petal1.getNationalFlagImagePath());
         assertThat(findPetal.getMember().getSeq()).isEqualTo(petal1.getMember().getSeq());
         assertThat(findPetal.getDandelion().getSeq()).isEqualTo(petal1.getDandelion().getSeq());
     }
@@ -208,8 +204,6 @@ public class PetalRepositoryTest {
                 .message("hello2")
                 .imagePath("imagePath")
                 .nation("CANADA")
-                .city("OTTAWA")
-                .nationalFlagImagePath("nationalFlagImagePath2")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
                 .build());
@@ -239,8 +233,6 @@ public class PetalRepositoryTest {
                 .message("hello2")
                 .imagePath("imagePath")
                 .nation("CANADA")
-                .city("OTTAWA")
-                .nationalFlagImagePath("nationalFlagImagePath2")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
                 .build());
@@ -292,8 +284,6 @@ public class PetalRepositoryTest {
                 .message("hello2")
                 .imagePath("imagePath")
                 .nation("CANADA")
-                .city("OTTAWA")
-                .nationalFlagImagePath("nationalFlagImagePath2")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
                 .build());
@@ -302,8 +292,6 @@ public class PetalRepositoryTest {
                 .message("호우 샷")
                 .imagePath("/test/img1.jpg")
                 .nation("ENGLAND")
-                .city("LONDON")
-                .nationalFlagImagePath("awsS3/test/2.jpg")
                 .dandelion(savedDandelion1)
                 .member(savedMember3)
                 .build());
@@ -353,8 +341,6 @@ public class PetalRepositoryTest {
                 .message("hello2")
                 .imagePath("imagePath")
                 .nation("CANADA")
-                .city("OTTAWA")
-                .nationalFlagImagePath("nationalFlagImagePath2")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
                 .build());
