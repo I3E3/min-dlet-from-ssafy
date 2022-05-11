@@ -12,9 +12,9 @@ import java.util.List;
 @ToString(of = {"seq", "petalInfos"})
 public class DandelionSeedDto {
 
-    Long seq;
+    private Long seq;
 
-    List<DandelionSeedDto.PetalInfo> petalInfos;
+    private List<DandelionSeedDto.PetalInfo> petalInfos;
 
     @Builder
     public DandelionSeedDto(Long seq, List<DandelionSeedDto.PetalInfo> petalInfos) {
