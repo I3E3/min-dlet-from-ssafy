@@ -249,7 +249,6 @@ public class DandelionController {
                 .build();
     }
 
-
     @Operation(
             summary = "민들레 삭제 API 기능 추가",
             description = "인증 토큰, 민들레 식별키를 전달받고 민들레를 삭제합니다.",
@@ -334,6 +333,47 @@ public class DandelionController {
     }
 
     @Operation(
+            summary = "민들레 HOLD 해제 API 기능 추가",
+            description = "인증 토큰, 민들레 식별키를 전달받고 HOLD 상태를 FLYING 으로 변경합니다.",
+            tags = {"dandelion"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "상태 변경 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/{dandelionSeq}/status-flying")
+    public BaseResponseDto<Void> holdUnlock(@PathVariable("dandelionSeq") Long dandelionSeq) {
+        Long findMemberSeq = AuthenticationUtil.getMemberSeq();
+
+        if (!dandelionService.isHold(dandelionSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        } else if (!dandelionService.isMostRecentParticipant(dandelionSeq, findMemberSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        } else {
+            dandelionService.changeStatus(dandelionSeq, Dandelion.Status.FLYING);
+        }
+
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
+
+
+    @Operation(
             summary = "민들레씨 생성 후 날리기 API 기능 추가",
             description = "사용자로 부터 데이터를 받아 민들레씨를 생성후 날린다",
             tags = {"dandelion"}
@@ -380,5 +420,4 @@ public class DandelionController {
     private boolean registerPossible(Long memberSeq) {
         return dandelionService.getLeftSeedCount(memberSeq).getLeftSeedCount() > 0;
     }
-
 }

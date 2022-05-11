@@ -1585,4 +1585,166 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+    @Test
+    @DisplayName("민들레 상태(Hold) 확인 - True")
+    void checkHoldTrue() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(savedMember1.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(savedMember1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.HOLD);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isHold = dandelionService.isHold(savedDandelion.getSeq());
+
+        // then
+        assertThat(isHold).isTrue();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Hold) 확인 - False")
+    void checkHoldFalse() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(savedMember1.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(savedMember1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isHold = dandelionService.isHold(savedDandelion.getSeq());
+
+        // then
+        assertThat(isHold).isFalse();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Hold) 확인 - 예외 발생")
+    void checkHoldException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isHold(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레씨 최근 참여 여부 확인 - 민들레 데이터가 없는 경우")
+    void checkRecentParticipantWhenNotExistDandelion() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isMostRecentParticipant(0L, savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레씨 최근 참여 여부 확인 - 민들레가 삭제 처리된 경우")
+    void checkRecentParticipantWhenDandelionDeleted() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isMostRecentParticipant(savedDandelion1.getSeq(), savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레씨 최근 참여 여부 확인 - 회원이 삭제 처리된 경우")
+    void checkRecentParticipantWhenMemberDeleted() {
+        // given
+        member1.delete();
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isMostRecentParticipant(savedDandelion1.getSeq(), savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레씨 최근 참여 여부 확인 - 가장 최근에 참여한 경우")
+    void checkRecentParticipantTrue() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        memberRepository.save(member2);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        /**
+         * 민들레씨 잡기 -> HOLD 처리됨
+         */
+        dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // when
+        boolean isMostRecentParticipant = dandelionService.isMostRecentParticipant(savedDandelion2.getSeq(), savedMember1.getSeq());
+
+        // then
+        assertThat(isMostRecentParticipant).isTrue();
+    }
+
+    @Test
+    @DisplayName("민들레씨 최근 참여 여부 확인 - 가장 최근에 참여한 민들레가 아닌 경우")
+    void checkRecentParticipantFalse() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+
+        memberRepository.save(member2);
+        Dandelion savedDandelion2 = dandelionRepository.save(dandelion2);
+
+        memberRepository.save(member3);
+        dandelionRepository.save(dandelion3);
+        em.flush();
+        em.clear();
+
+        /**
+         * 민들레씨 잡기 -> HOLD 처리됨
+         * dandelion2 -> dandelion3 순으로 잡음
+         */
+        dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+        dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+
+        // when
+        boolean isMostRecentParticipant = dandelionService.isMostRecentParticipant(savedDandelion2.getSeq(), savedMember1.getSeq());
+
+        // then
+        assertThat(isMostRecentParticipant).isFalse();
+    }
 }

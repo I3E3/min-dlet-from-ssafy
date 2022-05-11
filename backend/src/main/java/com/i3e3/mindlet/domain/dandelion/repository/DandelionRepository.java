@@ -19,4 +19,7 @@ public interface DandelionRepository extends JpaRepository<Dandelion, Long>, Dan
 
     @Query("SELECT d FROM Dandelion d WHERE d.member.seq = :memberSeq AND d.status = 'ALBUM' AND d.isDeleted = FALSE ORDER BY d.blossomedDate DESC ")
     Page<Dandelion> findAlbumByMemberSeq(@Param("memberSeq") Long memberSeq, Pageable pageable);
+
+    @Query("SELECT COUNT(d) > 0 FROM Dandelion d WHERE d.seq = :seq AND d.isDeleted = FALSE")
+    boolean existsBySeq(@Param("seq") Long seq);
 }

@@ -6,10 +6,6 @@ import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
-import com.i3e3.mindlet.domain.dandelion.service.dto.AlbumListPageSvcDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.*;
 import com.i3e3.mindlet.domain.file.service.FileService;
 import com.i3e3.mindlet.domain.member.entity.Member;
@@ -26,7 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeSet;
 
 @Slf4j
 @Service
@@ -93,7 +92,6 @@ public class DandelionServiceImpl implements DandelionService {
 
     @Override
     public boolean isReturn(Long dandelionSeq) {
-
         Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
 
@@ -312,5 +310,26 @@ public class DandelionServiceImpl implements DandelionService {
             flowerSign = ts.pollFirst();
         }
         return flowerSign;
+    }
+
+    @Override
+    public boolean isHold(Long dandelionSeq) {
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+        return findDandelion.getStatus() == Dandelion.Status.HOLD;
+    }
+
+    @Override
+    public boolean isMostRecentParticipant(Long dandelionSeq, Long memberSeq) {
+        if (!dandelionRepository.existsBySeq(dandelionSeq)) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        Member findMember = memberRepository.findBySeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+        List<MemberDandelionHistory> memberDandelionHistories = findMember.getMemberDandelionHistories();
+        int size = memberDandelionHistories.size();
+
+        return memberDandelionHistories.get(size - 1).getDandelion().getSeq().equals(dandelionSeq);
     }
 }

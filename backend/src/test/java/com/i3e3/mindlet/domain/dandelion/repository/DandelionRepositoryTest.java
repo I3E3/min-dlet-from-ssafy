@@ -1032,4 +1032,45 @@ class DandelionRepositoryTest {
         // then
         assertThat(dandelionPage.getTotalElements()).isEqualTo(0); // 총 데이터 개수
     }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 데이터 존재 확인 - 데이터가 있는 경우")
+    void existsDandelionBySeq() {
+        // given
+        memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        // when
+        boolean isExists = dandelionRepository.existsBySeq(savedDandelion1.getSeq());
+
+        // then
+        assertThat(isExists).isTrue();
+    }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 데이터 존재 확인 - 데이터가 있지만 삭제 처리된 경우 경우")
+    void existsDandelionBySeqWhenDeleted() {
+        // given
+        memberRepository.save(member1);
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        // when
+        boolean isExists = dandelionRepository.existsBySeq(savedDandelion1.getSeq());
+
+        // then
+        assertThat(isExists).isFalse();
+    }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 데이터 존재 확인 - 데이터가 없는 경우")
+    void existsDandelionBySeqWhenNotExistsDandelion() {
+        // given
+
+        // when
+        boolean isExists = dandelionRepository.existsBySeq(0L);
+
+        // then
+        assertThat(isExists).isFalse();
+    }
 }
