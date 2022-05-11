@@ -7,6 +7,8 @@ import LandingPage from "pages/LandingPage/LandingPage";
 import MainPage from "pages/MainPage/MainPage";
 import ContentsCreatePage from "pages/ContentsCreatePage/ContentsCreatePage";
 import ContentsListPage from "pages/ContentsListPage/ContentsListPage";
+import LoginPage from "pages/LandingPage/LoginPage";
+import SignupPage from "pages/LandingPage/SignupPage";
 import MyGardenDandelionDetail from "containers/MyGarden/MyGardenDandelionDetail";
 
 export default function Router() {
@@ -45,6 +47,14 @@ export default function Router() {
         { path: "create", element: <ContentsCreatePage /> },
         { path: "list", element: <ContentsListPage /> },
       ],
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
+    {
+      path: "/signup",
+      element: <SignupPage />,
     },
   ]);
 }
