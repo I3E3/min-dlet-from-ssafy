@@ -42,16 +42,15 @@ public class MemberServiceImpl implements MemberService {
         Member findMember = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_ID.getMessage()));
 
-        AppConfig findAppConfig = findMember.getAppConfig();
+        return MemberInfoDto.createByMember(findMember);
+    }
 
-        return MemberInfoDto.builder()
-                .seq(findMember.getSeq())
-                .id(findMember.getId())
-                .language(findAppConfig.getLanguage())
-                .community(findAppConfig.getCommunity())
-                .soundOff(findAppConfig.isSoundOff())
-                .role(findMember.getRole())
-                .build();
+    @Override
+    public MemberInfoDto getMemberInfoBySeq(Long seq) {
+        Member findMember = memberRepository.findBySeq(seq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        return MemberInfoDto.createByMember(findMember);
     }
 
     @Transactional
@@ -108,5 +107,4 @@ public class MemberServiceImpl implements MemberService {
 
         appConfig.changeLanguage(changeLanguage);
     }
-
 }
