@@ -13,6 +13,8 @@ public interface MemberService {
 
     MemberInfoDto getMemberInfoById(String id);
 
+    MemberInfoDto getMemberInfoBySeq(Long seq);
+
     Member register(MemberRegisterDto memberRegisterDto);
 
     boolean isExistsId(String id);
