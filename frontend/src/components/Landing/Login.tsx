@@ -1,10 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from 'pages/LandingPage/LandingPage.module.scss';
-import { id } from 'date-fns/locale';
-import { Backdrop } from '@react-three/drei';
 import { useNavigate } from 'react-router';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useRecoilState } from 'recoil';
 import memberState from 'utils/memberState';
 
