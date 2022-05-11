@@ -1401,4 +1401,27 @@ class DandelionServiceTest {
         assertThat(findPetal1.getMessage()).isEqualTo("안녕 나는 피나코야");
         assertThat(findPetal1.getImagePath()).isNull();
     }
+
+    @Test
+    @DisplayName("민들레씨 생성 후 날리기 - 실패 (유저존재 X)")
+    void createDandelionFailNotExistMember() {
+        //given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+
+        em.flush();
+        em.clear();
+
+        //when
+        DandelionCreateSvcDto newDandelionCreateSvcDto = DandelionCreateSvcDto.builder()
+                .message("안녕 나는 피나코야")
+                .blossomedDate(LocalDate.parse("2022-06-30"))
+                .imageFile(null)
+                .build();
+
+        //then
+        assertThatThrownBy(() -> dandelionService.createDandelion(0L, newDandelionCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
