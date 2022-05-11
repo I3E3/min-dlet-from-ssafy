@@ -1630,4 +1630,17 @@ class DandelionServiceTest {
         // then
         assertThat(isHold).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 상태(Hold) 확인 - 예외 발생")
+    void checkHoldException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isHold(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
