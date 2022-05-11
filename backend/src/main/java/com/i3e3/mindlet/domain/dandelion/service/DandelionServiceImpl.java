@@ -278,15 +278,15 @@ public class DandelionServiceImpl implements DandelionService {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         }
 
-        String filePath = null;
-
+        String fileName = null;
         if (petalCreateSvcDto.getImageFile() != null) {
-            filePath = fileService.s3Upload(petalCreateSvcDto.getImageFile());
+            String filePath = fileService.s3Upload(petalCreateSvcDto.getImageFile());
+            fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         }
 
         return Petal.builder()
                 .message(petalCreateSvcDto.getMessage())
-                .imagePath(filePath)
+                .imagePath(fileName)
                 .nation("KOREA")
                 .dandelion(dandelion)
                 .member(member)
