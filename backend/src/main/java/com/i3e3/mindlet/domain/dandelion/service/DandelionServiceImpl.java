@@ -6,6 +6,7 @@ import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
+import com.i3e3.mindlet.domain.dandelion.service.dto.AlbumListPageSvcDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
@@ -17,6 +18,8 @@ import com.i3e3.mindlet.global.constant.dandelion.DandelionConst;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -211,5 +214,35 @@ public class DandelionServiceImpl implements DandelionService {
                 .seq(findDandelion.getSeq())
                 .petalInfos(petalInfos)
                 .build();
+    }
+
+    @Override
+    public AlbumListPageSvcDto getAlbumInfo(Long memberSeq, int page, int size) {
+
+        Page<Dandelion> dandelionPage = dandelionRepository.findAlbumByMemberSeq(memberSeq, PageRequest.of(page - 1, size));
+
+        if (dandelionPage.getTotalElements() == 0){
+            return null;
+        }
+
+        List<AlbumListPageSvcDto.dandelionInfo> dandelionInfos = new ArrayList<>();
+
+        for (int i = 0; i < dandelionPage.getNumberOfElements(); i++) {
+            dandelionInfos.add(
+                    AlbumListPageSvcDto.dandelionInfo.builder()
+                            .dandelionSeq(dandelionPage.getContent().get(i).getSeq())
+                            .description(dandelionPage.getContent().get(i).getDescription())
+                            .build()
+            );
+        }
+
+        AlbumListPageSvcDto albumListPageSvcDto = AlbumListPageSvcDto.builder()
+                .totalDandelionCount(dandelionPage.getTotalElements())
+                .totalPageNum(dandelionPage.getTotalPages())
+                .nowPageNum(dandelionPage.getNumber() + 1)
+                .dandelionInfos(dandelionInfos)
+                .build();
+
+        return albumListPageSvcDto;
     }
 }
