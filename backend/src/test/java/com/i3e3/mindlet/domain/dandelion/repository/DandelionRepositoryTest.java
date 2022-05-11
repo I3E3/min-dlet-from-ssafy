@@ -1046,4 +1046,19 @@ class DandelionRepositoryTest {
         // then
         assertThat(isExists).isTrue();
     }
+
+    @Test
+    @DisplayName("민들레 식별키로 민들레 데이터 존재 확인 - 데이터가 있지만 삭제 처리된 경우 경우")
+    void existsDandelionBySeqWhenDeleted() {
+        // given
+        memberRepository.save(member1);
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+
+        // when
+        boolean isExists = dandelionRepository.existsBySeq(savedDandelion1.getSeq());
+
+        // then
+        assertThat(isExists).isFalse();
+    }
 }
