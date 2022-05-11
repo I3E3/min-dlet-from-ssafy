@@ -1,10 +1,9 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
+import com.i3e3.mindlet.domain.dandelion.service.dto.*;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface DandelionService {
@@ -32,4 +31,6 @@ public interface DandelionService {
     boolean isAlbum(Long dandelionSeq);
 
     DandelionSeedDto getDandelionSeedDto(Long memberSeq);
+
+    void createDandelion(Long memberSeq, DandelionCreateSvcDto dandelionCreateSvcDto) throws IOException;
 }

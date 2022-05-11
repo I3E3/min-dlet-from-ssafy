@@ -6,9 +6,8 @@ import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
+import com.i3e3.mindlet.domain.dandelion.service.dto.*;
+import com.i3e3.mindlet.domain.file.service.FileService;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.entity.MemberDandelionHistory;
 import com.i3e3.mindlet.domain.member.repository.MemberDandelionHistoryRepository;
@@ -20,9 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -38,6 +36,8 @@ public class DandelionServiceImpl implements DandelionService {
     private final PetalRepository petalRepository;
 
     private final MemberDandelionHistoryRepository memberDandelionHistoryRepository;
+
+    private final FileService fileService;
 
     @Override
     public boolean isBlossomed(Long dandelionSeq) {
@@ -154,7 +154,7 @@ public class DandelionServiceImpl implements DandelionService {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         }
 
-        List<Dandelion> dandelions = dandelionRepository.findDandelionListByMemberSeq(memberSeq);
+        List<Dandelion> dandelions = dandelionRepository.findActiveDandelionListByMemberSeq(memberSeq);
         List<ResponseGardenInfoDto> responseGardenInfos = new ArrayList<ResponseGardenInfoDto>();
 
         for (Dandelion dandelion : dandelions) {
@@ -194,7 +194,6 @@ public class DandelionServiceImpl implements DandelionService {
                     .message(petal.getMessage())
                     .imageUrlPath(petal.getImagePath())
                     .nation(petal.getNation())
-                    .city(petal.getCity())
                     .createdDate(petal.getCreatedDate())
                     .build());
         }
@@ -211,5 +210,71 @@ public class DandelionServiceImpl implements DandelionService {
                 .seq(findDandelion.getSeq())
                 .petalInfos(petalInfos)
                 .build();
+    }
+
+    @Transactional
+    @Override
+    public void createDandelion(Long memberSeq, DandelionCreateSvcDto dandelionCreateSvcDto) throws IOException {
+        Member findMember = memberRepository.findBySeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        int flowerSignNumber = getFlowerSignNumber(findMember.getSeq());
+
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(dandelionCreateSvcDto.getBlossomedDate())
+                .community(findMember.getAppConfig().getCommunity())
+                .flowerSignNumber(flowerSignNumber)
+                .member(findMember)
+                .build();
+
+        createPetal(findMember, newDandelion, dandelionCreateSvcDto.toPetalCreateSvcDto());
+    }
+
+    private Petal createPetal(Member member, Dandelion dandelion, PetalCreateSvcDto petalCreateSvcDto) throws IOException {
+
+        if (dandelion == null || dandelion.isDeleted()) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        if (member == null || member.isDeleted()) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        if (petalRepository.existsPetalByDandelionSeqAndMemberSeq(dandelion.getSeq(),member.getSeq())) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        String filePath = null;
+
+        if (petalCreateSvcDto.getImageFile() != null) {
+            filePath = fileService.s3Upload(petalCreateSvcDto.getImageFile());
+        }
+
+        return Petal.builder()
+                .message(petalCreateSvcDto.getMessage())
+                .imagePath(filePath)
+                .nation("KOREA")
+                .dandelion(dandelion)
+                .member(member)
+                .build();
+    }
+
+    private int getFlowerSignNumber(Long memberSeq) {
+        List<Dandelion> findActiveDandelions = dandelionRepository.findActiveDandelionListByMemberSeq(memberSeq);
+
+        if (findActiveDandelions != null && findActiveDandelions.size() == 5) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        int flowerSign = 1;
+
+        if (findActiveDandelions != null && findActiveDandelions.size() != 0) {
+            TreeSet<Integer> ts = new TreeSet<>(List.of(1, 2, 3, 4, 5));
+
+            findActiveDandelions.forEach(dandelion -> ts.remove(dandelion.getFlowerSignNumber()));
+
+            flowerSign = ts.pollFirst();
+        }
+        return flowerSign;
     }
 }
