@@ -1449,4 +1449,36 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("민들레씨 생성 후 날리기 - 실패 (해당 회원의 민들레씨가 5개인 경우)")
+    void createDandelionFailMemberUseAllSeed() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+
+        for (int i = 2; i <= 5; i++) {
+            dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-05-03"))
+                    .community(Community.WORLD)
+                    .flowerSignNumber(i)
+                    .member(savedMember1)
+                    .build());
+        }
+
+        em.flush();
+        em.clear();
+
+        //when
+        DandelionCreateSvcDto newDandelionCreateSvcDto = DandelionCreateSvcDto.builder()
+                .message("안녕 나는 피나코야")
+                .blossomedDate(LocalDate.parse("2022-06-30"))
+                .imageFile(null)
+                .build();
+
+        //then
+        assertThatThrownBy(() -> dandelionService.createDandelion(savedMember1.getSeq(), newDandelionCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
