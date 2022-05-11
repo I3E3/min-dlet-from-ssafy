@@ -6,6 +6,7 @@ import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
+import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionCreateSvcDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.AlbumListPageSvcDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
@@ -26,7 +27,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -702,8 +705,6 @@ class DandelionServiceTest {
                         .dandelion(savedDandelion1)
                         .message("안녕하세요!!!")
                         .nation("Korea")
-                        .city("SEOUL")
-                        .nationalFlagImagePath("/static/files/images/national-flag/korea.png")
                         .build());
 
         em.flush();
@@ -716,8 +717,6 @@ class DandelionServiceTest {
                         .dandelion(savedDandelion1)
                         .message("Nice to see ya")
                         .nation("CANADA")
-                        .city("OTTAWA")
-                        .nationalFlagImagePath("/static/files/images/national-flag/canada.png")
                         .build());
 
         em.flush();
@@ -759,8 +758,6 @@ class DandelionServiceTest {
                         .dandelion(savedDandelion1)
                         .message("안녕하세요!!!")
                         .nation("Korea")
-                        .city("SEOUL")
-                        .nationalFlagImagePath("/static/files/images/national-flag/korea.png")
                         .build());
 
         em.flush();
@@ -788,8 +785,6 @@ class DandelionServiceTest {
                         .dandelion(savedDandelion1)
                         .message("안녕하세요!!!")
                         .nation("Korea")
-                        .city("SEOUL")
-                        .nationalFlagImagePath("/static/files/images/national-flag/korea.png")
                         .build());
 
         em.flush();
@@ -992,8 +987,6 @@ class DandelionServiceTest {
                 .message("메시지1")
                 .imagePath("이미지1")
                 .nation("국가1")
-                .city("도시1")
-                .nationalFlagImagePath("국가이미지1")
                 .dandelion(savedDandelion1)
                 .member(savedMember1)
                 .build());
@@ -1001,8 +994,6 @@ class DandelionServiceTest {
                 .message("메시지2")
                 .imagePath("이미지2")
                 .nation("국가2")
-                .city("도시2")
-                .nationalFlagImagePath("국가이미지2")
                 .dandelion(savedDandelion1)
                 .member(savedMember2)
                 .build());
@@ -1033,14 +1024,12 @@ class DandelionServiceTest {
         DandelionSeedDto.PetalInfo findPetal1 = petalInfos.get(0);
         assertThat(findPetal1.getSeq()).isEqualTo(savedPetal1.getSeq());
         assertThat(findPetal1.getMessage()).isEqualTo(savedPetal1.getMessage());
-        assertThat(findPetal1.getCity()).isEqualTo(savedPetal1.getCity());
         assertThat(findPetal1.getNation()).isEqualTo(savedPetal1.getNation());
         assertThat(findPetal1.getImageUrlPath()).isEqualTo(savedPetal1.getImagePath());
 
         DandelionSeedDto.PetalInfo findPetal2 = petalInfos.get(1);
         assertThat(findPetal2.getSeq()).isEqualTo(savedPetal2.getSeq());
         assertThat(findPetal2.getMessage()).isEqualTo(savedPetal2.getMessage());
-        assertThat(findPetal2.getCity()).isEqualTo(savedPetal2.getCity());
         assertThat(findPetal2.getNation()).isEqualTo(savedPetal2.getNation());
         assertThat(findPetal2.getImageUrlPath()).isEqualTo(savedPetal2.getImagePath());
 
@@ -1247,8 +1236,6 @@ class DandelionServiceTest {
                 .message("와우 멋있어요")
                 .imagePath("/test/img")
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("awsS3/test")
                 .member(savedMember2)
                 .dandelion(savedDandelion1)
                 .build());
@@ -1276,8 +1263,6 @@ class DandelionServiceTest {
                 .imagePath("/test/img")
                 .member(savedMember2)
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("awsS3/test")
                 .dandelion(savedDandelion1)
                 .build());
 
@@ -1304,8 +1289,6 @@ class DandelionServiceTest {
                 .imagePath("/test/img")
                 .member(savedMember2)
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("awsS3/test")
                 .dandelion(savedDandelion1)
                 .build());
 
@@ -1335,8 +1318,6 @@ class DandelionServiceTest {
                 .imagePath("/test/img")
                 .member(savedMember2)
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("awsS3/test")
                 .dandelion(savedDandelion1)
                 .build());
 
@@ -1364,8 +1345,6 @@ class DandelionServiceTest {
                 .imagePath("/test/img.jpg")
                 .member(savedMember2)
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("awsS3/test/1.jpg")
                 .dandelion(savedDandelion1)
                 .build());
 
@@ -1374,8 +1353,6 @@ class DandelionServiceTest {
                 .imagePath("/test/img1.jpg")
                 .member(savedMember3)
                 .nation("CANADA")
-                .city("OTTAWA")
-                .nationalFlagImagePath("awsS3/test/2.jpg")
                 .dandelion(savedDandelion1)
                 .build());
 
@@ -1491,5 +1468,121 @@ class DandelionServiceTest {
 
         // then
         assertThat(albumListPageSvcDto).isNull();
+    }
+
+    @Test
+    @DisplayName("민들레씨 생성 후 날리기 - 성공 (파일 X, 메시지 O)")
+    void createDandelionSuccessNotExistFileAndExistMessage() throws IOException {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+
+        em.flush();
+        em.clear();
+
+        //when
+        DandelionCreateSvcDto newDandelionCreateSvcDto = DandelionCreateSvcDto.builder()
+                .message("안녕 나는 피나코야")
+                .blossomedDate(LocalDate.parse("2022-06-30", DateTimeFormatter.ISO_DATE))
+                .imageFile(null)
+                .build();
+
+        dandelionService.createDandelion(savedMember1.getSeq(), newDandelionCreateSvcDto);
+
+        Member findMember1 = memberRepository.findBySeq(savedMember1.getSeq()).orElse(null);
+
+        List<Dandelion> findActiveDandelions = dandelionRepository.findActiveDandelionListByMemberSeq(findMember1.getSeq());
+
+        Dandelion findDandelion1 = findActiveDandelions.get(findActiveDandelions.size() - 1);
+
+        List<Petal> findPetals = findDandelion1.getPetals();
+
+        Petal findPetal1 = findPetals.get(findPetals.size() - 1);
+
+        //then
+        assertThat(findActiveDandelions.size()).isEqualTo(2);
+        assertThat(findPetals.size()).isEqualTo(1);
+        assertThat(findPetal1.getMessage()).isEqualTo("안녕 나는 피나코야");
+        assertThat(findPetal1.getImagePath()).isNull();
+    }
+
+    @Test
+    @DisplayName("민들레씨 생성 후 날리기 - 실패 (유저존재 X)")
+    void createDandelionFailNotExistMember() {
+        //given
+        memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+
+        em.flush();
+        em.clear();
+
+        //when
+        DandelionCreateSvcDto newDandelionCreateSvcDto = DandelionCreateSvcDto.builder()
+                .message("안녕 나는 피나코야")
+                .blossomedDate(LocalDate.parse("2022-06-30"))
+                .imageFile(null)
+                .build();
+
+        //then
+        assertThatThrownBy(() -> dandelionService.createDandelion(0L, newDandelionCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레씨 생성 후 날리기 - 실패 (유저가 deleted)")
+    void createDandelionFailDeletedMember() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+
+        savedMember1.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+        DandelionCreateSvcDto newDandelionCreateSvcDto = DandelionCreateSvcDto.builder()
+                .message("안녕 나는 피나코야")
+                .blossomedDate(LocalDate.parse("2022-06-30"))
+                .imageFile(null)
+                .build();
+
+        //then
+        assertThatThrownBy(() -> dandelionService.createDandelion(savedMember1.getSeq(), newDandelionCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레씨 생성 후 날리기 - 실패 (해당 회원의 민들레씨가 5개인 경우)")
+    void createDandelionFailMemberUseAllSeed() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+
+        for (int i = 2; i <= 5; i++) {
+            dandelionRepository.save(Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-05-03"))
+                    .community(Community.WORLD)
+                    .flowerSignNumber(i)
+                    .member(savedMember1)
+                    .build());
+        }
+
+        em.flush();
+        em.clear();
+
+        //when
+        DandelionCreateSvcDto newDandelionCreateSvcDto = DandelionCreateSvcDto.builder()
+                .message("안녕 나는 피나코야")
+                .blossomedDate(LocalDate.parse("2022-06-30"))
+                .imageFile(null)
+                .build();
+
+        //then
+        assertThatThrownBy(() -> dandelionService.createDandelion(savedMember1.getSeq(), newDandelionCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
 }

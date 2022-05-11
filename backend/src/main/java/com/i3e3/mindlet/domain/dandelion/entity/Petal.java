@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "tb_petal")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(of = {"seq", "message", "imagePath", "nation", "city", "nationalFlagImagePath", "isDeleted"})
+@ToString(of = {"seq", "message", "imagePath", "nation", "isDeleted"})
 public class Petal extends BaseLastModifiedEntity {
 
     @Id
@@ -28,12 +28,6 @@ public class Petal extends BaseLastModifiedEntity {
 
     @Column(nullable = false)
     private String nation;
-
-    @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String nationalFlagImagePath;
 
     @Column(nullable = false, columnDefinition = "TINYINT")
     private boolean isDeleted;
@@ -50,12 +44,10 @@ public class Petal extends BaseLastModifiedEntity {
     private List<Report> reports = new ArrayList<>();
 
     @Builder
-    public Petal(String message, String imagePath, String nation, String city, String nationalFlagImagePath, Dandelion dandelion, Member member) {
+    public Petal(String message, String imagePath, String nation, Dandelion dandelion, Member member) {
         this.message = message;
         this.imagePath = imagePath;
         this.nation = nation;
-        this.city = city;
-        this.nationalFlagImagePath = nationalFlagImagePath;
         this.dandelion = dandelion;
         this.member = member;
 

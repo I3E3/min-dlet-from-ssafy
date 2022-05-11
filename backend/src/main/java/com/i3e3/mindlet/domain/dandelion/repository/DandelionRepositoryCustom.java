@@ -10,7 +10,7 @@ public interface DandelionRepositoryCustom {
 
     int countUsingSeed(Long memberSeq);
 
-    List<Dandelion> findDandelionListByMemberSeq(Long memberSeq);
+    List<Dandelion> findActiveDandelionListByMemberSeq(Long memberSeq);
 
     Optional<Dandelion> findRandomFlyingDandelionExceptMember(Member member);
 

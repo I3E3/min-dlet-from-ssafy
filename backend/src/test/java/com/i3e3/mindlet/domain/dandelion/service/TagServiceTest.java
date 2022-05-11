@@ -103,8 +103,6 @@ class TagServiceTest {
                         .dandelion(savedDandelion1)
                         .message("안녕하세요!!!")
                         .nation("Korea")
-                        .city("SEOUL")
-                        .nationalFlagImagePath("/static/files/images/national-flag/korea.png")
                         .build());
         petalRepository.save(
                 Petal.builder()
@@ -112,8 +110,6 @@ class TagServiceTest {
                         .dandelion(savedDandelion2)
                         .message("Hello~!!!")
                         .nation("Canada")
-                        .city("OTTAWA")
-                        .nationalFlagImagePath("/static/files/images/national-flag/canada.png")
                         .build());
 
         petalRepository.save(
@@ -122,8 +118,6 @@ class TagServiceTest {
                         .dandelion(savedDandelion1)
                         .message("오 한국 사람!!!!")
                         .nation("Korea")
-                        .city("SEOUL")
-                        .nationalFlagImagePath("/static/files/images/national-flag/korea.png")
                         .build());
 
         petalRepository.save(
@@ -132,8 +126,6 @@ class TagServiceTest {
                         .dandelion(savedDandelion2)
                         .message("오 캐나다 사람!!!")
                         .nation("Korea")
-                        .city("SEOUL")
-                        .nationalFlagImagePath("/static/files/images/national-flag/korea.png")
                         .build());
 
         savedDandelion1.changeStatus(Dandelion.Status.BLOSSOMED);
@@ -164,7 +156,7 @@ class TagServiceTest {
 
     @Test
     @DisplayName("민들레 태그 추가 - 실패(민들레 존재 X)")
-    void registerDandelionTagFailNotExistDandelion(){
+    void registerDandelionTagFailNotExistDandelion() {
         //given
         Member savedMember1 = memberRepository.save(member1);
 
@@ -181,7 +173,7 @@ class TagServiceTest {
 
     @Test
     @DisplayName("민들레 태그 추가 - 실패(회원 존재 X)")
-    void registerDandelionTagFailNotExistMember(){
+    void registerDandelionTagFailNotExistMember() {
         //given
         memberRepository.save(member1);
         Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
@@ -199,7 +191,7 @@ class TagServiceTest {
 
     @Test
     @DisplayName("민들레 태그 추가 - 실패(민들레 deleted)")
-    void registerDandelionTagFailDeletedDandelion(){
+    void registerDandelionTagFailDeletedDandelion() {
         //given
         memberRepository.save(member1);
         Member savedMember2 = memberRepository.save(member2);
@@ -220,7 +212,7 @@ class TagServiceTest {
 
     @Test
     @DisplayName("민들레 태그 추가 - 실패(회원 deleted)")
-    void registerDandelionTagFailDeletedMember(){
+    void registerDandelionTagFailDeletedMember() {
         //given
         memberRepository.save(member1);
         Member savedMember2 = memberRepository.save(member2);

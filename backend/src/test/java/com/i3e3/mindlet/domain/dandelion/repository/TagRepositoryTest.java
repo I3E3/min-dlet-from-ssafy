@@ -89,8 +89,6 @@ public class TagRepositoryTest {
                 .message("hello")
                 .imagePath("imagePath")
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("nationalFlagImagePath")
                 .dandelion(dandelion1)
                 .member(member1)
                 .build();
@@ -99,8 +97,6 @@ public class TagRepositoryTest {
                 .message("hello")
                 .imagePath("imagePath")
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("nationalFlagImagePath")
                 .dandelion(dandelion2)
                 .member(member2)
                 .build();
@@ -109,8 +105,6 @@ public class TagRepositoryTest {
                 .message("hello")
                 .imagePath("imagePath")
                 .nation("KOREA")
-                .city("SEOUL")
-                .nationalFlagImagePath("nationalFlagImagePath")
                 .dandelion(dandelion1)
                 .member(member2)
                 .build();

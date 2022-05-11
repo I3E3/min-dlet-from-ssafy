@@ -39,7 +39,7 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
     }
 
     @Override
-    public List<Dandelion> findDandelionListByMemberSeq(Long memberSeq) {
+    public List<Dandelion> findActiveDandelionListByMemberSeq(Long memberSeq) {
         JPAQuery<Dandelion> query = queryFactory
                 .select(dandelion)
                 .from(dandelion)

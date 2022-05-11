@@ -1,12 +1,13 @@
 package com.i3e3.mindlet.domain.dandelion.controller;
 
 import com.i3e3.mindlet.domain.dandelion.controller.dto.DandelionDescriptionModifyDto;
+import com.i3e3.mindlet.domain.dandelion.controller.dto.DandelionRegisterDto;
 import com.i3e3.mindlet.domain.dandelion.controller.dto.DandelionStatusChangeDto;
 import com.i3e3.mindlet.domain.dandelion.controller.dto.DandelionTagRegisterDto;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.service.DandelionService;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.TagService;
+import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.dto.BaseResponseDto;
@@ -24,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -329,4 +332,53 @@ public class DandelionController {
                 .data(dandelionSeedDto)
                 .build(), status);
     }
+
+    @Operation(
+            summary = "민들레씨 생성 후 날리기 API 기능 추가",
+            description = "사용자로 부터 데이터를 받아 민들레씨를 생성후 날린다",
+            tags = {"dandelion"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "민들레 생성 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BaseResponseDto<Void> registerDandelion(@Validated @ModelAttribute DandelionRegisterDto registerDto) throws IOException {
+        Long memberSeq = AuthenticationUtil.getMemberSeq();
+
+//        if ((registerDto.getMessage() == null && registerDto.getImageFile() == null) || !registerPossible(memberSeq)) {
+//            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+//        } else if (!LocalDate.parse(registerDto.getBlossomedDate()).isAfter(LocalDate.now().plusDays(1))) {
+//            throw new IllegalStateException(ErrorMessage.INVALID_DATE_REQUEST.getMessage());
+//        } else {
+//            dandelionService.createDandelion(memberSeq, registerDto.toSvcDto());
+//        }
+        return BaseResponseDto.<Void>builder()
+                .build();
+    }
+
+    private boolean registerPossible(Long memberSeq) {
+        return dandelionService.getLeftSeedCount(memberSeq).getLeftSeedCount() > 0;
+    }
+
 }
