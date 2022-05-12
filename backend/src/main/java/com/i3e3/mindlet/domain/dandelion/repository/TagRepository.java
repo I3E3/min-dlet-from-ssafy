@@ -13,4 +13,7 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 
     @Query("SELECT t FROM Tag t WHERE t.member.seq = :memberSeq AND t.dandelion.seq = :dandelionSeq")
     Optional<List<Tag>> findTagListByMemberSeqAndDandelionSeq(@Param("memberSeq") Long memberSeq, @Param("dandelionSeq") Long dandelionSeq);
+
+    @Query("SELECT t FROM Tag t WHERE t.member.seq = :memberSeq")
+    Optional<List<Tag>> findTagListByMemberSeq(@Param("memberSeq") Long memberSeq);
 }
