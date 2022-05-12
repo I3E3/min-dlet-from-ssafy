@@ -22,8 +22,6 @@ public class CorsConfig {
         config.addAllowedHeader("*");
         // 모든 HTTP 요청 허용
         config.addAllowedMethod("*");
-        // 개발 환경 추가
-        config.addAllowedOrigin("http://localhost:3000");
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
