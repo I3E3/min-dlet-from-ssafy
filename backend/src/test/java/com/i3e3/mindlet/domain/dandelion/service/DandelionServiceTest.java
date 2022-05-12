@@ -2115,6 +2115,29 @@ class DandelionServiceTest {
         assertThat(petalInfos.get(1).getMessage()).isEqualTo("오 안녕안녕");
     }
 
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 실패(회원 존재X)")
+    void getDandelionDetailFailNotExistMember(){
+        //given
+        Member savedMember1 = memberRepository.save(member1);
 
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
 
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> dandelionService.getDandelionDetail(savedDandelion1.getSeq(), 0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+    }
 }
