@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.i3e3.mindlet.domain.dandelion.entity.QDandelion.dandelion;
+import static com.i3e3.mindlet.domain.dandelion.entity.QPetal.petal;
 import static com.i3e3.mindlet.domain.member.entity.QMemberDandelionHistory.memberDandelionHistory;
 
 public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
@@ -95,5 +96,25 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
                         dandelion.lastModifiedDate.before(LocalDateTime.now().minusMinutes(elapsedMinute)),
                         dandelion.isDeleted.isFalse())
                 .execute();
+    }
+
+    @Override
+    public long countParticipationDandelions(Long memberSeq) {
+
+        return queryFactory
+                .select(petal.count())
+                .from(petal)
+                .where(
+                        petal.member.seq.eq(memberSeq),
+                        petal.dandelion.member.seq.ne(memberSeq),
+                        petal.isDeleted.isFalse(),
+                        petal.dandelion.isDeleted.isFalse(),
+                        petal.dandelion.member.isDeleted.isFalse(),
+                        petal.dandelion.status.in(
+                                Dandelion.Status.BLOSSOMED,
+                                Dandelion.Status.ALBUM
+                        )
+                )
+                .fetchOne();
     }
 }
