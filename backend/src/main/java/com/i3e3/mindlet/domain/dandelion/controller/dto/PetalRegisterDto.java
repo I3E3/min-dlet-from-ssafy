@@ -26,4 +26,8 @@ public class PetalRegisterDto {
                 .nation("KOREA")
                 .build();
     }
+
+    public void addFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
 }
