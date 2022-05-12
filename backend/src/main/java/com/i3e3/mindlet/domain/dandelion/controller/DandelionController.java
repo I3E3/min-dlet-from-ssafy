@@ -4,6 +4,7 @@ import com.i3e3.mindlet.domain.dandelion.controller.dto.*;
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.service.DandelionService;
 import com.i3e3.mindlet.domain.dandelion.service.TagService;
+import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionDetailSvcDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
@@ -462,6 +463,51 @@ public class DandelionController {
         }
 
         return BaseResponseDto.<Void>builder()
+                .build();
+    }
+
+    @Operation(
+            summary = "민들레 상세정보 조회 API 기능 추가",
+            description = "인증 토큰, 민들레 식별키를 받고 민들레 상세정보 반환",
+            tags = {"dandelion"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "민들레 상세정보 조회 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "데이터 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+    @GetMapping("/{dandelionSeq}")
+    public BaseResponseDto<DandelionDetailSvcDto> getDandelionDetail(@PathVariable Long dandelionSeq) {
+        Long memberSeq = AuthenticationUtil.getMemberSeq();
+
+        DandelionDetailSvcDto dandelionDetailSvcDto = null;
+
+        if ((dandelionService.isBlossomed(dandelionSeq) || dandelionService.isAlbum(dandelionSeq)) &&
+                (dandelionService.isOwner(dandelionSeq, memberSeq) || dandelionService.isParticipated(dandelionSeq, memberSeq))) {
+            dandelionDetailSvcDto = dandelionService.getDandelionDetail(dandelionSeq,memberSeq);
+        }else{
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+        return BaseResponseDto.<DandelionDetailSvcDto>builder()
+                .data(dandelionDetailSvcDto)
                 .build();
     }
 
