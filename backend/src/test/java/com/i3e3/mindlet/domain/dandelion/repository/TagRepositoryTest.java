@@ -197,4 +197,34 @@ public class TagRepositoryTest {
         //then
         assertThat(tags.size()).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("멤버 식별키만 사용해서 태그 리스트 가져오기 - 데이터가 있는경우")
+    void getTagListUsingOnlyMemberSeqHasData() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+
+        petalRepository.save(petal1);
+        petalRepository.save(petal2);
+        petalRepository.save(petal3);
+
+        Tag savedTag1 = tagRepository.save(tag1);
+        Tag savedTag2 = tagRepository.save(tag2);
+        Tag savedTag3 = tagRepository.save(tag3);
+        em.flush();
+        em.clear();
+
+        //when
+
+        List<Tag> tags = tagRepository.findTagListByMemberSeq(member2.getSeq())
+                .orElse(null);
+
+        //then
+        assertThat(tags.size()).isEqualTo(2);
+        assertThat(savedTag1.getName()).isEqualTo(tags.get(0).getName());
+        assertThat(savedTag3.getName()).isEqualTo(tags.get(1).getName());
+    }
 }
