@@ -2,8 +2,10 @@ package com.i3e3.mindlet.domain.dandelion.repository;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.member.entity.Member;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
@@ -116,5 +118,37 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
                         )
                 )
                 .fetchOne();
+    }
+
+    @Override
+    public Optional<List<Dandelion>> findParticipationByMemberSeqAndPageable(Long memberSeq, Pageable pageable) {
+
+        List<Dandelion> dandelions = queryFactory
+                .selectFrom(dandelion)
+                .where(
+                        dandelion.seq.in(
+                                JPAExpressions.select(petal.dandelion.seq)
+                                        .from(petal)
+                                        .where(petal.member.seq.eq(memberSeq),
+                                                petal.isDeleted.isFalse()
+                                        )
+                        ),
+                        dandelion.member.seq.ne(memberSeq),
+                        dandelion.isDeleted.isFalse(),
+                        dandelion.member.isDeleted.isFalse(),
+                        dandelion.status.in(
+                                Dandelion.Status.BLOSSOMED,
+                                Dandelion.Status.ALBUM
+                        )
+                )
+                .offset((long) (pageable.getPageNumber() - 1) * pageable.getPageSize())
+                .limit(pageable.getPageSize())
+                .orderBy(dandelion.blossomedDate.desc())
+                .fetch();
+        if (dandelions.size() == 0) {
+            dandelions = null;
+        }
+
+        return Optional.ofNullable(dandelions);
     }
 }
