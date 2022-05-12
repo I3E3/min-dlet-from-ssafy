@@ -2,7 +2,7 @@ import React, { useState, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import DandelionFlower from '../DandelionFlower';
-import DandelionPetalDown from '../DandelionPetalDown';
+import DandelionPetalUp from '../DandelionPetalUp';
 import Dandelion from '../../Landing/Dandelion';
 
 const dandles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -45,7 +45,7 @@ export default function NewPlantAnimation({ endstate }) {
       <ambientLight intensity={0.3} />
       <Suspense fallback={<FallbackTitle />}>
         <DandelionFlower />
-        <DandelionPetalDown flag={handleNext} />
+        <DandelionPetalUp flag={handleNext} />
         <directionalLight
           position={[0.5, 1, 0.866]}
           intensity={1.7}
@@ -68,7 +68,7 @@ export default function NewPlantAnimation({ endstate }) {
         />
       </Suspense>
       <OrbitControls
-        enableRotate={true}
+        enableRotate={false}
         enablePan={false}
         autoRotate={false}
         minDistance={120}
