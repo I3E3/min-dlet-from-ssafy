@@ -16,6 +16,7 @@ import com.i3e3.mindlet.global.constant.dandelion.DandelionConst;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,15 @@ public class DandelionServiceImpl implements DandelionService {
     private final MemberDandelionHistoryRepository memberDandelionHistoryRepository;
 
     private final FileService fileService;
+
+    @Value("${path.access}")
+    private String fileStorageUrl;
+
+    @Value("${path.access.files.images.content}")
+    private String contentImagePath;
+
+    @Value("${path.access.files.images.nation}")
+    private String nationImagePath;
 
     @Override
     public boolean isBlossomed(Long dandelionSeq) {
@@ -305,6 +315,40 @@ public class DandelionServiceImpl implements DandelionService {
         return memberDandelionHistories.get(size - 1).getDandelion().getSeq().equals(dandelionSeq);
     }
 
+
+    @Override
+    public DandelionDetailSvcDto getDandelionDetail(Long dandelionSeq, Long memberSeq) {
+        memberRepository.findBySeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        List<Petal> petals = findDandelion.getPetals();
+
+        List<DandelionDetailSvcDto.PetalInfo> petalInfos = new ArrayList<>();
+
+        for (Petal petal : petals) {
+            if (petal.isDeleted()) continue;
+
+            petalInfos.add(DandelionDetailSvcDto.PetalInfo.builder()
+                    .seq(petal.getSeq())
+                    .message(petal.getMessage())
+                    .nation(petal.getNation())
+                    .nationImageUrlPath(getNationImagePath(petal.getNation()))
+                    .contentImageUrlPath(getContentImagePath(petal.getImageFilename()))
+                    .createdDate(petal.getCreatedDate())
+                    .build());
+        }
+        petalInfos.sort(Comparator.comparing(DandelionDetailSvcDto.PetalInfo::getCreatedDate));
+
+        return DandelionDetailSvcDto.builder()
+                .dandelionSeq(dandelionSeq)
+                .totalPetalCount(petals.size())
+                .petalInfos(petalInfos)
+                .build();
+    }
+
     private Petal createPetal(Member member, Dandelion dandelion, PetalCreateSvcDto petalCreateSvcDto) throws IOException {
         if (dandelion == null || dandelion.isDeleted()) {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
@@ -350,5 +394,12 @@ public class DandelionServiceImpl implements DandelionService {
             flowerSign = ts.pollFirst();
         }
         return flowerSign;
+    }
+    public String getNationImagePath(String nation){
+        return new StringBuilder().append(fileStorageUrl).append(nationImagePath).append(nation).append(".png").toString();
+    }
+
+    public String getContentImagePath(String imagePath){
+        return new StringBuilder().append(fileStorageUrl).append(contentImagePath).append(imagePath).toString();
     }
 }
