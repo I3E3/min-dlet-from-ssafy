@@ -1583,6 +1583,7 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
     @Test
     @DisplayName("민들레 상태(Hold) 확인 - True")
     void checkHoldTrue() {
@@ -1982,7 +1983,7 @@ class DandelionServiceTest {
 
     @Test
     @DisplayName("민들레 상세조회 기능 - 성공(blossomed)")
-    void getDandelionDetailSuccessBlossomed(){
+    void getDandelionDetailSuccessBlossomed() {
         //given
         Member savedMember1 = memberRepository.save(member1);
         Member savedMember2 = memberRepository.save(member2);
@@ -2072,7 +2073,7 @@ class DandelionServiceTest {
 
     @Test
     @DisplayName("민들레 상세조회 기능 - 성공(participated)")
-    void getDandelionDetailSuccessParticipated(){
+    void getDandelionDetailSuccessParticipated() {
         //given
         Member savedMember1 = memberRepository.save(member1);
         Member savedMember2 = memberRepository.save(member2);
@@ -2117,7 +2118,7 @@ class DandelionServiceTest {
 
     @Test
     @DisplayName("민들레 상세조회 기능 - 실패(회원 존재X)")
-    void getDandelionDetailFailNotExistMember(){
+    void getDandelionDetailFailNotExistMember() {
         //given
         Member savedMember1 = memberRepository.save(member1);
 
@@ -2143,7 +2144,7 @@ class DandelionServiceTest {
 
     @Test
     @DisplayName("민들레 상세조회 기능 - 실패(회원 deleted)")
-    void getDandelionDetailFailDeletedMember(){
+    void getDandelionDetailFailDeletedMember() {
         //given
         Member savedMember1 = memberRepository.save(member1);
 
@@ -2171,7 +2172,7 @@ class DandelionServiceTest {
 
     @Test
     @DisplayName("민들레 상세조회 기능 - 실패(민들레 존재X)")
-    void getDandelionDetailFailNotExistDandelion(){
+    void getDandelionDetailFailNotExistDandelion() {
         //given
         Member savedMember1 = memberRepository.save(member1);
 
@@ -2195,4 +2196,31 @@ class DandelionServiceTest {
 
     }
 
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 실패(민들레 deleted)")
+    void getDandelionDetailFailDeletedDandelion() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        savedDandelion1.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> dandelionService.getDandelionDetail(savedDandelion1.getSeq(), savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+    }
 }
