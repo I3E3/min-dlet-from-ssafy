@@ -20,8 +20,11 @@ const Login = () => {
   // 아이디 중복체크 함수
   const handleValidationClick = async () => {
     // const idInput = document.getElementById('idinput')
+    if (idInput.current.value.length < 5) {
+      return
+    }
     try {
-    const result = await fetch(`${BaseURL}members/id-duplicate-check/${idInput}`)
+    const result = await fetch(`${BaseURL}members/id-duplicate-check/${idInput.current.value}`)
     if (result.status === 204) {
       setIsShow(true)
       setIsValidId(true)
@@ -37,6 +40,11 @@ const Login = () => {
 
   // 로그인 함수
   const handleSignupClick = async () => {
+    if (!(isShow && isValidId)) {
+      toast.error('아이디 중복확인을 진행해 주세요.')
+      return
+    }
+
     if (passwordInput.current.value !== passwordConfirmInput.current.value) {
       return
     }
