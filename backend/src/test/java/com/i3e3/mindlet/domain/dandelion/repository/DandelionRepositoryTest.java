@@ -1184,4 +1184,109 @@ class DandelionRepositoryTest {
         //then
         assertThat(count).isEqualTo(0L);
     }
+
+    @Test
+    @DisplayName("요청 페이지의 민들레 리스트 가져오기 - 데이터가 있는경우")
+    void getParticipationPageHasData() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        em.flush();
+        List<Dandelion> dandelions = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            Dandelion dandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-" + (30 - i)))
+                    .community(member1.getAppConfig().getCommunity())
+                    .flowerSignNumber(i)
+                    .member(member1)
+                    .build();
+            if (i % 3 == 0) {
+                dandelion.changeStatus(Dandelion.Status.ALBUM);
+            }
+            if (i % 3 == 1) {
+                dandelion.changeStatus(Dandelion.Status.BLOSSOMED);
+            }
+            dandelions.add(dandelion);
+            dandelionRepository.save(dandelion);
+            em.flush();
+        }
+
+        for (int i = 0; i < 21; i++) {
+            Petal petal = Petal.builder()
+                    .message("메시지1")
+                    .imageFilename("이미지1")
+                    .nation("국가1")
+                    .dandelion(dandelions.get(i))
+                    .member(member2)
+                    .build();
+            petalRepository.save(petal);
+            em.flush();
+        }
+
+        // 첫번째 페이지
+        int page = 1;
+        int size = 3;
+        List<Dandelion> newDandelions = dandelionRepository.findParticipationByMemberSeqAndPageable(member2.getSeq(), PageRequest.of(page, size))
+                .orElse(null);
+
+        assertThat(newDandelions.size()).isEqualTo(3);
+        assertThat(newDandelions.get(0).getFlowerSignNumber()).isEqualTo(0);
+        assertThat(newDandelions.get(1).getFlowerSignNumber()).isEqualTo(1);
+        assertThat(newDandelions.get(2).getFlowerSignNumber()).isEqualTo(3);
+
+        // 마지막 페이지
+        page = 5;
+        size = 3;
+        newDandelions = dandelionRepository.findParticipationByMemberSeqAndPageable(member2.getSeq(), PageRequest.of(page, size))
+                .orElse(null);
+        assertThat(newDandelions.size()).isEqualTo(2);
+        assertThat(newDandelions.get(0).getFlowerSignNumber()).isEqualTo(18);
+        assertThat(newDandelions.get(1).getFlowerSignNumber()).isEqualTo(19);
+
+        // 0번 민들레 삭제
+        dandelions.get(0).delete();
+        dandelionRepository.save(dandelions.get(0));
+        em.flush();
+        em.clear();
+
+        page = 1;
+        size = 3;
+        newDandelions = dandelionRepository.findParticipationByMemberSeqAndPageable(member2.getSeq(), PageRequest.of(page, size))
+                .orElse(null);
+
+        assertThat(newDandelions.size()).isEqualTo(3);
+        assertThat(newDandelions.get(0).getFlowerSignNumber()).isEqualTo(1);
+        assertThat(newDandelions.get(1).getFlowerSignNumber()).isEqualTo(3);
+        assertThat(newDandelions.get(2).getFlowerSignNumber()).isEqualTo(4);
+
+        // 3번 민들레 꽃잎 삭제
+        dandelions.get(3).getPetals().get(0).delete();
+        petalRepository.save(dandelions.get(3).getPetals().get(0));
+        dandelionRepository.save(dandelions.get(3));
+        em.flush();
+        em.clear();
+
+        page = 1;
+        size = 3;
+        newDandelions = dandelionRepository.findParticipationByMemberSeqAndPageable(member2.getSeq(), PageRequest.of(page, size))
+                .orElse(null);
+
+        assertThat(newDandelions.size()).isEqualTo(3);
+        assertThat(newDandelions.get(0).getFlowerSignNumber()).isEqualTo(1);
+        assertThat(newDandelions.get(1).getFlowerSignNumber()).isEqualTo(4);
+        assertThat(newDandelions.get(2).getFlowerSignNumber()).isEqualTo(6);
+
+        // 민들레 주인 탈퇴
+        member1.delete();
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        page = 1;
+        size = 3;
+        newDandelions = dandelionRepository.findParticipationByMemberSeqAndPageable(member2.getSeq(), PageRequest.of(page, size))
+                .orElse(null);
+
+        assertThat(newDandelions).isNull();
+    }
 }
