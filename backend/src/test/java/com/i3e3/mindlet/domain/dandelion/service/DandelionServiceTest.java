@@ -2069,4 +2069,52 @@ class DandelionServiceTest {
         assertThat(petalInfos.get(0).getMessage()).isEqualTo("안녕하세요!");
         assertThat(petalInfos.get(1).getMessage()).isEqualTo("오 안녕안녕");
     }
+
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 성공(participated)")
+    void getDandelionDetailSuccessParticipated(){
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Petal savedPetal1 = petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        em.flush();
+        em.clear();
+
+        //when
+        Dandelion findDandelion1 = dandelionRepository.findBySeq(savedDandelion1.getSeq()).orElse(null);
+        Member findMember2 = memberRepository.findBySeq(savedMember2.getSeq()).orElse(null);
+
+        Petal savedPetal2 = petalRepository.save(Petal.builder()
+                .message("오 안녕안녕")
+                .dandelion(findDandelion1)
+                .member(findMember2)
+                .nation("KOREA")
+                .imageFilename("pinako.jpg").build());
+
+        findDandelion1.changeStatus(Dandelion.Status.ALBUM);
+
+        em.flush();
+        em.clear();
+
+        DandelionDetailSvcDto dandelionDetail = dandelionService.getDandelionDetail(findDandelion1.getSeq(), findMember2.getSeq());
+        List<DandelionDetailSvcDto.PetalInfo> petalInfos = dandelionDetail.getPetalInfos();
+
+        //then
+        assertThat(petalInfos.size()).isEqualTo(2);
+        assertThat(petalInfos.get(0).getSeq()).isEqualTo(savedPetal1.getSeq());
+        assertThat(petalInfos.get(1).getSeq()).isEqualTo(savedPetal2.getSeq());
+        assertThat(petalInfos.get(0).getMessage()).isEqualTo("안녕하세요!");
+        assertThat(petalInfos.get(1).getMessage()).isEqualTo("오 안녕안녕");
+    }
+
+
+
 }
