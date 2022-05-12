@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -221,7 +222,7 @@ public class DandelionServiceImpl implements DandelionService {
 
         Page<Dandelion> dandelionPage = dandelionRepository.findAlbumByMemberSeq(memberSeq, PageRequest.of(page - 1, size));
 
-        if (dandelionPage.getTotalElements() == 0){
+        if (dandelionPage.getTotalElements() == 0) {
             return null;
         }
 
@@ -274,7 +275,7 @@ public class DandelionServiceImpl implements DandelionService {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         }
 
-        if (petalRepository.existsPetalByDandelionSeqAndMemberSeq(dandelion.getSeq(),member.getSeq())) {
+        if (petalRepository.existsPetalByDandelionSeqAndMemberSeq(dandelion.getSeq(), member.getSeq())) {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         }
 
@@ -331,5 +332,53 @@ public class DandelionServiceImpl implements DandelionService {
         int size = memberDandelionHistories.size();
 
         return memberDandelionHistories.get(size - 1).getDandelion().getSeq().equals(dandelionSeq);
+    }
+
+    @Override
+    public ParticipationListPageSvcDto getParticipationInfo(Long memberSeq, Pageable pageable) {
+
+        long totalCount = dandelionRepository.countParticipationDandelions(memberSeq);
+
+        if (totalCount == 0) {
+            return null;
+        }
+
+        long totalPageNumber = (long) Math.ceil((double) totalCount / pageable.getPageSize());
+
+        List<Dandelion> dandelions = dandelionRepository.findParticipationByMemberSeqAndPageable(memberSeq, pageable)
+                .orElse(null);
+
+        List<Tag> tags = tagRepository.findTagListByMemberSeq(memberSeq)
+                .orElse(null);
+
+
+        List<ParticipationListPageSvcDto.dandelionInfo> dandelionInfos = new ArrayList<>();
+
+        for (Dandelion dandelion : dandelions) {
+            List<ParticipationListPageSvcDto.dandelionInfo.tagInfo> tagInfos = new ArrayList<>();
+            for (Tag tag : tags) {
+                if (tag.getDandelion().getSeq().equals(dandelion.getSeq())) {
+                    tagInfos.add(ParticipationListPageSvcDto.dandelionInfo.tagInfo.builder()
+                            .tagSeq(tag.getSeq())
+                            .tagName(tag.getName())
+                            .build()
+                    );
+                }
+            }
+            dandelionInfos.add(ParticipationListPageSvcDto.dandelionInfo.builder()
+                    .dandelionSeq(dandelion.getSeq())
+                    .tagInfos(tagInfos)
+                    .build()
+            );
+        }
+
+        ParticipationListPageSvcDto participationListPageSvcDto = ParticipationListPageSvcDto.builder()
+                .totalDandelionCount(totalCount)
+                .totalPageNum(totalPageNumber)
+                .nowPageNum(pageable.getPageNumber())
+                .dandelionInfos(dandelionInfos)
+                .build();
+
+        return participationListPageSvcDto;
     }
 }
