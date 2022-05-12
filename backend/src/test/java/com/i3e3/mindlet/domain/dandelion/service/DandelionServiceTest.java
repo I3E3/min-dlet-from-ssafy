@@ -6,11 +6,7 @@ import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionCreateSvcDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.AlbumListPageSvcDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
+import com.i3e3.mindlet.domain.dandelion.service.dto.*;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.entity.MemberDandelionHistory;
@@ -1485,9 +1481,11 @@ class DandelionServiceTest {
                 .message("안녕 나는 피나코야")
                 .blossomedDate(LocalDate.parse("2022-06-30", DateTimeFormatter.ISO_DATE))
                 .imageFile(null)
+                .nation("KOREA")
                 .build();
 
-        dandelionService.createDandelion(savedMember1.getSeq(), newDandelionCreateSvcDto);
+        Dandelion savedDandelion = dandelionService.createDandelion(savedMember1.getSeq(), newDandelionCreateSvcDto);
+        System.out.println("savedDandelion.getPetals().get(0) = " + savedDandelion.getPetals().get(0));
 
         Member findMember1 = memberRepository.findBySeq(savedMember1.getSeq()).orElse(null);
 
@@ -1746,5 +1744,28 @@ class DandelionServiceTest {
 
         // then
         assertThat(isMostRecentParticipant).isFalse();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Flying) 확인 - true")
+    void checkFlyingTrue() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(savedMember1.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(savedMember1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isFlying = dandelionService.isFlying(savedDandelion.getSeq());
+
+        // then
+        assertThat(isFlying).isTrue();
     }
 }
