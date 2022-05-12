@@ -1,5 +1,6 @@
 package com.i3e3.mindlet.domain.member.service;
 
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.repository.AppConfigRepository;
@@ -26,6 +27,8 @@ public class MemberServiceImpl implements MemberService {
     private final AppConfigRepository appConfigRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final TagRepository tagRepository;
 
     @Override
     public boolean login(MemberLoginDto memberLoginDto) {
@@ -106,5 +109,18 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
 
         appConfig.changeLanguage(changeLanguage);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long memberSeq) {
+        Member findMember = memberRepository.findBySeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        if (findMember.isDeleted()) {
+            throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
+        }
+
+        findMember.delete();
     }
 }

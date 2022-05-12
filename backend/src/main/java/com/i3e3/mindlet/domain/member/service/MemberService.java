@@ -24,4 +24,6 @@ public interface MemberService {
     void changeSound(Long memberSeq, boolean soundOff);
 
     void changeLanguage(Long memberSeq, AppConfig.Language language);
+
+    void delete(Long memberSeq);
 }

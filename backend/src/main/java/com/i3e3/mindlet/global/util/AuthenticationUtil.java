@@ -11,7 +11,7 @@ public class AuthenticationUtil {
         return ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails()).getMember().getSeq();
     }
 
-    public static void verityMember(Long memberSeq) {
+    public static void verifyMember(Long memberSeq) {
         if (((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails()).getMember().getSeq().equals(memberSeq)) {
             return;
         }

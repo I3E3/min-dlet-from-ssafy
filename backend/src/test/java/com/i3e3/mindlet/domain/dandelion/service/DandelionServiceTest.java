@@ -1746,6 +1746,483 @@ class DandelionServiceTest {
     }
 
     @Test
+    @DisplayName("민들레 상태(Flying) 확인 - true")
+    void checkFlyingTrue() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(savedMember1.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(savedMember1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isFlying = dandelionService.isFlying(savedDandelion.getSeq());
+
+        // then
+        assertThat(isFlying).isTrue();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Flying) 확인 - False")
+    void checkFlyingFalse() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(savedMember1.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(savedMember1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.HOLD);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isFlying = dandelionService.isFlying(savedDandelion.getSeq());
+
+        // then
+        assertThat(isFlying).isFalse();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Flying) 확인 - 데이터 없어서 예외 발생")
+    void checkFlyingExceptionWhenNotExists() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isFlying(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Flying) 확인 - 삭체 처리되어 예외 발생")
+    void checkFlyingExceptionWhenDeleted() {
+        // given
+        memberRepository.save(member1);
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isFlying(savedDandelion1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("꽃잎 추가 - 예외 발생 : 회원 데이터 없음")
+    void addPetalExceptionWhenNotExistMember() throws IOException {
+        // given
+        memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.addPetal(0L, savedDandelion1.getSeq(), newPetalCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("꽃잎 추가 - 예외 발생 : 회원 탈퇴")
+    void addPetalExceptionWhenDeletedMember() {
+        // given
+        member1.delete();
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.addPetal(savedMember1.getSeq(), savedDandelion1.getSeq(), newPetalCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("꽃잎 추가 - 예외 발생 : 민들레 데이터 없음")
+    void addPetalExceptionWhenNotExistDandelion() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelionRepository.save(dandelion1);
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.addPetal(savedMember1.getSeq(), 0L, newPetalCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("꽃잎 추가 - 예외 발생 : 민들레 삭제 처리")
+    void addPetalExceptionWhenDeletedDandelion() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.addPetal(savedMember1.getSeq(), savedDandelion1.getSeq(), newPetalCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("꽃잎 추가 - 성공")
+    void addPetalSuccess() throws IOException {
+        // given
+        Member newMember = Member.builder()
+                .id("newId")
+                .password("newPassword")
+                .build();
+        AppConfig.builder()
+                .member(newMember)
+                .language(AppConfig.Language.KOREAN)
+                .build();
+        Member newSavedMember = memberRepository.save(newMember);
+        em.flush();
+        em.clear();
+
+        DandelionCreateSvcDto newDandelion = DandelionCreateSvcDto.builder()
+                .message("하하하하하")
+                .imageFile(null)
+                .blossomedDate(LocalDate.parse("2022-05-30"))
+                .nation("KOREA")
+                .build();
+        Dandelion savedDandelion = dandelionService.createDandelion(newSavedMember.getSeq(), newDandelion);
+
+        Member savedMember1 = memberRepository.save(member1);
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+
+        // when
+        Petal savedPetal = dandelionService.addPetal(savedMember1.getSeq(), savedDandelion.getSeq(), newPetalCreateSvcDto);
+        em.flush();
+        em.clear();
+        Petal findPetal = petalRepository.findBySeq(savedPetal.getSeq())
+                .orElse(null);
+        Dandelion findDandelion1 = dandelionRepository.findBySeq(savedDandelion.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion1.getPetals().size()).isEqualTo(2);
+        assertThat(findPetal.getMessage()).isEqualTo(newPetalCreateSvcDto.getMessage());
+        assertThat(findPetal.getImageFilename()).isNull();
+        assertThat(findPetal.getNation()).isEqualTo("KOREA");
+    }
+
+    @Test
+    @DisplayName("꽃잎 추가 - 예외 발생 : 중복 추가")
+    void addPetalExceptionWhenMultiplePetal() throws IOException {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        DandelionCreateSvcDto newDandelion = DandelionCreateSvcDto.builder()
+                .message("하하하하하")
+                .imageFile(null)
+                .blossomedDate(LocalDate.parse("2022-05-30"))
+                .nation("KOREA")
+                .build();
+        Dandelion savedDandelion = dandelionService.createDandelion(savedMember1.getSeq(), newDandelion);
+
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.addPetal(savedMember1.getSeq(), savedDandelion.getSeq(), newPetalCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 성공(blossomed)")
+    void getDandelionDetailSuccessBlossomed() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Petal savedPetal1 = petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        em.flush();
+        em.clear();
+
+        //when
+        Dandelion findDandelion1 = dandelionRepository.findBySeq(savedDandelion1.getSeq()).orElse(null);
+        Member findMember2 = memberRepository.findBySeq(savedMember2.getSeq()).orElse(null);
+
+        Petal savedPetal2 = petalRepository.save(Petal.builder()
+                .message("오 안녕안녕")
+                .dandelion(findDandelion1)
+                .member(findMember2)
+                .nation("KOREA")
+                .imageFilename("pinako.jpg").build());
+
+        findDandelion1.changeStatus(Dandelion.Status.BLOSSOMED);
+
+        em.flush();
+        em.clear();
+
+        DandelionDetailSvcDto dandelionDetail = dandelionService.getDandelionDetail(findDandelion1.getSeq(), savedMember1.getSeq());
+        List<DandelionDetailSvcDto.PetalInfo> petalInfos = dandelionDetail.getPetalInfos();
+
+        //then
+        assertThat(petalInfos.size()).isEqualTo(2);
+        assertThat(petalInfos.get(0).getSeq()).isEqualTo(savedPetal1.getSeq());
+        assertThat(petalInfos.get(1).getSeq()).isEqualTo(savedPetal2.getSeq());
+        assertThat(petalInfos.get(0).getMessage()).isEqualTo("안녕하세요!");
+        assertThat(petalInfos.get(1).getMessage()).isEqualTo("오 안녕안녕");
+    }
+
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 성공(album)")
+    void getDandelionDetailSuccessAlbum() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Petal savedPetal1 = petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        em.flush();
+        em.clear();
+
+        //when
+        Dandelion findDandelion1 = dandelionRepository.findBySeq(savedDandelion1.getSeq()).orElse(null);
+        Member findMember2 = memberRepository.findBySeq(savedMember2.getSeq()).orElse(null);
+
+        Petal savedPetal2 = petalRepository.save(Petal.builder()
+                .message("오 안녕안녕")
+                .dandelion(findDandelion1)
+                .member(findMember2)
+                .nation("KOREA")
+                .imageFilename("pinako.jpg").build());
+
+        findDandelion1.changeStatus(Dandelion.Status.ALBUM);
+
+        em.flush();
+        em.clear();
+
+        DandelionDetailSvcDto dandelionDetail = dandelionService.getDandelionDetail(findDandelion1.getSeq(), savedMember1.getSeq());
+        List<DandelionDetailSvcDto.PetalInfo> petalInfos = dandelionDetail.getPetalInfos();
+
+        //then
+        assertThat(petalInfos.size()).isEqualTo(2);
+        assertThat(petalInfos.get(0).getSeq()).isEqualTo(savedPetal1.getSeq());
+        assertThat(petalInfos.get(1).getSeq()).isEqualTo(savedPetal2.getSeq());
+        assertThat(petalInfos.get(0).getMessage()).isEqualTo("안녕하세요!");
+        assertThat(petalInfos.get(1).getMessage()).isEqualTo("오 안녕안녕");
+    }
+
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 성공(participated)")
+    void getDandelionDetailSuccessParticipated() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+        Member savedMember2 = memberRepository.save(member2);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Petal savedPetal1 = petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        em.flush();
+        em.clear();
+
+        //when
+        Dandelion findDandelion1 = dandelionRepository.findBySeq(savedDandelion1.getSeq()).orElse(null);
+        Member findMember2 = memberRepository.findBySeq(savedMember2.getSeq()).orElse(null);
+
+        Petal savedPetal2 = petalRepository.save(Petal.builder()
+                .message("오 안녕안녕")
+                .dandelion(findDandelion1)
+                .member(findMember2)
+                .nation("KOREA")
+                .imageFilename("pinako.jpg").build());
+
+        findDandelion1.changeStatus(Dandelion.Status.ALBUM);
+
+        em.flush();
+        em.clear();
+
+        DandelionDetailSvcDto dandelionDetail = dandelionService.getDandelionDetail(findDandelion1.getSeq(), findMember2.getSeq());
+        List<DandelionDetailSvcDto.PetalInfo> petalInfos = dandelionDetail.getPetalInfos();
+
+        //then
+        assertThat(petalInfos.size()).isEqualTo(2);
+        assertThat(petalInfos.get(0).getSeq()).isEqualTo(savedPetal1.getSeq());
+        assertThat(petalInfos.get(1).getSeq()).isEqualTo(savedPetal2.getSeq());
+        assertThat(petalInfos.get(0).getMessage()).isEqualTo("안녕하세요!");
+        assertThat(petalInfos.get(1).getMessage()).isEqualTo("오 안녕안녕");
+    }
+
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 실패(회원 존재X)")
+    void getDandelionDetailFailNotExistMember() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> dandelionService.getDandelionDetail(savedDandelion1.getSeq(), 0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 실패(회원 deleted)")
+    void getDandelionDetailFailDeletedMember() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        savedMember1.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> dandelionService.getDandelionDetail(savedDandelion1.getSeq(), savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 실패(민들레 존재X)")
+    void getDandelionDetailFailNotExistDandelion() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> dandelionService.getDandelionDetail(0L, savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("민들레 상세조회 기능 - 실패(민들레 deleted)")
+    void getDandelionDetailFailDeletedDandelion() {
+        //given
+        Member savedMember1 = memberRepository.save(member1);
+
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        petalRepository.save(Petal.builder()
+                .message("안녕하세요!")
+                .dandelion(savedDandelion1)
+                .member(savedMember1)
+                .nation("KOREA")
+                .imageFilename("testImg.jpg").build());
+
+        savedDandelion1.delete();
+
+        em.flush();
+        em.clear();
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> dandelionService.getDandelionDetail(savedDandelion1.getSeq(), savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+    }
+
+    @Test
     @DisplayName("기록 보관함 조회 페이징 - 데이터가 있는 경우")
     void getParticipationPageHasData() {
         // given

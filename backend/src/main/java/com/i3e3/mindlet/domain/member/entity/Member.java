@@ -84,5 +84,15 @@ public class Member extends BaseLastModifiedEntity {
 
     public void delete() {
         this.isDeleted = true;
+
+        for (Dandelion dandelion : this.dandelions) {
+            dandelion.delete();
+        }
+
+        for (Petal petal : this.petals) {
+            petal.delete();
+        }
+
+        this.tags.clear();
     }
 }
