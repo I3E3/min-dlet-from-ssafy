@@ -1150,4 +1150,38 @@ class DandelionRepositoryTest {
         count = dandelionRepository.countParticipationDandelions(member2.getSeq());
         assertThat(count).isEqualTo(0L);
     }
+
+    @Test
+    @DisplayName("전체 기록보관함 민들레 개수 가져오기 - 데이터 없는 경우")
+    void countToTalParticipationNoneData() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        em.flush();
+        List<Dandelion> dandelions = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            Dandelion dandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-30"))
+                    .community(member1.getAppConfig().getCommunity())
+                    .flowerSignNumber(1)
+                    .member(member1)
+                    .build();
+            if (i % 3 == 0) {
+                dandelion.changeStatus(Dandelion.Status.ALBUM);
+            }
+            if (i % 3 == 1) {
+                dandelion.changeStatus(Dandelion.Status.BLOSSOMED);
+            }
+            dandelions.add(dandelion);
+            dandelionRepository.save(dandelion);
+            em.flush();
+        }
+        em.clear();
+
+        // when
+        Long count = dandelionRepository.countParticipationDandelions(member2.getSeq());
+
+        //then
+        assertThat(count).isEqualTo(0L);
+    }
 }
