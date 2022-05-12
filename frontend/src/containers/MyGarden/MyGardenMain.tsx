@@ -6,15 +6,15 @@ import pencil from "assets/images/pencil.png";
 import album from "assets/images/photo-album.png";
 import styles from "./MyGarden.module.scss";
 import classNames from "classnames/bind";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MyGardenDandelion from "./MyGardenDandelion";
 
 const cx = classNames.bind(styles);
 
 function MyGardenMain() {
   const navigate = useNavigate();
-  const { isLoading, data } = useQuery(["getGarden"], () => getGarden());
-  console.log(data);
+  // const { isLoading, data } = useQuery(["getGarden"], () => getGarden());
+  // console.log(data);
 
   const [dandelions, setDandelions] = useState(["A", "B", "C", "D", "E"]);
   const onSettingsClick = () => {
@@ -57,7 +57,7 @@ function MyGardenMain() {
       </div>
 
       <div>
-        {isLoading ? <div>꽃밭을 불러오는 중 ...</div> : <div>{data}</div>}
+        {/* {isLoading ? <div>꽃밭을 불러오는 중 ...</div> : <div>{data}</div>} */}
       </div>
 
       <div>
