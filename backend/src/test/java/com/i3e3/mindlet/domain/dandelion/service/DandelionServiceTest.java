@@ -1883,4 +1883,25 @@ class DandelionServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("꽃잎 추가 - 예외 발생 : 민들레 삭제 처리")
+    void addPetalExceptionWhenDeletedDandelion() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        dandelion1.delete();
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.addPetal(savedMember1.getSeq(), savedDandelion1.getSeq(), newPetalCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
