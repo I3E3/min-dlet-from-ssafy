@@ -1872,4 +1872,22 @@ class DandelionServiceTest {
 
         assertThat(participationListPageSvcDto).isNull();
     }
+
+    @Test
+    @DisplayName("기록 보관함 조회 페이징 - 데이터가 없는 경우")
+    void getParticipationPageNoneData() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        em.flush();
+        em.flush();
+
+        // when
+        int page = 1;
+        int size = 3;
+        ParticipationListPageSvcDto participationListPageSvcDto = dandelionService.getParticipationInfo(member2.getSeq(), PageRequest.of(page, size));
+
+        // then
+        assertThat(participationListPageSvcDto).isNull();
+    }
 }
