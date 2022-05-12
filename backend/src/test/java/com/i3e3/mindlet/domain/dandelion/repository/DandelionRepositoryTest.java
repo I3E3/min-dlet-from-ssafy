@@ -1,6 +1,7 @@
 package com.i3e3.mindlet.domain.dandelion.repository;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.entity.Petal;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.entity.MemberDandelionHistory;
@@ -36,6 +37,9 @@ class DandelionRepositoryTest {
 
     @Autowired
     private DandelionRepository dandelionRepository;
+
+    @Autowired
+    private PetalRepository petalRepository;
 
     @Autowired
     private AppConfigRepository appConfigRepository;
@@ -1072,5 +1076,78 @@ class DandelionRepositoryTest {
 
         // then
         assertThat(isExists).isFalse();
+    }
+
+    @Test
+    @DisplayName("전체 기록보관함 민들레 개수 가져오기 - 데이터 있는 경우")
+    void countToTalParticipationHasData() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        em.flush();
+        List<Dandelion> dandelions = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            Dandelion dandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-30"))
+                    .community(member1.getAppConfig().getCommunity())
+                    .flowerSignNumber(1)
+                    .member(member1)
+                    .build();
+            if (i % 3 == 0) {
+                dandelion.changeStatus(Dandelion.Status.ALBUM);
+            }
+            if (i % 3 == 1) {
+                dandelion.changeStatus(Dandelion.Status.BLOSSOMED);
+            }
+            dandelions.add(dandelion);
+            dandelionRepository.save(dandelion);
+            em.flush();
+        }
+
+        for (int i = 0; i < 21; i++) {
+            Petal petal = Petal.builder()
+                    .message("메시지1")
+                    .imageFilename("이미지1")
+                    .nation("국가1")
+                    .dandelion(dandelions.get(i))
+                    .member(member2)
+                    .build();
+            petalRepository.save(petal);
+            em.flush();
+        }
+        em.clear();
+
+        // when then
+
+        // blossomed 7개 album 7개
+        Long count = dandelionRepository.countParticipationDandelions(member2.getSeq());
+        assertThat(count).isEqualTo(14L);
+
+        // blossomed 7개 album 6개
+        dandelions.get(3).delete();
+        dandelionRepository.save(dandelions.get(3));
+        em.flush();
+        em.clear();
+
+        count = dandelionRepository.countParticipationDandelions(member2.getSeq());
+        assertThat(count).isEqualTo(13L);
+
+        // blossomed 7개 album 5개
+        dandelions.get(6).getPetals().get(0).delete();
+        dandelionRepository.save(dandelions.get(6));
+        em.flush();
+        em.clear();
+
+        count = dandelionRepository.countParticipationDandelions(member2.getSeq());
+        assertThat(count).isEqualTo(12L);
+
+        // 둘다 0개
+        member1.delete();
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        count = dandelionRepository.countParticipationDandelions(member2.getSeq());
+        assertThat(count).isEqualTo(0L);
     }
 }
