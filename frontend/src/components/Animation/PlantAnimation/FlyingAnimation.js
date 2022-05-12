@@ -47,6 +47,15 @@ export default function FlyingAnimation({ endstate, msgCheck, isPossible }) {
     SetDandel(petals);
   };
 
+  const petalAppear = (petal) => {
+    SetPage(petal);
+  };
+
+  useEffect(() => {
+    console.log(pagestate);
+    if (pagestate === 1) endstate(true);
+  }, [pagestate]);
+
   useEffect(() => {
     console.log(nextstate);
     if (nextstate === true) down(true);
@@ -55,8 +64,7 @@ export default function FlyingAnimation({ endstate, msgCheck, isPossible }) {
   useEffect(() => {
     console.log(dandelstate);
     if (dandelstate === true) {
-      console.log('얍');
-      endstate(true);
+      //
       petalUp(true);
     }
   }, [dandelstate]);
@@ -79,11 +87,11 @@ export default function FlyingAnimation({ endstate, msgCheck, isPossible }) {
         <DandelionSeedDown flag={handleNext} />
         <directionalLight position={[0.5, 1, 0.866]} intensity={1.7} />
         <DandelionUp dandelUp={grassState} petal={petalUp} />
-        {/* <DandelionPetalUp petal={petalUp} flag={petalUp} /> */}
+        {dandelstate && <DandelionPetalUp flag={petalAppear} />}
         <directionalLight position={[0.5, 10, 0.866]} intensity={1.7} />
-        {dandles.map((dandle) => {
+        {/* {dandles.map((dandle) => {
           return <FlyingSeed key={dandle} seed={dandle} />;
-        })}
+        })} */}
         <directionalLight position={[-1, -0.3, -0.866]} intensity={1} />
       </Suspense>
       <OrbitControls
