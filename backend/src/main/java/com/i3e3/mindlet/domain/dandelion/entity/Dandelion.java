@@ -77,6 +77,12 @@ public class Dandelion extends BaseLastModifiedEntity {
 
     public void delete() {
         this.isDeleted = true;
+
+        for (Petal petal : this.getPetals()) {
+            petal.delete();
+        }
+
+        this.tags.clear();
     }
 
     public void changeCommunity(Community community) {
