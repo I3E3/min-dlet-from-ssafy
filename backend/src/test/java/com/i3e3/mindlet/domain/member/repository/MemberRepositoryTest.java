@@ -199,4 +199,17 @@ class MemberRepositoryTest {
         // then
         assertThat(findMember).isNull();
     }
+
+    @Test
+    @DisplayName("회원 식별키로 회원 엔티티(삭제 포함) 조회 - 데이터가 없는 경우")
+    void findMemberBySeqContainsDeletedWhenNotExist() {
+        // given
+
+        // when
+        Member findMember1 = memberRepository.findBySeqContainsDeleted(0L)
+                .orElse(null);
+
+        // then
+        assertThat(findMember1).isNull();
+    }
 }
