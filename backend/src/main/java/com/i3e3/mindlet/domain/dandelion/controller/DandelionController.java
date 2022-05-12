@@ -355,6 +355,7 @@ public class DandelionController {
                     description = "서버 에러",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{dandelionSeq}/status-flying")
     public BaseResponseDto<Void> holdUnlock(@PathVariable("dandelionSeq") Long dandelionSeq) {

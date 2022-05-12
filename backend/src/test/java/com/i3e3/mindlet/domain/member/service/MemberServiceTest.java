@@ -1,5 +1,12 @@
 package com.i3e3.mindlet.domain.member.service;
 
+import com.i3e3.mindlet.domain.dandelion.controller.dto.DandelionRegisterDto;
+import com.i3e3.mindlet.domain.dandelion.controller.dto.PetalRegisterDto;
+import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.entity.Petal;
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
+import com.i3e3.mindlet.domain.dandelion.service.DandelionService;
+import com.i3e3.mindlet.domain.dandelion.service.TagService;
 import com.i3e3.mindlet.domain.member.controller.dto.LoginRequestDto;
 import com.i3e3.mindlet.domain.member.controller.dto.RegisterRequestDto;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
@@ -18,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,6 +50,16 @@ class MemberServiceTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DandelionService dandelionService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private TagRepository tagRepository;
+
 
     private Member member1;
 
@@ -457,5 +476,156 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.getMemberInfoBySeq(0L))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 - 예외 발생 : 회원 데이터 없음")
+    void deleteMemberExceptionWhenNotExistsMember() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.delete(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 - 예외 발생 : 이미 삭제된 회원")
+    void deleteMemberExceptionWhenDeletedMember() {
+        // given
+        member1.delete();
+        Member savedMember1 = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.delete(savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 - 성공 : 데이터 검증")
+    void deleteMemberSuccess() throws IOException {
+        // given
+        /**
+         * 회원1 회원가입
+         * 회원1을 탈퇴 처리합니다.
+         */
+        Member savedMember1 = memberService.register(RegisterRequestDto.builder()
+                .id("id01")
+                .password("pass12#$")
+                .build().toServiceDto());
+
+        /**
+         * 회원2 회원가입
+         */
+        Member savedMember2 = memberService.register(RegisterRequestDto.builder()
+                .id("id02")
+                .password("pass12#$")
+                .build().toServiceDto());
+
+        /**
+         * 회원1 계정으로 민들레, 꽃잎 생성
+         * 회원1 계정이 삭제 처리되면 이 데이터들은 삭제 처리되어야 한다.
+         */
+        Dandelion savedDandelionByMember1 = dandelionService.createDandelion(savedMember1.getSeq(), DandelionRegisterDto.builder()
+                .blossomedDate("2022-12-30")
+                .message("messageByMember1")
+                .imageFile(null)
+                .build().toSvcDto());
+
+        /**
+         * 회원2 계정으로 민들레, 꽃잎 생성
+         * 회원1 계정이 삭제 처리되어도 이 데이터는 존재해야 한다.
+         */
+        Dandelion savedDandelionByMember2 = dandelionService.createDandelion(savedMember2.getSeq(), DandelionRegisterDto.builder()
+                .blossomedDate("2022-12-30")
+                .message("messageByMember2")
+                .imageFile(null)
+                .build().toSvcDto());
+
+        /**
+         * 회원2 계정으로 회원1 계정의 민들레에 꽃잎을 추가한다.
+         * 회원1 계정이 삭제 처리되면 이 데이터는 삭제 처리되어야 한다.
+         */
+        dandelionService.addPetal(savedMember2.getSeq(), savedDandelionByMember1.getSeq(), PetalRegisterDto.builder()
+                .imageFile(null)
+                .message("messageByMember2")
+                .build().toSvcDto());
+
+        /**
+         * 회원1 계정으로 회원2 계정의 민들레에 꽃잎을 추가한다.
+         * 회원1 계정이 삭제 처리되면 이 데이터는 삭제 처리되어야 한다.
+         */
+        dandelionService.addPetal(savedMember1.getSeq(), savedDandelionByMember2.getSeq(), PetalRegisterDto.builder()
+                .imageFile(null)
+                .message("messageByMember1")
+                .build().toSvcDto());
+
+        /**
+         * 회원2 계정으로 회원1 계정의 민들레에 태그를 추가한다.
+         * 회원1 계정이 삭제 처리되면 이 데이터는 완전 삭제되어야 한다.
+         */
+        tagService.registerDandelionTag(savedDandelionByMember1.getSeq(), savedMember2.getSeq(), "tg1ByMember2");
+        tagService.registerDandelionTag(savedDandelionByMember1.getSeq(), savedMember2.getSeq(), "tg2ByMember2");
+
+        /**
+         * 회원1 계정으로 회원2 계정의 민들레에 태그를 추가한다.
+         * 회원1 계정이 삭제 처리되면 이 데이터는 완전 삭제되어야 한다.
+         */
+        tagService.registerDandelionTag(savedDandelionByMember2.getSeq(), savedMember1.getSeq(), "tg1ByMember1");
+        tagService.registerDandelionTag(savedDandelionByMember2.getSeq(), savedMember1.getSeq(), "tg2ByMember1");
+
+        // when
+        memberService.delete(savedMember1.getSeq());
+
+        // then
+        /**
+         * 회원 식별키로 데이터를 조회(findBySeq: 삭데 처리된 데이터는 조회하지 않는다.)하면 예외가 발생해야 한다.
+         */
+        assertThatThrownBy(() -> memberRepository.findBySeq(savedMember1.getSeq())
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage())))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+
+        Member deletedMember = memberRepository.findBySeqContainsDeleted(savedMember1.getSeq())
+                .orElse(null);
+
+        /**
+         * 삭제 처리 검증
+         */
+        assertThat(deletedMember.isDeleted()).isTrue();
+
+        /**
+         * 1. 회원1이 생성한 민들레 삭제 처리 검증
+         * 2. 회원1이 생성한 민들레에 추가되었던 꽃잎 삭제 처리 검증
+         * 3. 회원1이 생성한 민들레게 추가되었던 태그 리스트 사이즈 0 검증
+         */
+        for (Dandelion dandelion : deletedMember.getDandelions()) {
+            assertThat(dandelion.isDeleted()).isTrue();
+
+            for (Petal petal : dandelion.getPetals()) {
+                assertThat(petal.isDeleted()).isTrue();
+            }
+
+            assertThat(dandelion.getTags().size()).isEqualTo(0);
+        }
+
+        /**
+         * 회원 1이 참여하였던 민들레의 꽃잎 삭제 처리 검증
+         */
+        for (Petal petal : deletedMember.getPetals()) {
+            assertThat(petal.isDeleted()).isTrue();
+        }
+
+        /**
+         * 회원1이 참여하였던 민들레들의 태그 리스트 사이즈 0 검증
+         */
+        assertThat(deletedMember.getTags().size()).isEqualTo(0);
     }
 }

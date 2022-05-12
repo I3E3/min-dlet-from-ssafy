@@ -135,7 +135,7 @@ public class MemberController {
     @PatchMapping("/{memberSeq}/community")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto<Void> changeCommunity(@PathVariable Long memberSeq, @Validated @RequestBody CommunityModifyDto modifyDto) {
-        AuthenticationUtil.verityMember(memberSeq);
+        AuthenticationUtil.verifyMember(memberSeq);
 
         Community community = null;
         try {
@@ -181,7 +181,7 @@ public class MemberController {
     @PatchMapping("/{memberSeq}/sound-off")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto<Void> changeSound(@PathVariable Long memberSeq, @Validated @RequestBody SoundModifyDto modifyDto) {
-        AuthenticationUtil.verityMember(memberSeq);
+        AuthenticationUtil.verifyMember(memberSeq);
 
         memberService.changeSound(memberSeq, modifyDto.isSoundOff());
 
@@ -220,7 +220,7 @@ public class MemberController {
     @PatchMapping("/{memberSeq}/language")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto<Void> changeLanguage(@PathVariable Long memberSeq, @Validated @RequestBody LanguageModifyDto modifyDto) {
-        AuthenticationUtil.verityMember(memberSeq);
+        AuthenticationUtil.verifyMember(memberSeq);
 
         AppConfig.Language language = null;
 
@@ -302,15 +302,51 @@ public class MemberController {
                     description = "서버 에러",
                     content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{memberSeq}")
     public BaseResponseDto<MemberInfoDto> memberInfo(@PathVariable Long memberSeq) {
-        AuthenticationUtil.verityMember(memberSeq);
+        AuthenticationUtil.verifyMember(memberSeq);
 
         MemberInfoDto memberInfo = memberService.getMemberInfoBySeq(memberSeq);
 
         return BaseResponseDto.<MemberInfoDto>builder()
                 .data(memberInfo)
+                .build();
+    }
+
+    @Operation(
+            summary = "회원 탈퇴 API",
+            description = "인증 토큰, 회원 식별키를 받고 회원 탈퇴 처리 합니다.",
+            tags = {"member"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "회원 탈퇴 성공",
+                    content = @Content(schema = @Schema(implementation = BaseResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "토큰 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 에러",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{memberSeq}")
+    public BaseResponseDto<Void> delete(@PathVariable("memberSeq") Long memberSeq) {
+        AuthenticationUtil.verifyMember(memberSeq);
+
+        memberService.delete(memberSeq);
+
+        return BaseResponseDto.<Void>builder()
                 .build();
     }
 }
