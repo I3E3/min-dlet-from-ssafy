@@ -1,11 +1,8 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
-import com.i3e3.mindlet.domain.dandelion.service.dto.AlbumListPageSvcDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.*;
+import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,4 +40,6 @@ public interface DandelionService {
     boolean isHold(Long dandelionSeq);
 
     boolean isMostRecentParticipant(Long dandelionSeq, Long memberSeq);
+
+    ParticipationListPageSvcDto getParticipationInfo(Long memberSeq, Pageable pageable);
 }
