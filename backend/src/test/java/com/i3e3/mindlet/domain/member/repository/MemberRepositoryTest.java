@@ -229,4 +229,22 @@ class MemberRepositoryTest {
         assertThat(findMember1.getSeq()).isEqualTo(savedMember1.getSeq());
         assertThat(findMember1.isDeleted()).isFalse();
     }
+
+    @Test
+    @DisplayName("회원 식별키로 회원 엔티티(삭제 포함) 조회 - 데이터가 있고 삭제된 경우")
+    void findMemberBySeqContainsDeletedWhenDeleted() {
+        // given
+        member1.delete();
+        Member savedMember1 = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+        Member findMember1 = memberRepository.findBySeqContainsDeleted(savedMember1.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findMember1.getSeq()).isEqualTo(savedMember1.getSeq());
+        assertThat(findMember1.isDeleted()).isTrue();
+    }
 }
