@@ -16,7 +16,7 @@ public class AlbumListPageSvcDto {
 
     private int totalPageNum;
 
-    List<AlbumListPageSvcDto.dandelionInfo> dandelionInfos;
+    private List<AlbumListPageSvcDto.dandelionInfo> dandelionInfos;
 
     @Builder
     public AlbumListPageSvcDto(Long totalDandelionCount,
