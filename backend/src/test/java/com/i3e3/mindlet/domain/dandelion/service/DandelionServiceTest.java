@@ -1951,4 +1951,31 @@ class DandelionServiceTest {
         assertThat(findPetal.getImageFilename()).isNull();
         assertThat(findPetal.getNation()).isEqualTo("KOREA");
     }
+
+    @Test
+    @DisplayName("꽃잎 추가 - 예외 발생 : 중복 추가")
+    void addPetalExceptionWhenMultiplePetal() throws IOException {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        DandelionCreateSvcDto newDandelion = DandelionCreateSvcDto.builder()
+                .message("하하하하하")
+                .imageFile(null)
+                .blossomedDate(LocalDate.parse("2022-05-30"))
+                .nation("KOREA")
+                .build();
+        Dandelion savedDandelion = dandelionService.createDandelion(savedMember1.getSeq(), newDandelion);
+
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.addPetal(savedMember1.getSeq(), savedDandelion.getSeq(), newPetalCreateSvcDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
