@@ -1,0 +1,98 @@
+import React, { useState, Suspense, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Html } from '@react-three/drei';
+import DandelionUp from '../DandelionUp';
+import DandelionPetalUp from '../DandelionPetalUp';
+import DandelionSeedDown from '../DandelionSeedDown';
+import FlyingSeed from '../FlyingSeed';
+import Grass from '../Grass';
+
+const dandles = [
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+  22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+];
+
+function FallbackTitle() {
+  return (
+    <Html center>
+      <h1 style={{ color: 'white' }}>
+        <br />
+        Loading...
+        <br />
+      </h1>
+    </Html>
+  );
+}
+
+export default function FlyingAnimation({ endstate, msgCheck, isPossible }) {
+  const [nextstate, SetNext] = useState(false);
+  const [grassState, SetGrass] = useState(false);
+  const [dandelstate, SetDandel] = useState(false);
+  const [pagestate, SetPage] = useState(false);
+
+  const touch = () => {
+    msgCheck(1);
+    console.log(isPossible);
+  };
+
+  const handleNext = (next) => {
+    SetNext(next);
+  };
+
+  const down = (next) => {
+    SetGrass(next);
+  };
+
+  const petalUp = (petals) => {
+    SetDandel(petals);
+  };
+
+  useEffect(() => {
+    console.log(nextstate);
+    if (nextstate === true) down(true);
+  }, [nextstate]);
+
+  useEffect(() => {
+    console.log(dandelstate);
+    if (dandelstate === true) {
+      console.log('얍');
+      endstate(true);
+      petalUp(true);
+    }
+  }, [dandelstate]);
+
+  return (
+    <Canvas
+      frameloop="demand"
+      camera={{
+        position: [60, -50, 110],
+        // <Canvas frameloop="demand" style={{pointerEvents: 'auto', cursor:'pointer'}} pixelRatio={[1, 1]} camera={{ position: [-15, 27, 150],
+        fov: 90,
+        far: 500,
+        near: 10,
+      }}
+      onClick={touch}
+    >
+      <ambientLight intensity={0.3} />
+      <Suspense fallback={<FallbackTitle />}>
+        <Grass downgrass={grassState} />
+        <DandelionSeedDown flag={handleNext} />
+        <directionalLight position={[0.5, 1, 0.866]} intensity={1.7} />
+        <DandelionUp dandelUp={grassState} petal={petalUp} />
+        {/* <DandelionPetalUp petal={petalUp} flag={petalUp} /> */}
+        <directionalLight position={[0.5, 10, 0.866]} intensity={1.7} />
+        {dandles.map((dandle) => {
+          return <FlyingSeed key={dandle} seed={dandle} />;
+        })}
+        <directionalLight position={[-1, -0.3, -0.866]} intensity={1} />
+      </Suspense>
+      <OrbitControls
+        enableRotate={false}
+        enablePan={false}
+        autoRotate={false}
+        minDistance={120}
+        maxDistance={150}
+      />
+    </Canvas>
+  );
+}
