@@ -1,5 +1,8 @@
 package com.i3e3.mindlet.domain.member.service;
 
+import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
+import com.i3e3.mindlet.domain.dandelion.service.DandelionService;
+import com.i3e3.mindlet.domain.dandelion.service.TagService;
 import com.i3e3.mindlet.domain.member.controller.dto.LoginRequestDto;
 import com.i3e3.mindlet.domain.member.controller.dto.RegisterRequestDto;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
@@ -41,6 +44,16 @@ class MemberServiceTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DandelionService dandelionService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private TagRepository tagRepository;
+
 
     private Member member1;
 
@@ -455,6 +468,19 @@ class MemberServiceTest {
 
         // then
         assertThatThrownBy(() -> memberService.getMemberInfoBySeq(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 - 예외 발생 : 회원 데이터 없음")
+    void deleteMemberExceptionWhenNotExistsMember() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.delete(0L))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
