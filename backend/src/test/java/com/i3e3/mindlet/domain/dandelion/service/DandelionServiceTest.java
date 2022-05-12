@@ -6,11 +6,7 @@ import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.domain.dandelion.repository.DandelionRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.PetalRepository;
 import com.i3e3.mindlet.domain.dandelion.repository.TagRepository;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionCreateSvcDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.AlbumListPageSvcDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.ResponseGardenInfoDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
+import com.i3e3.mindlet.domain.dandelion.service.dto.*;
 import com.i3e3.mindlet.domain.member.entity.AppConfig;
 import com.i3e3.mindlet.domain.member.entity.Member;
 import com.i3e3.mindlet.domain.member.entity.MemberDandelionHistory;
@@ -24,6 +20,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -1746,5 +1743,133 @@ class DandelionServiceTest {
 
         // then
         assertThat(isMostRecentParticipant).isFalse();
+    }
+
+    @Test
+    @DisplayName("기록 보관함 조회 페이징 - 데이터가 있는 경우")
+    void getParticipationPageHasData() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        em.flush();
+        List<Dandelion> dandelions = new ArrayList<>();
+        for (int i = 0; i < 21; i++) {
+            Dandelion dandelion = Dandelion.builder()
+                    .blossomedDate(LocalDate.parse("2022-04-" + (30 - i)))
+                    .community(member1.getAppConfig().getCommunity())
+                    .flowerSignNumber(1)
+                    .member(member1)
+                    .build();
+            if (i % 3 == 0) {
+                dandelion.changeStatus(Dandelion.Status.ALBUM);
+            }
+            if (i % 3 == 1) {
+                dandelion.changeStatus(Dandelion.Status.BLOSSOMED);
+            }
+            dandelions.add(dandelion);
+            dandelionRepository.save(dandelion);
+            em.flush();
+        }
+
+        for (int i = 0; i < 21; i++) {
+            Petal petal = Petal.builder()
+                    .message("메시지1")
+                    .imageFilename("이미지1")
+                    .nation("국가1")
+                    .dandelion(dandelions.get(i))
+                    .member(member2)
+                    .build();
+            petalRepository.save(petal);
+            em.flush();
+        }
+
+        for (int i = 0; i < 21; i++) {
+            Tag tag = Tag.builder()
+                    .name("TagNum = " + i)
+                    .dandelion(dandelions.get(i))
+                    .member(member2)
+                    .build();
+            tagRepository.save(tag);
+            em.flush();
+        }
+        em.clear();
+
+        // when then
+
+        //첫번째 페이지
+        int page = 1;
+        int size = 3;
+        ParticipationListPageSvcDto participationListPageSvcDto = dandelionService.getParticipationInfo(member2.getSeq(), PageRequest.of(page, size));
+
+        assertThat(participationListPageSvcDto.getTotalDandelionCount()).isEqualTo(14);
+        assertThat(participationListPageSvcDto.getTotalPageNum()).isEqualTo(5);
+        assertThat(participationListPageSvcDto.getNowPageNum()).isEqualTo(1);
+        assertThat(participationListPageSvcDto.getDandelionInfos().size()).isEqualTo(3);
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(0).getTagInfos().size()).isEqualTo(1);
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(0).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 0");
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(1).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 1");
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(2).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 3");
+
+        //마지막 페이지
+        page = 5;
+        size = 3;
+        participationListPageSvcDto = dandelionService.getParticipationInfo(member2.getSeq(), PageRequest.of(page, size));
+
+        assertThat(participationListPageSvcDto.getTotalDandelionCount()).isEqualTo(14);
+        assertThat(participationListPageSvcDto.getTotalPageNum()).isEqualTo(5);
+        assertThat(participationListPageSvcDto.getNowPageNum()).isEqualTo(5);
+        assertThat(participationListPageSvcDto.getDandelionInfos().size()).isEqualTo(2);
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(0).getTagInfos().size()).isEqualTo(1);
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(0).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 18");
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(1).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 19");
+
+        // 0번 민들레 삭제
+        dandelions.get(0).delete();
+        dandelionRepository.save(dandelions.get(0));
+        em.flush();
+        em.clear();
+
+        page = 1;
+        size = 3;
+        participationListPageSvcDto = dandelionService.getParticipationInfo(member2.getSeq(), PageRequest.of(page, size));
+
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(0).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 1");
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(1).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 3");
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(2).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 4");
+
+        // 3번 민들레 꽃잎 삭제
+        dandelions.get(3).getPetals().get(0).delete();
+        petalRepository.save(dandelions.get(3).getPetals().get(0));
+        dandelionRepository.save(dandelions.get(3));
+        em.flush();
+        em.clear();
+
+        participationListPageSvcDto = dandelionService.getParticipationInfo(member2.getSeq(), PageRequest.of(page, size));
+
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(0).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 1");
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(1).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 4");
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(2).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 6");
+
+        // 4번 민들레 태그 삭제
+        tagRepository.delete(dandelions.get(4).getTags().get(0));
+        em.flush();
+        em.clear();
+
+
+        participationListPageSvcDto = dandelionService.getParticipationInfo(member2.getSeq(), PageRequest.of(page, size));
+
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(0).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 1");
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(1).getTagInfos().size()).isEqualTo(0);
+        assertThat(participationListPageSvcDto.getDandelionInfos().get(2).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 6");
+
+        // 민들레 주인 탈퇴
+        member1.delete();
+        memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        participationListPageSvcDto = dandelionService.getParticipationInfo(member2.getSeq(), PageRequest.of(page, size));
+
+        assertThat(participationListPageSvcDto).isNull();
     }
 }
