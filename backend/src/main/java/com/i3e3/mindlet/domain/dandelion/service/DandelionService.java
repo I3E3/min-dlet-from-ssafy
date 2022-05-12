@@ -1,6 +1,7 @@
 package com.i3e3.mindlet.domain.dandelion.service;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.domain.dandelion.entity.Petal;
 import com.i3e3.mindlet.domain.dandelion.service.dto.*;
 
 import java.io.IOException;
@@ -41,4 +42,6 @@ public interface DandelionService {
     boolean isMostRecentParticipant(Long dandelionSeq, Long memberSeq);
 
     boolean isFlying(Long dandelionSeq);
+
+    Petal addPetal(Long memberSeq, Long dandelionSeq, PetalCreateSvcDto petalCreateSvcDto) throws IOException;
 }

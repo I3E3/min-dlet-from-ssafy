@@ -267,18 +267,21 @@ public class DandelionServiceImpl implements DandelionService {
 
     @Override
     public boolean isFlying(Long dandelionSeq) {
-        /**
-         * > test case
-         * 1. true
-         * 2. false
-         * 2. not exist -> 예외 발생
-         * 3. deleted -> 예외 발생
-         */
-
         Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
 
         return findDandelion.getStatus() == Dandelion.Status.FLYING;
+    }
+
+    @Transactional
+    @Override
+    public Petal addPetal(Long memberSeq, Long dandelionSeq, PetalCreateSvcDto petalCreateSvcDto) throws IOException {
+        Member findMember = memberRepository.findBySeq(memberSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        return createPetal(findMember, findDandelion, petalCreateSvcDto);
     }
 
     @Override
