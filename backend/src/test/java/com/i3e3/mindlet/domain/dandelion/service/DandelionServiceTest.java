@@ -1791,4 +1791,17 @@ class DandelionServiceTest {
         // then
         assertThat(isFlying).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 상태(Flying) 확인 - 데이터 없어서 예외 발생")
+    void checkFlyingExceptionWhenNotExists() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isFlying(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
