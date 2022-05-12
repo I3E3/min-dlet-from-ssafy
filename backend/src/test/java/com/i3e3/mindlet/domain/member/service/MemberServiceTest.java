@@ -484,4 +484,21 @@ class MemberServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
     }
+
+    @Test
+    @DisplayName("회원 탈퇴 - 예외 발생 : 이미 삭제된 회원")
+    void deleteMemberExceptionWhenDeletedMember() {
+        // given
+        member1.delete();
+        Member savedMember1 = memberRepository.save(member1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberService.delete(savedMember1.getSeq()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
