@@ -15,4 +15,6 @@ public interface DandelionRepositoryCustom {
     Optional<Dandelion> findRandomFlyingDandelionExceptMember(Member member);
 
     void updateHoldingDandelionToFlying(long minute);
+
+    long countParticipationDandelions(Long memberSeq);
 }
