@@ -1768,4 +1768,27 @@ class DandelionServiceTest {
         // then
         assertThat(isFlying).isTrue();
     }
+
+    @Test
+    @DisplayName("민들레 상태(Flying) 확인 - False")
+    void checkFlyingFalse() {
+        // given
+        Member savedMember1 = memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(savedMember1.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(savedMember1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.HOLD);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isFlying = dandelionService.isFlying(savedDandelion.getSeq());
+
+        // then
+        assertThat(isFlying).isFalse();
+    }
 }
