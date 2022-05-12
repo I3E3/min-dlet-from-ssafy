@@ -1289,4 +1289,23 @@ class DandelionRepositoryTest {
 
         assertThat(newDandelions).isNull();
     }
+
+    @Test
+    @DisplayName("요청 페이지의 민들레 리스트 가져오기 - 데이터가 없는경우")
+    void getParticipationPageNoneData() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        em.flush();
+        em.clear();
+
+        // when
+        int page = 1;
+        int size = 3;
+        List<Dandelion> newDandelions = dandelionRepository.findParticipationByMemberSeqAndPageable(member2.getSeq(), PageRequest.of(page, size))
+                .orElse(null);
+
+        // then
+        assertThat(newDandelions).isNull();
+    }
 }
