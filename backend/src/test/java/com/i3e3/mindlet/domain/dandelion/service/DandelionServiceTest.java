@@ -1958,6 +1958,7 @@ class DandelionServiceTest {
 
         // then
         assertThat(findDandelion1.getPetals().size()).isEqualTo(2);
+        assertThat(findDandelion1.getStatus()).isEqualTo(Dandelion.Status.FLYING);
         assertThat(findPetal.getMessage()).isEqualTo(newPetalCreateSvcDto.getMessage());
         assertThat(findPetal.getImageFilename()).isNull();
         assertThat(findPetal.getNation()).isEqualTo("KOREA");
