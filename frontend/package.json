@@ -69,5 +69,7 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+
+  "proxy": "https://www.min-dlet.com/api/v1"
 }

@@ -16,7 +16,7 @@ function LoginRecoil() {
     const token = localStorage.getItem('token')
     if (!token) {
       if (!['/login', '/signup'].includes(location.pathname)) {
-        navigate('login')
+        navigate('/login')
       }
       return
     } else {

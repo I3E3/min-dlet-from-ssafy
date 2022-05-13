@@ -3,10 +3,13 @@ import classNames from 'classnames/bind';
 import styles from './LandingPage.module.scss';
 import { useNavigate } from 'react-router';
 import LandingModel from 'components/Landing/LandingModel';
+import GroupSelection from 'components/Landing/GroupSelection';
 import { ReactComponent as Menu } from 'assets/images/menu.svg';
 
 const cx = classNames.bind(styles);
 const LandingPage = () => {
+  const [isShowing, setIsShowing] = useState(true);
+  const [isGroupShowing, setIsGroupShowing] = useState(false)
   let [xStart, yStart, xEnd, yEnd] = [0, 0, 0, 0];
   let howManyTouches = 0;
   const navigate = useNavigate();
@@ -38,8 +41,6 @@ const LandingPage = () => {
     }
   };
 
-  const [isShowing, setIsShowing] = useState(true);
-
   useEffect(() => {
     window.addEventListener('touchstart', handleTouchStart);
     window.addEventListener('touchend', handleTouchEnd);
@@ -59,10 +60,12 @@ const LandingPage = () => {
       }}
     >
       {/* <h1>제발!!</h1> */}
-      <button className={cx('menu-button')}>
+      <button className={cx('menu-button')}
+        onClick={() => {setIsGroupShowing((isGroupShowing) => !isGroupShowing)}}>
         <Menu className={cx('menu-svg')}></Menu>
       </button>
       {isShowing && <LandingModel></LandingModel>}
+      {isGroupShowing && <GroupSelection setIsGroupShowing={setIsGroupShowing} />}
     </section>
   );
 };
