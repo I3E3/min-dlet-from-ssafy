@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 
 export default function Earth() {
-  const { scene } = useGLTF(require('assets/Models/earth_with_cloud_tree.glb'));
-
-  return <primitive position={[1, -180, 0]} object={scene} scale={10} />;
+  const { scene } = useGLTF(require('assets/Models/earth_with_tree.glb'));
+  const earth = useRef();
+  useEffect(() => {
+    earth.current.rotation.y += 300;
+  }, []);
+  return (
+    <instancedMesh ref={earth}>
+      <primitive position={[1, -180, 0]} object={scene} scale={10} />{' '}
+    </instancedMesh>
+  );
 }

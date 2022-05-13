@@ -63,7 +63,7 @@ export default function LandingModel() {
         enableRotate={false}
         enablePan={false}
         autoRotate={true}
-        autoRotateSpeed={0.5}
+        autoRotateSpeed={1}
         minDistance={120}
         maxDistance={150}
       />

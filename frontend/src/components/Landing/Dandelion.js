@@ -17,7 +17,6 @@ export default function Dandelion({ seed }) {
   let rand = Math.random(seed) - 0.5;
   setInterval(() => {
     rand = Math.random(seed) - 0.5;
-    // console.log(rand)
   }, Math.max((globalValue + 10) * 1000, 4000));
 
   useFrame((state) => {

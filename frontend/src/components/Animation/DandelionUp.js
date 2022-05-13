@@ -3,9 +3,7 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
 export default function DandelionUp({ dandelUp, petal }) {
-  const { scene } = useGLTF(
-    require('assets/Models/Dandelion_flower_without_leaf.glb')
-  );
+  const { scene } = useGLTF(require('assets/Models/two_dandel.glb'));
   const dandle = useRef();
   useEffect(() => {
     console.log(dandelUp);
