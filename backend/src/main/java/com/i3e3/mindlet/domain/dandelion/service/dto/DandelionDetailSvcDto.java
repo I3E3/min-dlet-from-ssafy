@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@ToString(of = {"totalPageNum", "nowPageNum", "totalPetalCount"})
+@ToString(of = {"dandelionSeq", "totalPetalCount"})
 public class DandelionDetailSvcDto {
     private Long dandelionSeq;
 
