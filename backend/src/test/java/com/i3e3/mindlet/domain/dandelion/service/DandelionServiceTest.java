@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,16 @@ class DandelionServiceTest {
 
     @Autowired
     private MemberDandelionHistoryRepository memberDandelionHistoryRepository;
+
+    @Value("${path.access}")
+    private String fileStorageUrl;
+
+    @Value("${path.access.files.images.content}")
+    private String contentImagePath;
+
+    @Value("${path.access.files.images.nation}")
+    private String nationImagePath;
+
 
     private Member member1, member2, member3;
 
@@ -998,8 +1009,8 @@ class DandelionServiceTest {
         em.clear();
 
         // when
-        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember3.getSeq());
-        Long findDandelionSeq = dandelionSeedDto.getSeq();
+        DandelionDetailSvcDto dandelionDetailSvcDto = dandelionService.getDandelionSeedDto(savedMember3.getSeq());
+        Long findDandelionSeq = dandelionDetailSvcDto.getDandelionSeq();
         Dandelion findDandelion = dandelionRepository.findBySeq(findDandelionSeq)
                 .orElse(null);
         MemberDandelionHistory findMemberDandelionHistory = memberDandelionHistoryRepository.findByMemberAndDandelion(savedMember3, savedDandelion1)
@@ -1010,25 +1021,25 @@ class DandelionServiceTest {
         /**
          * DTO 민들레 식별키 검증
          */
-        assertThat(dandelionSeedDto.getSeq()).isEqualTo(savedDandelion1.getSeq());
+        assertThat(dandelionDetailSvcDto.getDandelionSeq()).isEqualTo(savedDandelion1.getSeq());
 
         /**
          * 꽃잎 데이터 검증
          */
-        List<DandelionSeedDto.PetalInfo> petalInfos = dandelionSeedDto.getPetalInfos();
+        List<DandelionDetailSvcDto.PetalInfo> petalInfos = dandelionDetailSvcDto.getPetalInfos();
         assertThat(petalInfos.size()).isEqualTo(2);
 
-        DandelionSeedDto.PetalInfo findPetal1 = petalInfos.get(0);
+        DandelionDetailSvcDto.PetalInfo findPetal1 = petalInfos.get(0);
         assertThat(findPetal1.getSeq()).isEqualTo(savedPetal1.getSeq());
         assertThat(findPetal1.getMessage()).isEqualTo(savedPetal1.getMessage());
         assertThat(findPetal1.getNation()).isEqualTo(savedPetal1.getNation());
-        assertThat(findPetal1.getImageUrlPath()).isEqualTo(savedPetal1.getImageFilename());
+        assertThat(findPetal1.getContentImageUrlPath()).isEqualTo(getContentImagePath(savedPetal1.getImageFilename()));
 
-        DandelionSeedDto.PetalInfo findPetal2 = petalInfos.get(1);
+        DandelionDetailSvcDto.PetalInfo findPetal2 = petalInfos.get(1);
         assertThat(findPetal2.getSeq()).isEqualTo(savedPetal2.getSeq());
         assertThat(findPetal2.getMessage()).isEqualTo(savedPetal2.getMessage());
         assertThat(findPetal2.getNation()).isEqualTo(savedPetal2.getNation());
-        assertThat(findPetal2.getImageUrlPath()).isEqualTo(savedPetal2.getImageFilename());
+        assertThat(findPetal2.getContentImageUrlPath()).isEqualTo(getContentImagePath(savedPetal2.getImageFilename()));
 
         /**
          * 민들레 데이터 검증
@@ -1053,10 +1064,10 @@ class DandelionServiceTest {
         em.clear();
 
         // when
-        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+        DandelionDetailSvcDto dandelionDetailSvcDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
 
         // then
-        assertThat(dandelionSeedDto).isNull();
+        assertThat(dandelionDetailSvcDto).isNull();
     }
 
     @Test
@@ -1076,10 +1087,10 @@ class DandelionServiceTest {
         em.clear();
 
         // when
-        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+        DandelionDetailSvcDto dandelionDetailSvcDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
 
         // then
-        assertThat(dandelionSeedDto).isNull();
+        assertThat(dandelionDetailSvcDto).isNull();
     }
 
     @Test
@@ -1099,10 +1110,10 @@ class DandelionServiceTest {
         em.clear();
 
         // when
-        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+        DandelionDetailSvcDto dandelionDetailSvcDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
 
         // then
-        assertThat(dandelionSeedDto).isNull();
+        assertThat(dandelionDetailSvcDto).isNull();
     }
 
     @Test
@@ -1127,10 +1138,10 @@ class DandelionServiceTest {
         em.clear();
 
         // when
-        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+        DandelionDetailSvcDto dandelionDetailSvcDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
 
         // then
-        assertThat(dandelionSeedDto).isNull();
+        assertThat(dandelionDetailSvcDto).isNull();
     }
 
     @Test
@@ -1156,10 +1167,10 @@ class DandelionServiceTest {
         em.clear();
 
         // when
-        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
+        DandelionDetailSvcDto dandelionDetailSvcDto = dandelionService.getDandelionSeedDto(savedMember1.getSeq());
 
         // then
-        assertThat(dandelionSeedDto).isNull();
+        assertThat(dandelionDetailSvcDto).isNull();
     }
 
     @Test
@@ -2368,5 +2379,9 @@ class DandelionServiceTest {
 
         // then
         assertThat(participationListPageSvcDto).isNull();
+    }
+
+    public String getContentImagePath(String imagePath){
+        return new StringBuilder().append(fileStorageUrl).append(contentImagePath).append(imagePath).toString();
     }
 }

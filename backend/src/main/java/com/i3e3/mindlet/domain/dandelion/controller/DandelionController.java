@@ -322,14 +322,14 @@ public class DandelionController {
     })
     @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @GetMapping("/random")
-    public ResponseEntity<BaseResponseDto<DandelionSeedDto>> catchDandelionSeed() {
+    public ResponseEntity<BaseResponseDto<DandelionDetailSvcDto>> catchDandelionSeed() {
         Long findMemberSeq = AuthenticationUtil.getMemberSeq();
-        DandelionSeedDto dandelionSeedDto = dandelionService.getDandelionSeedDto(findMemberSeq);
+        DandelionDetailSvcDto dandelionDetailSvcDto = dandelionService.getDandelionSeedDto(findMemberSeq);
 
-        HttpStatus status = dandelionSeedDto == null ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        HttpStatus status = dandelionDetailSvcDto == null ? HttpStatus.NO_CONTENT : HttpStatus.OK;
 
-        return new ResponseEntity<>(BaseResponseDto.<DandelionSeedDto>builder()
-                .data(dandelionSeedDto)
+        return new ResponseEntity<>(BaseResponseDto.<DandelionDetailSvcDto>builder()
+                .data(dandelionDetailSvcDto)
                 .build(), status);
     }
 

@@ -32,7 +32,7 @@ public interface DandelionService {
 
     boolean isAlbum(Long dandelionSeq);
 
-    DandelionSeedDto getDandelionSeedDto(Long memberSeq);
+    DandelionDetailSvcDto getDandelionSeedDto(Long memberSeq);
 
     AlbumListPageSvcDto getAlbumInfo(Long memberSeq, int page, int size);
 
