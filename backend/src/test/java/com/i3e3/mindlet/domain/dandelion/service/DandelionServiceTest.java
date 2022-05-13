@@ -1481,6 +1481,7 @@ class DandelionServiceTest {
         DandelionCreateSvcDto newDandelionCreateSvcDto = DandelionCreateSvcDto.builder()
                 .message("안녕 나는 피나코야")
                 .blossomedDate(LocalDate.parse("2022-06-30", DateTimeFormatter.ISO_DATE))
+                .nation("KOREA")
                 .imageFile(null)
                 .build();
 
@@ -2340,13 +2341,14 @@ class DandelionServiceTest {
         assertThat(participationListPageSvcDto.getDandelionInfos().get(2).getTagInfos().get(0).getTagName()).isEqualTo("TagNum = 6");
 
         // 민들레 주인 탈퇴
-        member1.delete();
-        memberRepository.save(member1);
+
+        Member findMember1 = memberRepository.findBySeq(member1.getSeq()).orElse(null);
+        findMember1.delete();
+
         em.flush();
         em.clear();
 
         participationListPageSvcDto = dandelionService.getParticipationInfo(member2.getSeq(), PageRequest.of(page, size));
-
         assertThat(participationListPageSvcDto).isNull();
     }
 
