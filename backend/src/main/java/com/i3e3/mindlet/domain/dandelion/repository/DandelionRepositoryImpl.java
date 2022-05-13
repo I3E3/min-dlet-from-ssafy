@@ -38,7 +38,7 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
                         Dandelion.Status.BLOSSOMED,
                         Dandelion.Status.PENDING,
                         Dandelion.Status.RETURN))
-                .fetchOne();
+                .fetchFirst();
     }
 
     @Override
@@ -117,7 +117,7 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
                                 Dandelion.Status.ALBUM
                         )
                 )
-                .fetchOne();
+                .fetchFirst();
     }
 
     @Override
