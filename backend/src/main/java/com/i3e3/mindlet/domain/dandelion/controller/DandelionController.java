@@ -413,7 +413,7 @@ public class DandelionController {
         } else if ((dandelionRegisterDto.getMessage() == null && imageFile == null) || !registerPossible(memberSeq)) {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         } else {
-            dandelionRegisterDto.addFile(imageFile);
+            dandelionRegisterDto.addFile(imageFile.isEmpty() ? null : imageFile);
             dandelionService.createDandelion(memberSeq, dandelionRegisterDto.toSvcDto());
         }
 
@@ -459,7 +459,7 @@ public class DandelionController {
         if ((petalRegisterDto.getMessage() == null && imageFile == null) || !dandelionService.isFlying(dandelionSeq)) {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         } else {
-            petalRegisterDto.addFile(imageFile);
+            petalRegisterDto.addFile(imageFile.isEmpty() ? null : imageFile);
             dandelionService.addPetal(memberSeq, dandelionSeq, petalRegisterDto.toSvcDto());
         }
 
