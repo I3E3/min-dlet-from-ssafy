@@ -89,9 +89,6 @@ export default function FlyingAnimation({ endstate, msgCheck, isPossible }) {
         <DandelionUp dandelUp={grassState} petal={petalUp} />
         {dandelstate && <DandelionPetalUp flag={petalAppear} />}
         <directionalLight position={[0.5, 10, 0.866]} intensity={1.7} />
-        {/* {dandles.map((dandle) => {
-          return <FlyingSeed key={dandle} seed={dandle} />;
-        })} */}
         <directionalLight position={[-1, -0.3, -0.866]} intensity={1} />
       </Suspense>
       <OrbitControls
