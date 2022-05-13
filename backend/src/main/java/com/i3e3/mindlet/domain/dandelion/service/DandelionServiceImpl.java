@@ -189,7 +189,7 @@ public class DandelionServiceImpl implements DandelionService {
 
     @Transactional
     @Override
-    public DandelionSeedDto getDandelionSeedDto(Long memberSeq) {
+    public DandelionDetailSvcDto getDandelionSeedDto(Long memberSeq) {
         Member findMember = memberRepository.findBySeq(memberSeq)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
         Dandelion findDandelion = dandelionRepository.findRandomFlyingDandelionExceptMember(findMember)
@@ -200,19 +200,22 @@ public class DandelionServiceImpl implements DandelionService {
         }
 
         List<Petal> petals = findDandelion.getPetals();
-        List<DandelionSeedDto.PetalInfo> petalInfos = new ArrayList<>();
+
+        List<DandelionDetailSvcDto.PetalInfo> petalInfos = new ArrayList<>();
+
         for (Petal petal : petals) {
             if (petal.isDeleted()) continue;
 
-            petalInfos.add(DandelionSeedDto.PetalInfo.builder()
+            petalInfos.add(DandelionDetailSvcDto.PetalInfo.builder()
                     .seq(petal.getSeq())
                     .message(petal.getMessage())
-                    .imageUrlPath(petal.getImageFilename())
                     .nation(petal.getNation())
+                    .nationImageUrlPath(getNationImagePath(petal.getNation()))
+                    .contentImageUrlPath(getContentImagePath(petal.getImageFilename()))
                     .createdDate(petal.getCreatedDate())
                     .build());
         }
-        petalInfos.sort(Comparator.comparing(DandelionSeedDto.PetalInfo::getCreatedDate));
+        petalInfos.sort(Comparator.comparing(DandelionDetailSvcDto.PetalInfo::getCreatedDate));
 
         MemberDandelionHistory.builder()
                 .member(findMember)
@@ -221,8 +224,9 @@ public class DandelionServiceImpl implements DandelionService {
 
         findDandelion.changeStatus(Dandelion.Status.HOLD);
 
-        return DandelionSeedDto.builder()
-                .seq(findDandelion.getSeq())
+        return DandelionDetailSvcDto.builder()
+                .dandelionSeq(findDandelion.getSeq())
+                .totalPetalCount(petalInfos.size())
                 .petalInfos(petalInfos)
                 .build();
     }
@@ -345,7 +349,7 @@ public class DandelionServiceImpl implements DandelionService {
 
         return DandelionDetailSvcDto.builder()
                 .dandelionSeq(dandelionSeq)
-                .totalPetalCount(petals.size())
+                .totalPetalCount(petalInfos.size())
                 .petalInfos(petalInfos)
                 .build();
     }
