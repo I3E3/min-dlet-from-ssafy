@@ -41,7 +41,7 @@ instance.interceptors.response.use(
           console.log('400 ERROR, not authorized.');
           break;
         case 401:
-          toast('전송에 실패하였습니다.', {
+          toast('다시 로그인 해주세요.', {
             icon: '🌼',
             style: {
               borderRadius: '10px',

@@ -62,6 +62,10 @@ const LandingPage = () => {
   const [isShowing, setIsShowing] = useState(true);
 
   useEffect(() => {
+    if (!localStorage.getItem('token')) {
+      navigate('/login');
+    }
+
     window.addEventListener('touchstart', handleTouchStart);
     window.addEventListener('touchend', handleTouchEnd);
 
