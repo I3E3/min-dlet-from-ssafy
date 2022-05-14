@@ -39,6 +39,7 @@ export default function BlowAnimation({
   isPossible,
   windState,
 }) {
+  const [appear, SetAppear] = useState(false);
   const [nextstate, SetNext] = useState(false);
   const [seedState, SetSeed] = useState(false);
   const [dandelstate, SetDandel] = useState(false);
@@ -46,6 +47,10 @@ export default function BlowAnimation({
 
   const detectReady = (detect) => {
     isPossible(true);
+  };
+
+  const appearState = (state) => {
+    SetAppear(state);
   };
 
   const touch = () => {
@@ -98,17 +103,18 @@ export default function BlowAnimation({
         <DandelionDown SeedUp={down} petal={petalstate} />
         {windState && <DandelionSeedUp flag={handleNext} />}
         <directionalLight position={[0.5, 10, 0.866]} intensity={1.7} />
-        {
+        {!appear && (
           <FlyingSeedAnimation
             seedUp={seedState}
             wind={windState}
             ready={detectReady}
+            appear={appearState}
           />
-        }
+        )}
         <directionalLight position={[-1, -0.3, -0.866]} intensity={1} />
       </Suspense>
       <OrbitControls
-        enableRotate={true}
+        enableRotate={false}
         enablePan={false}
         autoRotate={false}
         minDistance={120}

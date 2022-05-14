@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
-export default function FlyingSeedAnimation({ seedUp, wind, ready }) {
+export default function FlyingSeedAnimation({ seedUp, wind, ready, appear }) {
   const [size, SetSize] = useState(8);
   const [state, SetState] = useState(false);
   const [down, SetDown] = useState(false);
@@ -32,6 +32,8 @@ export default function FlyingSeedAnimation({ seedUp, wind, ready }) {
     } else if (up && ref.current.position.y >= -65) {
       SetSize(size + 0.0001);
       ready(true);
+    } else if (up && wind && ref.current.position.y <= -150) {
+      appear(true);
     } else {
       SetSize(size + 0.0001);
     }

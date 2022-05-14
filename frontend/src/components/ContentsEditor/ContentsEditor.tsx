@@ -38,7 +38,7 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
 
   const handleUploadImage = async (event: any) => {
     const file = event.target.files;
-    img(URL.createObjectURL(file[0]));
+    img(file[0]);
     setImgFile(URL.createObjectURL(file[0]));
   };
 
@@ -59,11 +59,17 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
 
   useEffect(() => {
     SetText(form.message);
-    setImgFile(form.image);
+    if (form.image) setImgFile(URL.createObjectURL(form.image));
   }, []);
 
   return (
-    <div className={cx('container')}>
+    <div
+      className={cx('container')}
+      style={{
+        width: '100%',
+        overflow: 'hidden',
+      }}
+    >
       <div className={cx('inner-container')}>
         <div className={cx('petal-img')}>
           <img className={cx('petal')} src={petal} alt="petal" />

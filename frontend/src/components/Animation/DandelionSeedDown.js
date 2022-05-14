@@ -7,25 +7,31 @@ export default function DandelionSeedDown({ flag }) {
   const [size, SetSize] = useState(50);
   const [clicked, click] = useState(true);
 
-  const petal = useRef();
+  const seed = useRef();
 
   useFrame(() => {
-    if (petal.current.position.y > -200) {
-      petal.current.position.y -= down;
+    if (seed.current.position.y > -200) {
+      seed.current.position.y -= down;
       SetSize(size + 0.01);
     } else {
       flag(true);
       SetSize(size + 0.01);
-      petal.current.position.y -= down;
+      seed.current.position.y -= down;
     }
   });
+
+  useEffect(() => {
+    seed.current.rotation.y += 0;
+    seed.current.rotation.x += 0;
+    seed.current.rotation.z -= 0.4;
+  }, []);
 
   useEffect(() => {}, [size]);
 
   return (
-    <instancedMesh ref={petal}>
+    <instancedMesh ref={seed}>
       <primitive
-        position={[-20, 100, -30]}
+        position={[-50, 100, -30]}
         object={scene}
         scale={6}
         onClick={(event) => {
