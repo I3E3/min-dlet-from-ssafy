@@ -30,14 +30,7 @@ export default function DandelionPetalUp({ flag }) {
 
   return (
     <instancedMesh ref={petal}>
-      <primitive
-        position={[-20, -50, 0]}
-        object={scene}
-        scale={size}
-        onClick={(event) => {
-          click(!clicked);
-        }}
-      />
+      <primitive position={[-20, -50, 0]} object={scene} scale={size} />
     </instancedMesh>
   );
 }

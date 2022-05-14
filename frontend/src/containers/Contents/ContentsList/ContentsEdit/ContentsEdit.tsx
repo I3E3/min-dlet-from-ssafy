@@ -30,7 +30,7 @@ const ContentsEdit = ({ onClick, form, setForm }: any) => {
 
   return (
     <>
-      <div className={cx('')}>
+      <div className={cx('container')}>
         <img
           className={cx('home-btn')}
           src={iconimg}

@@ -29,14 +29,14 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
   };
 
   const sendData = () => {
-    console.log(imgFile);
-    console.log(text);
+    //    console.log(imgFile);
+    //   console.log(text);
     onClick(3);
   };
 
   useEffect(() => {
     SetText(form.message);
-    setImgFile(form.image);
+    if (form.image) setImgFile(URL.createObjectURL(form.image));
   }, []);
 
   const popupOn = () => {

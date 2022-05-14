@@ -4,15 +4,18 @@ import styles from './Plant.module.scss';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 import FlyingAnimation from 'components/Animation/PlantAnimation/FlyingAnimation';
-
+import cloud1 from 'assets/images/cloud1.png';
+import cloud2 from 'assets/images/cloud2.png';
 const cx = classNames.bind(styles);
 const Plant = ({ onClick }: any) => {
   const [endstate, SetEndstate] = useState(false);
   const [checkState, SetCheckState] = useState(0);
   const [possibleState, SetState] = useState(0);
+
   const stateDetect = (state: boolean) => {
     SetEndstate(state);
   };
+
   const msgDetect = (state: number) => {
     SetCheckState(state);
   };

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { sound } from 'utils/soundRecognize';
 import BlowAnimation from 'components/Animation/BlowAnimation/BlowAnimation';
+
 const Blow = ({ onClick, form, setForm }: any) => {
   const [isShowing, setIsShowing] = useState(true);
   const [loading, SetLoading] = useState(false);

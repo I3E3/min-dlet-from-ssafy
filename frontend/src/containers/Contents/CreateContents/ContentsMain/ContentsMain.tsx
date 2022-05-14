@@ -13,9 +13,7 @@ const ContentsMain = () => {
   const [form, setForm] = useState({
     image: '',
     message: '',
-    date: Date(),
-    latitude: 0,
-    longitude: 0,
+    date: '',
   });
   const handleformStep = (step: number) => {
     setFormStep(step);

@@ -13,7 +13,7 @@ export default function DandelionPetalDown({ flag }) {
     if (size > 30) {
       SetSize(size - 3.4);
       petal.current.position.x += 0.7;
-      petal.current.position.y -= 1;
+      petal.current.position.y -= 1.1;
     } else {
       SetSize(size - 0.01);
       if (petal.current.position.y > -140) petal.current.position.y -= 0.5;
