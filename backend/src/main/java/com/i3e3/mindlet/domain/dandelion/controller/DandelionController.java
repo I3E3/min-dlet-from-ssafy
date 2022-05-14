@@ -413,7 +413,7 @@ public class DandelionController {
         } else if ((dandelionRegisterDto.getMessage() == null && imageFile == null) || !registerPossible(memberSeq)) {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         } else {
-            dandelionRegisterDto.addFile(imageFile.isEmpty() ? null : imageFile);
+            dandelionRegisterDto.addFile(imageFile == null ? null : (imageFile.isEmpty() ? null : imageFile));
             dandelionService.createDandelion(memberSeq, dandelionRegisterDto.toSvcDto());
         }
 
@@ -459,7 +459,7 @@ public class DandelionController {
         if ((petalRegisterDto.getMessage() == null && imageFile == null) || !dandelionService.isFlying(dandelionSeq)) {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         } else {
-            petalRegisterDto.addFile(imageFile.isEmpty() ? null : imageFile);
+            petalRegisterDto.addFile(imageFile == null ? null : (imageFile.isEmpty() ? null : imageFile));
             dandelionService.addPetal(memberSeq, dandelionSeq, petalRegisterDto.toSvcDto());
         }
 
@@ -503,8 +503,8 @@ public class DandelionController {
 
         if ((dandelionService.isBlossomed(dandelionSeq) || dandelionService.isAlbum(dandelionSeq)) &&
                 (dandelionService.isOwner(dandelionSeq, memberSeq) || dandelionService.isParticipated(dandelionSeq, memberSeq))) {
-            dandelionDetailSvcDto = dandelionService.getDandelionDetail(dandelionSeq,memberSeq);
-        }else{
+            dandelionDetailSvcDto = dandelionService.getDandelionDetail(dandelionSeq, memberSeq);
+        } else {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         }
         return BaseResponseDto.<DandelionDetailSvcDto>builder()
