@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
 export default function Dandelion({ seed }) {
-  const { scene } = useGLTF(require('assets/Models/dandl_compressed.glb'));
+  const { scene } = useGLTF(require('assets/Models/seed_color.glb'));
   const [copiedScene, globalValue, globalValue2] = useMemo(
     () => [
       scene.clone(),
@@ -17,7 +17,6 @@ export default function Dandelion({ seed }) {
   let rand = Math.random(seed) - 0.5;
   setInterval(() => {
     rand = Math.random(seed) - 0.5;
-    // console.log(rand)
   }, Math.max((globalValue + 10) * 1000, 4000));
 
   useFrame((state) => {

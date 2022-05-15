@@ -51,13 +51,11 @@ const ContentsMain = () => {
             );
           case 4:
             return (
-              <div>
-                <Blow
-                  onClick={handleformStep}
-                  form={form}
-                  setForm={handleFormSet}
-                />
-              </div>
+              <Blow
+                onClick={handleformStep}
+                form={form}
+                setForm={handleFormSet}
+              />
             );
         }
       })()}

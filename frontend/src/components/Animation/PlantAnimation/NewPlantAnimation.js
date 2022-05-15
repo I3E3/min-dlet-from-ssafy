@@ -4,9 +4,6 @@ import { OrbitControls, Html } from '@react-three/drei';
 import DandelionFlower from '../DandelionFlower';
 import DandelionPetalUp from '../DandelionPetalUp';
 import Dandelion from '../../Landing/Dandelion';
-
-const dandles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
 function FallbackTitle() {
   return (
     <Html center>
@@ -58,9 +55,6 @@ export default function NewPlantAnimation({ endstate }) {
           intensity={1.7}
           // castShadow
         />
-        {dandles.map((dandle) => {
-          return <Dandelion key={dandle} seed={dandle} />;
-        })}
         <directionalLight
           position={[-1, -0.3, -0.866]}
           intensity={1}

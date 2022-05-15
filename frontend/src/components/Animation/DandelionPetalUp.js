@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-export default function DandelionPetalDown({ flag }) {
+export default function DandelionPetalUp({ flag }) {
   const { scene } = useGLTF(require('assets/Models/petal.glb'));
   const [up, SetUp] = useState(0.8);
   const [size, SetSize] = useState(50);
@@ -30,14 +30,7 @@ export default function DandelionPetalDown({ flag }) {
 
   return (
     <instancedMesh ref={petal}>
-      <primitive
-        position={[-20, -50, 0]}
-        object={scene}
-        scale={size}
-        onClick={(event) => {
-          click(!clicked);
-        }}
-      />
+      <primitive position={[-20, -50, 0]} object={scene} scale={size} />
     </instancedMesh>
   );
 }
