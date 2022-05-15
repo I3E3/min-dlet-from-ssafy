@@ -1,12 +1,15 @@
-import React from 'react';
-import { useGLTF } from "@react-three/drei";
+import React, { useEffect, useRef } from 'react';
+import { useGLTF } from '@react-three/drei';
 
-
-export default function Earth () {
-  const { scene } = useGLTF(require('assets/Models/earth_modi1_compressed.glb'))
-
-
+export default function Earth() {
+  const { scene } = useGLTF(require('assets/Models/earth_with_tree.glb'));
+  const earth = useRef();
+  useEffect(() => {
+    earth.current.rotation.y += 300;
+  }, []);
   return (
-        <primitive position={[0, -110, 0]} object={scene} scale={0.1} />
+    <instancedMesh ref={earth}>
+      <primitive position={[1, -180, 0]} object={scene} scale={10} />{' '}
+    </instancedMesh>
   );
 }
