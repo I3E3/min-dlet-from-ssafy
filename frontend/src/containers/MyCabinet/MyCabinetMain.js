@@ -6,12 +6,14 @@ import garden from "assets/images/garden.png";
 import album from "assets/images/photo-album.png";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useEffect } from "react";
+
 const cx = classNames.bind(styles);
+const BaseURL = process.env.REACT_APP_BASE_URL;
 
 function MyCabinetMain() {
   const navigate = useNavigate();
-  const baseUrl = "http://localhost:8080/";
-
+  // const { isLoading, data } = useQuery(["getCabinets"], () => getCabinets());
   const onSettingsClick = () => {
     navigate(`/settings`);
   };
@@ -24,7 +26,7 @@ function MyCabinetMain() {
     navigate(`/mygarden`);
   };
 
-  const onRecordClick = (dandelionId: number) => {
+  const onRecordClick = (dandelionId) => {
     Swal.fire({
       title: "꽃말을 입력하세요",
       input: "text",
@@ -51,7 +53,7 @@ function MyCabinetMain() {
   const registerTag = async () => {
     await axios({
       // url: `baseUrl/dandelions/{id}/tags`, 나중에 아이디 있는거로 교체
-      url: `${baseUrl}/dandelions/1/tags`,
+      url: `${BaseURL}/dandelions/1/tags`,
       method: "patch",
     })
       .then((res) => {
@@ -64,7 +66,28 @@ function MyCabinetMain() {
       });
     registerTag();
   };
-
+  function getCabinets() {
+    const getCabinets = async () => {
+      await axios({
+        // url: `baseUrl/dandelions/{id}/tags`, 나중에 아이디 있는거로 교체
+        url: `/garden/participation?page=1&size=1`,
+        method: "get",
+        baseURL: BaseURL,
+      })
+        .then((res) => {
+          console.log("기록보관함 가져오기 성공");
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log("기록보관함 가져오기 실패");
+          console.log(err);
+        });
+    };
+    getCabinets();
+  }
+  useEffect(() => {
+    getCabinets();
+  }, []);
   return (
     <div className={cx("container")}>
       <div>
@@ -93,11 +116,14 @@ function MyCabinetMain() {
         <span>내가 작성한 모든 꽃 기록들</span>
       </div>
       <div>
+        <div>
+          {/* {isLoading ? <div>기록을 불러오는 중 ... </div> : <div>{data}</div>} */}
+        </div>
         {/* <div onClick={()=>{onRecordClick(id)}}>꽃1</div> */}
         <div
-          onClick={() => {
-            onRecordClick(1);
-          }}
+        // onClick={() => {
+        //   onRecordClick(1);
+        // }}
         >
           꽃1
         </div>
