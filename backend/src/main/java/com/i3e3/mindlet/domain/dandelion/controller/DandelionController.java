@@ -456,7 +456,7 @@ public class DandelionController {
                                                @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
         Long memberSeq = AuthenticationUtil.getMemberSeq();
 
-        if ((petalRegisterDto.getMessage() == null && imageFile == null) || !dandelionService.isFlying(dandelionSeq)) {
+        if ((petalRegisterDto.getMessage() == null && imageFile == null) || !dandelionService.isHold(dandelionSeq)) {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         } else {
             petalRegisterDto.addFile(imageFile == null ? null : (imageFile.isEmpty() ? null : imageFile));
