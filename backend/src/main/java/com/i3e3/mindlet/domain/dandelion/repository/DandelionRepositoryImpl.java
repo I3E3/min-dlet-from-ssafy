@@ -63,27 +63,26 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
     public Optional<Dandelion> findRandomFlyingDandelionExceptMember(Member member) {
         /*
         SELECT *
-        FROM tb_dandelion d
-                 LEFT JOIN tb_member_dandelion_history mdh
-                           on d.dandelion_seq = mdh.dandelion_seq
-        WHERE d.status = 'FLYING'
-          AND d.community = 'KOREA'
-          AND d.is_deleted = false
-          AND d.member_seq != 3
-          AND (mdh.member_seq != 3 OR mdh.member_seq is null)
-        ORDER BY d.last_modified_date ASC;
+        FROM tb_dandelion
+        WHERE status = 'FLYING'
+          AND community = 'KOREA'
+          AND is_deleted = false
+          AND member_seq != 814
+          ANd dandelion_seq not in (SELECT dandelion_seq FROM tb_member_dandelion_history mdh WHERE mdh.member_seq = 814)
+        ORDER BY last_modified_date ASC
         LIMIT 1;
          */
         return Optional.ofNullable(queryFactory
                 .selectFrom(dandelion)
-                .leftJoin(dandelion.memberDandelionHistories, memberDandelionHistory)
-                .on(memberDandelionHistory.dandelion.eq(dandelion))
                 .where(
                         dandelion.status.eq(Dandelion.Status.FLYING),
                         dandelion.community.eq(member.getAppConfig().getCommunity()),
                         dandelion.isDeleted.isFalse(),
                         dandelion.member.ne(member),
-                        memberDandelionHistory.member.ne(member).or(memberDandelionHistory.member.isNull()))
+                        dandelion.notIn(JPAExpressions
+                                .select(memberDandelionHistory.dandelion)
+                                .from(memberDandelionHistory)
+                                .where(memberDandelionHistory.member.eq(member))))
                 .orderBy(dandelion.lastModifiedDate.asc())
                 .fetchFirst());
     }
