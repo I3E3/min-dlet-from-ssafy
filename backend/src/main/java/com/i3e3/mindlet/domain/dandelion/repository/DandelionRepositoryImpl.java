@@ -64,27 +64,26 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
         /*
         SELECT *
         FROM tb_dandelion d
-        LEFT JOIN tb_member_dandelion_history md on d.dandelion_seq = md.dandelion_seq
-        WHERE
-            d.status = 'FLYING' AND
-            d.community = 'KOREA' AND // <- KOREA : 회원의 커뮤니티
-            d.is_deleted = false AND
-            d.member_seq != 2 AND // <- 2 : 회원의 식별키
-            md.member_seq != 2
-        ORDER BY d.last_modified_date ASC
+                 LEFT JOIN tb_member_dandelion_history mdh
+                           on d.dandelion_seq = mdh.dandelion_seq
+        WHERE d.status = 'FLYING'
+          AND d.community = 'KOREA'
+          AND d.is_deleted = false
+          AND d.member_seq != 3
+          AND (mdh.member_seq != 3 OR mdh.member_seq is null)
+        ORDER BY d.last_modified_date ASC;
         LIMIT 1;
          */
         return Optional.ofNullable(queryFactory
                 .selectFrom(dandelion)
                 .leftJoin(dandelion.memberDandelionHistories, memberDandelionHistory)
-                .on(
-                        memberDandelionHistory.dandelion.eq(dandelion),
-                        memberDandelionHistory.member.ne(member))
+                .on(memberDandelionHistory.dandelion.eq(dandelion))
                 .where(
                         dandelion.status.eq(Dandelion.Status.FLYING),
                         dandelion.community.eq(member.getAppConfig().getCommunity()),
                         dandelion.isDeleted.isFalse(),
-                        dandelion.member.ne(member))
+                        dandelion.member.ne(member),
+                        memberDandelionHistory.member.ne(member).or(memberDandelionHistory.member.isNull()))
                 .orderBy(dandelion.lastModifiedDate.asc())
                 .fetchFirst());
     }
