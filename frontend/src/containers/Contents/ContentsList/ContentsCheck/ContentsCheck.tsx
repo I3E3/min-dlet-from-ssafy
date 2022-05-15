@@ -36,7 +36,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
 
   useEffect(() => {
     SetText(form.message);
-    setImgFile(form.image);
+    if (form.image) setImgFile(URL.createObjectURL(form.image));
   }, []);
 
   const popupOn = () => {

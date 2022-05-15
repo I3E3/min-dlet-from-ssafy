@@ -16,17 +16,13 @@ body {
   height: 100vh;
   overflow: hidden;
   margin: 0 auto;
-  background: linear-gradient(180deg, #224E8B 0%, #C2BFCD 50%, #DBD2D2 100%);
+  background: linear-gradient(180deg, #568bda 0%, #df9bc2 50%, #ffd5b7 100%);
 }
 
 h1 {
   margin: 0;
   font-family: $font-header;
 }
-
-// p {
-//   font-size: 30px;
-// }
 
 a {
   color: inherit;

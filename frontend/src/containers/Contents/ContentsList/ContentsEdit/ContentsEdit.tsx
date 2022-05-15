@@ -37,7 +37,7 @@ const ContentsEdit = ({ onClick, form, setForm }: any) => {
           onClick={home}
           alt="home"
         />
-      </div>{' '}
+      </div>
       <ContentsEditor form={form} img={SetImg} msg={SetMsg} onSend={check} />
       <button onClick={back} className={cx('back-btn')}>
         Back

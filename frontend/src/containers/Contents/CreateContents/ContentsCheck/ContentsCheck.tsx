@@ -60,11 +60,9 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
               <div className={cx('thumbnail')}>
                 <div className={cx('default')}>
                   {imgFile ? (
-                    <>
-                      <div onClick={popupOn} className={cx('preview-img')}>
-                        <img src={imgFile} alt="preview" />
-                      </div>
-                    </>
+                    <div onClick={popupOn} className={cx('preview-img')}>
+                      <img src={imgFile} alt="preview" />
+                    </div>
                   ) : null}
                 </div>
               </div>
@@ -86,6 +84,3 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
 };
 
 export default ContentsCheck;
-function moment(date: Date) {
-  throw new Error('Function not implemented.');
-}
