@@ -2382,7 +2382,7 @@ class DandelionServiceTest {
         assertThat(participationListPageSvcDto).isNull();
     }
 
-    public String getContentImagePath(String imagePath){
-        return new StringBuilder().append(fileStorageUrl).append(contentImagePath).append(imagePath).toString();
+    public String getContentImagePath(String imageFilename){
+        return imageFilename == null ? null : fileStorageUrl + contentImagePath + imageFilename;
     }
 }
