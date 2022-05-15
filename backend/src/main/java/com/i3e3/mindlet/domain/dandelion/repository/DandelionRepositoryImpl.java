@@ -70,22 +70,23 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
             d.community = 'KOREA' AND // <- KOREA : 회원의 커뮤니티
             d.is_deleted = false AND
             d.member_seq != 2 AND // <- 2 : 회원의 식별키
-            md.member_seq is null
+            md.member_seq != 2
         ORDER BY d.last_modified_date ASC
         LIMIT 1;
          */
         return Optional.ofNullable(queryFactory
                 .selectFrom(dandelion)
-                .leftJoin(memberDandelionHistory).on(memberDandelionHistory.dandelion.eq(dandelion))
+                .leftJoin(dandelion.memberDandelionHistories, memberDandelionHistory)
+                .on(
+                        memberDandelionHistory.dandelion.eq(dandelion),
+                        memberDandelionHistory.member.ne(member))
                 .where(
                         dandelion.status.eq(Dandelion.Status.FLYING),
                         dandelion.community.eq(member.getAppConfig().getCommunity()),
                         dandelion.isDeleted.isFalse(),
-                        dandelion.member.ne(member),
-                        memberDandelionHistory.member.isNull())
+                        dandelion.member.ne(member))
                 .orderBy(dandelion.lastModifiedDate.asc())
-                .limit(1L)
-                .fetchOne());
+                .fetchFirst());
     }
 
     @Override
