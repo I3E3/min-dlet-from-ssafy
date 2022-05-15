@@ -1,17 +1,44 @@
+import styled from "styled-components";
+import sign from "assets/images/sign.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./MyGardenDandelion.module.scss";
 import cancel from "assets/images/cancel.png";
 import photo from "assets/images/photo-album.png";
-import shovel from "assets/images/shovel.png";
+import flower_scissors from "assets/images/flower_scissors.png";
 import pencil_check from "assets/images/pencil_check.png";
-import sign from "assets/images/sign.png";
 import axios from "axios";
 import Swal from "sweetalert2";
+
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
-function MyGardenDandelion({ dandelion }) {
+
+const Sign = styled.div`
+  color: white;
+  font-size: 20px;
+  position: relative;
+  img {
+    height: 190px;
+    width: 190px;
+  }
+`;
+
+const Icons = styled.img`
+  width: 30px !important;
+  height: 30px !important;
+  margin-right: 10px;
+`;
+
+const IconBox = styled.div`
+  text-align: center;
+`;
+
+const Blank = styled.div`
+  height: 37px;
+`;
+
+function MyGardenDandelion2({ dandelion }) {
   const navigate = useNavigate();
   const baseUrl = "http://localhost:8080/";
   const onDandelionClick = (dandelionId) => {
@@ -152,45 +179,49 @@ function MyGardenDandelion({ dandelion }) {
       <div onClick={onOptionsClick}>
         {show ? (
           <div>
-            <div>
+            <IconBox>
               <span>
-                <img className={cx("btn")} src={cancel} alt="취소" />
+                <Icons src={cancel} alt="취소" />
               </span>
               <span
                 onClick={() => {
                   onRecordClick(1);
                 }}
               >
-                <img className={cx("btn")} src={pencil_check} alt="꽃말" />
+                <Icons src={pencil_check} alt="꽃말" />
               </span>
               <span
                 onClick={() => {
                   onAlbumClick(1);
                 }}
               >
-                <img className={cx("btn")} src={photo} alt="보관함" />
+                <Icons src={photo} alt="보관함" />
               </span>
               <span
                 onClick={() => {
                   onDeleteClick(1);
                 }}
               >
-                <img className={cx("btn")} src={shovel} alt="삭제" />
+                <Icons src={flower_scissors} alt="삭제" />
               </span>
-            </div>
-            <div className={cx("sign_form")}>
-              <img className={cx("sign")} src={sign} alt="팻말" />
-              {dandelion}
+            </IconBox>
+            <div>
+              <Sign>
+                <img src={sign} alt="팻말" />
+              </Sign>
             </div>
           </div>
         ) : (
-          <div className={cx("sign_form")}>
-            <img className={cx("sign")} src={sign} alt="팻말" />
-            {dandelion}
+          <div>
+            <Blank></Blank>
+            <Sign>
+              <img src={sign} alt="팻말" />
+            </Sign>
           </div>
         )}
       </div>
     </div>
   );
 }
-export default MyGardenDandelion;
+
+export default MyGardenDandelion2;
