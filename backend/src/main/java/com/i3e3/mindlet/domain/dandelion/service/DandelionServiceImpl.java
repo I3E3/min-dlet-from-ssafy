@@ -317,9 +317,9 @@ public class DandelionServiceImpl implements DandelionService {
         Member findMember = memberRepository.findBySeq(memberSeq)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
         List<MemberDandelionHistory> memberDandelionHistories = findMember.getMemberDandelionHistories();
-        int size = memberDandelionHistories.size();
+        memberDandelionHistories.sort((o1, o2) -> o1.getCreatedDate().compareTo(o2.getCreatedDate()) * -1);
 
-        return memberDandelionHistories.get(size - 1).getDandelion().getSeq().equals(dandelionSeq);
+        return memberDandelionHistories.get(0).getDandelion().getSeq().equals(dandelionSeq);
     }
 
 
@@ -402,11 +402,12 @@ public class DandelionServiceImpl implements DandelionService {
         }
         return flowerSign;
     }
-    public String getNationImagePath(String nation){
+
+    public String getNationImagePath(String nation) {
         return nation == null ? null : fileStorageUrl + nationImagePath + nation + ".png";
     }
 
-    public String getContentImagePath(String imageFilename){
+    public String getContentImagePath(String imageFilename) {
         return imageFilename == null ? null : fileStorageUrl + contentImagePath + imageFilename;
     }
 
