@@ -403,11 +403,11 @@ public class DandelionServiceImpl implements DandelionService {
         return flowerSign;
     }
     public String getNationImagePath(String nation){
-        return new StringBuilder().append(fileStorageUrl).append(nationImagePath).append(nation).append(".png").toString();
+        return nation == null ? null : fileStorageUrl + nationImagePath + nation + ".png";
     }
 
-    public String getContentImagePath(String imagePath){
-        return new StringBuilder().append(fileStorageUrl).append(contentImagePath).append(imagePath).toString();
+    public String getContentImagePath(String imageFilename){
+        return imageFilename == null ? null : fileStorageUrl + contentImagePath + imageFilename;
     }
 
     @Override
