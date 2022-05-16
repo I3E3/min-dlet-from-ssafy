@@ -6,7 +6,6 @@ import sign from "assets/images/sign.png";
 import styles from "./MyGarden.module.scss";
 import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
-import MyGardenDandelion from "./MyGardenDandelion";
 import MyGardenDandelion2 from "./MyGardenDandelion2";
 import axios from "axios";
 
@@ -80,28 +79,28 @@ function MyGardenMain() {
       <div className={cx("sign_boxs")}>
         <div className={cx("sign_box_1")}>
           {dandelions.slice(0, 1).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} />
+            <MyGardenDandelion2 dandelion={dandelion} key={index} />
           ))}
         </div>
         <div className={cx("sign_box_2")}>
           {dandelions.slice(1, 2).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} />
+            <MyGardenDandelion2 dandelion={dandelion} key={index} />
           ))}
         </div>
         <div className={cx("sign_box_3")}>
           {dandelions.slice(2, 3).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} />
+            <MyGardenDandelion2 dandelion={dandelion} key={index} />
           ))}
         </div>
         <div className={cx("sign_box_4")}>
           {dandelions.slice(3, 4).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} />
+            <MyGardenDandelion2 dandelion={dandelion} key={index} />
           ))}
         </div>
         <div className={cx("sign_box_5")}>
           {dandelions.slice(4, 5).map((dandelion, index) => (
             <div>
-              <MyGardenDandelion2 dandelion={dandelion} />
+              <MyGardenDandelion2 dandelion={dandelion} key={index} />
             </div>
           ))}
         </div>
