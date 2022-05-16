@@ -4,11 +4,14 @@ import styles from './LandingPage.module.scss';
 import { useNavigate } from 'react-router';
 import toast, { Toaster } from 'react-hot-toast';
 import LandingModel from 'components/Landing/LandingModel';
+import GroupSelection from 'components/Landing/GroupSelection';
 import { ReactComponent as Menu } from 'assets/images/menu.svg';
 import { leftSeedCount } from 'services/api/Contents';
 
 const cx = classNames.bind(styles);
 const LandingPage = () => {
+  const [isShowing, setIsShowing] = useState(true);
+  const [isGroupShowing, setIsGroupShowing] = useState(false)
   let [xStart, yStart, xEnd, yEnd] = [0, 0, 0, 0];
   let howManyTouches = 0;
   const navigate = useNavigate();
@@ -59,8 +62,6 @@ const LandingPage = () => {
     }
   };
 
-  const [isShowing, setIsShowing] = useState(true);
-
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       navigate('/login');
@@ -84,13 +85,16 @@ const LandingPage = () => {
       }}
     >
       {/* <h1>제발!!</h1> */}
-      <button className={cx('menu-button')}>
+      <button className={cx('menu-button')}
+        onClick={() => {setIsGroupShowing((isGroupShowing) => !isGroupShowing)}}>
+      {/* <button className={cx('menu-button')}> */}
         {' '}
-        <Toaster position="top-center" reverseOrder={false} />
+        {/* <Toaster position="top-center" reverseOrder={false} /> */}
         <Menu className={cx('menu-svg')}></Menu>
       </button>
 
       {isShowing && <LandingModel></LandingModel>}
+      {isGroupShowing && <GroupSelection setIsGroupShowing={setIsGroupShowing} />}
     </section>
   );
 };
