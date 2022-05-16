@@ -25,7 +25,7 @@ export default function LandingModel() {
   return (
     <Canvas
       frameloop="demand"
-      style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+      style={{ pointerEvents: 'auto' }}
       camera={{
         position: [0, -80, 120],
         // <Canvas frameloop="demand" style={{pointerEvents: 'auto', cursor:'pointer'}} pixelRatio={[1, 1]} camera={{ position: [-15, 27, 150],

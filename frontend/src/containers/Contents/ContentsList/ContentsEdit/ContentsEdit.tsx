@@ -2,7 +2,7 @@ import ContentsEditor from 'components/ContentsEditor/ContentsEditor';
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentsEdit.module.scss';
-import iconimg from 'assets/images/icon/icon_dandelion.png';
+import iconimg from 'assets/images/icon/earth-globe-white.png';
 import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 

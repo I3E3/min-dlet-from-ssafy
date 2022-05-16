@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSprings, animated, to as interpolate } from '@react-spring/web';
 import petal from 'assets/images/petal-yellow-4.png';
-import test from 'assets/images/ImsiImage.jpg';
 import classNames from 'classnames/bind';
 import { useDrag } from '@use-gesture/react';
-import iconimg from 'assets/images/icon/icon_dandelion.png';
+import iconimg from 'assets/images/icon/earth-globe-white.png';
+import nationImg from 'assets/images/Flag_of_South_Korea.png';
 import styles from './ContentsList.module.scss';
 import { resetContentsState } from 'services/api/Contents';
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as NationImg } from 'assets/images/Flag_of_South_Korea.svg';
 import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
 import { useSetRecoilState } from 'recoil';
 
@@ -26,20 +27,17 @@ const to = (i: number) => ({
 const from = (_i: number) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 });
 // This is being used down there in the view, it interpolates rotation and scale into a css transform
 const trans = (r: number, s: number) =>
-  `perspective(1500px) rotateX(30deg) rotateY(${
-    r / 10
-  }deg) rotateZ(${r}deg) scale(${s})`;
+  `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
   const navigate = useNavigate();
   const setPetalData = useSetRecoilState(petalCatchResultList);
   const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
-  const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
+  const [gone] = useState(() => new Set());
   const [props, api] = useSprings(count, (i) => ({
     ...to(i),
     from: from(i),
-  })); // Create a bunch of springs using the helpers above
-  // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
+  }));
 
   const home = async () => {
     const response = await resetContentsState(seq);
@@ -108,8 +106,17 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
               <div className={cx('contents')}>
                 <div className={cx('petal-img')}>
                   <div className={cx('editor')}>
-                    <div className={cx('date')}> {list[i].createdDate}</div>
-                    {list[i].nation}
+                    <div className={cx('header')}>
+                      <div className={cx('nation')}>
+                        {list[i].nation}
+                        <img
+                          className={cx('nationimg')}
+                          src={list[i].nationImageUrlPath}
+                          alt="preview"
+                        />
+                      </div>
+                      <div className={cx('date')}> {list[i].createdDate}</div>
+                    </div>
                     <div className={cx('scrollBar')}>
                       <div className={cx('thumbnail')}>
                         <div className={cx('default')}>

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import petal from 'assets/images/img_petal_1.png';
+import petal from 'assets/images/petal-yellow-4.png';
 import classNames from 'classnames/bind';
 
 import 'react-day-picker/dist/style.css';
 import styles from './ContentsCheck.module.scss';
 import { fDateDash } from 'utils/formatTime';
-import iconimg from 'assets/images/icon/icon_dandelion.png';
+import iconimg from 'assets/images/icon/earth-globe-white.png';
 import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
@@ -47,7 +47,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
     <div className={cx('container')}>
       <div className={cx('inner-container')}>
         <img
-          className={cx('back-btn')}
+          className={cx('home-btn')}
           src={iconimg}
           onClick={home}
           alt="home"
@@ -74,7 +74,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
           <div className={cx('btn')} onClick={sendData}>
             Send
           </div>
-          <div className={cx('btn')} onClick={back}>
+          <div className={cx('back-btn')} onClick={back}>
             Back
           </div>
         </div>
