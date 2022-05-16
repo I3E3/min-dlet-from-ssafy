@@ -6,6 +6,7 @@ import classNames from "classnames/bind";
 import styles from "./MyGardenDandelion.module.scss";
 import cancel from "assets/images/cancel.png";
 import photo from "assets/images/photo-album.png";
+import shovel from "assets/images/shovel.png";
 import flower_scissors from "assets/images/flower_scissors.png";
 import pencil_check from "assets/images/pencil_check.png";
 import axios from "axios";
@@ -116,6 +117,7 @@ const Dday = styled.span`
 
 function MyGardenDandelion2({ dandelion }) {
   const [show, setShow] = useState(false);
+  const [showPlant, setShowPlant] = useState(false);
   const [record, setRecord] = useState(false);
   const [date, setDate] = useState("");
   const [status, setStatus] = useState("");
@@ -165,6 +167,19 @@ function MyGardenDandelion2({ dandelion }) {
     }).then((res) => {
       if (res.isConfirmed) {
         saveDandelion(dandelionId);
+      }
+    });
+  };
+
+  const onPlantClick = (dandelionId) => {
+    Swal.fire({
+      title: "씨앗을 심겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "심기",
+      cancelButtonText: "취소",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        plantDandelion(dandelionId);
       }
     });
   };
@@ -232,8 +247,33 @@ function MyGardenDandelion2({ dandelion }) {
         console.log("보관함에 저장 성공");
       })
       .catch((err) => {
-        Swal.fire("보관함에 저장 실패!", "", "danger");
+        Swal.fire("보관함에 저장 실패!", "", "warning");
         console.log("보관함에 저장 실패");
+        console.log(err);
+      });
+  }
+
+  async function plantDandelion(dandelionId) {
+    const token = localStorage.getItem("token");
+    const config = {
+      Authorization: "Bearer " + token,
+    };
+    await axios({
+      url: `dandelions/${dandelionId}/status`,
+      method: "patch",
+      data: {
+        status: "BLOSSOMED",
+      },
+      baseURL: BaseURL,
+      headers: config,
+    })
+      .then((res) => {
+        Swal.fire("씨앗 심기 성공!", "", "success");
+        console.log("씨앗 심기 성공");
+      })
+      .catch((err) => {
+        Swal.fire("씨앗 심기 실패!", "", "warning");
+        console.log("씨앗 심기 실패");
         console.log(err);
       });
   }
@@ -254,7 +294,7 @@ function MyGardenDandelion2({ dandelion }) {
         console.log("민들레 삭제 성공");
       })
       .catch((err) => {
-        Swal.fire("민들레 삭제 실패!", "", "danger");
+        Swal.fire("민들레 삭제 실패!", "", "warning");
         console.log("민들레 삭제 실패");
         console.log(err);
       });
@@ -267,9 +307,11 @@ function MyGardenDandelion2({ dandelion }) {
     } else if (status === "RETURN") {
       setRecord(true);
       setReturned(true);
+      setShowPlant(true);
     } else if (status === "BLOSSOMED") {
       setRecord(true);
       setReturned(false);
+      setShowPlant(false);
       setBlossom(true);
     }
   }, [status]);
@@ -283,7 +325,7 @@ function MyGardenDandelion2({ dandelion }) {
                 <Icons src={cancel} alt="취소" />
               </IconCover>
 
-              {record ? (
+              {record && blossom ? (
                 <IconCover
                   onClick={() => {
                     onRecordClick(dandelion.seq);
@@ -295,7 +337,7 @@ function MyGardenDandelion2({ dandelion }) {
                 <span></span>
               )}
 
-              {record ? (
+              {record && blossom ? (
                 <IconCover
                   onClick={() => {
                     onAlbumClick(dandelion.seq);
@@ -306,6 +348,19 @@ function MyGardenDandelion2({ dandelion }) {
               ) : (
                 <span></span>
               )}
+
+              {showPlant ? (
+                <IconCover
+                  onClick={() => {
+                    onPlantClick(dandelion.seq);
+                  }}
+                >
+                  <Icons src={shovel} alt="씨앗 심기" />
+                </IconCover>
+              ) : (
+                <span></span>
+              )}
+
               <IconCover
                 onClick={() => {
                   onDeleteClick(dandelion.seq);
