@@ -2431,4 +2431,17 @@ class DandelionServiceTest {
         // then
         assertThat(isReady).isFalse();
     }
+
+    @Test
+    @DisplayName("민들레 상태(Ready) 확인 - 예외 발생")
+    void checkReadyException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isReady(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }
