@@ -9,7 +9,7 @@ export default function Earth() {
   }, []);
   return (
     <instancedMesh ref={earth}>
-      <primitive position={[1, -180, 0]} object={scene} scale={10} />{' '}
+      <primitive position={[7, -180, 0]} object={scene} scale={10} />{' '}
     </instancedMesh>
   );
 }

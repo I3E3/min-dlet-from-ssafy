@@ -8,15 +8,18 @@
 
 html {
   font-family: $font-main;
+  overflow: hidden;
+  position: relative;
 }
 
 body {
   // background: linear-gradient(180deg, #92c4ff 0%, #ffffff 100%);
   width: 100vw;
   height: 100vh;
+  position: relative;
   overflow: hidden;
-  margin: 0 auto;
   background: linear-gradient(180deg, #568bda 0%, #ffb8b8 80%, #ffd5b7 100%);
+  background-repeat: no-repeat;
 }
 
 h1 {
