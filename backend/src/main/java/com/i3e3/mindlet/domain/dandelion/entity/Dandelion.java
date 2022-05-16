@@ -96,6 +96,7 @@ public class Dandelion extends BaseLastModifiedEntity {
         RETURN("returned to owner"),
         PENDING("under confirm"),
         BLOCKED("inappropriate dandelion"),
+        READY("can't catch before return"),
         BLOSSOMED("in the garden"),
         ALBUM("in the album");
 
