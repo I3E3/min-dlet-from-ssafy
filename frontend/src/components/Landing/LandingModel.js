@@ -38,12 +38,13 @@ export default function LandingModel() {
       <Suspense fallback={<FallbackTitle />}>
         <Earth />
         <directionalLight
+          color="#DF9BC2"
           position={[0.5, 1, 0.866]}
           intensity={1.7}
           // castShadow
         />
         <directionalLight
-          // color="#b6fccd"
+          color="#DF9BC2"
           position={[0.5, 10, 0.866]}
           intensity={1.7}
           // castShadow

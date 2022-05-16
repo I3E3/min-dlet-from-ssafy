@@ -8,15 +8,14 @@ $color: blue;
 
 .menu-button {
   position: absolute;
-  right: 10px; 
-  top: 10px; 
+  right: 10px;
+  top: 10px;
   border-radius: 20%;
   border: 1px solid white;
   z-index: 3;
   padding: 4px;
   padding-top: 8px;
 }
-
 
 .menu-svg {
   z-index: 3;
@@ -30,7 +29,6 @@ $color: blue;
   overflow: hidden;
   width: 86vw;
   max-width: 540px;
-  height: 60vh;
   min-height: 480px;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 4%;
@@ -38,9 +36,9 @@ $color: blue;
   margin: auto;
   margin-top: 20vh;
   left: 50%;
-  margin-left: #{"max(-270px, -43vw)"};
-  
-  h1{
+  margin-left: #{'max(-270px, -43vw)'};
+
+  h1 {
     text-align: center;
     font-size: 32px;
     color: white;
@@ -53,7 +51,7 @@ $color: blue;
     display: grid;
     // gap: 32px;
     width: 70%;
-    color: #224E8B;
+    color: #224e8b;
     line-height: 100%;
 
     button {
@@ -63,7 +61,7 @@ $color: blue;
       color: white;
       margin: auto;
       margin-top: 32px;
-      background-color: #224E8B;
+      background-color: #224e8b;
     }
   }
 
@@ -72,23 +70,26 @@ $color: blue;
     height: 40px;
     padding: 10px;
     margin-top: 8px;
-    color: #224E8B;
-    border: 1px solid #224E8B;
+    color: #224e8b;
+    border: 1px solid #224e8b;
     // border-radius: 3%;
     font-size: 16px;
   }
-  ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #224E8B;
+  ::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #224e8b;
     opacity: 0.7; /* Firefox */
   }
-  
-  :-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: #224E8B;
+
+  :-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #224e8b;
     opacity: 0.7;
   }
-  
-  ::-ms-input-placeholder { /* Microsoft Edge */
-    color: #224E8B;
+
+  ::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #224e8b;
     opacity: 0.7;
   }
 
@@ -98,7 +99,6 @@ $color: blue;
     text-align: center;
     display: block;
   }
-
 }
 
 .id-validation-check {
@@ -107,4 +107,29 @@ $color: blue;
   // flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.guideDown {
+  top: 2%;
+  left: 2%;
+  position: absolute;
+  z-index: 9999;
+  animation: ani 1s infinite alternate;
+}
+
+.guideUp {
+  bottom: 2%;
+  left: 2%;
+  position: absolute;
+  z-index: 9999;
+  animation: ani 1s infinite alternate;
+}
+
+@keyframes ani {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0, 8px);
+  }
 }

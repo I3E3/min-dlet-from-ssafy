@@ -16,7 +16,8 @@ export default function Router() {
   return useRoutes([
     {
       path: '/',
-      element: <LandingPage />,
+      element: <Background />,
+      children: [{ path: '', element: <LandingPage /> }],
     },
     {
       path: '/main',
@@ -53,11 +54,13 @@ export default function Router() {
     },
     {
       path: '/login',
-      element: <LoginPage />,
+      element: <Background />,
+      children: [{ path: '', element: <LoginPage /> }],
     },
     {
       path: '/signup',
       element: <SignupPage />,
+      children: [{ path: '', element: <SignupPage /> }],
     },
     {
       path: '/layout',

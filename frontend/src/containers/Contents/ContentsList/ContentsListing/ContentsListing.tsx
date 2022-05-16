@@ -89,63 +89,78 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
   );
   // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
   return (
-    <div className={cx('container')}>
-      <img className={cx('home-btn')} src={iconimg} onClick={home} alt="home" />
-      <div className={cx('petal-img')}>
-        {props.map(({ x, y, rot, scale }, i) => (
-          <animated.div className={cx('deck')} key={i} style={{ x, y }}>
-            {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
-            <animated.div
-              className={cx('petal')}
-              {...bind(i)}
-              style={{
-                transform: interpolate([rot, scale], trans),
-              }}
-            >
-              <img className={cx('petals')} src={`${cards[0]}`} alt="petals" />
-              <div className={cx('contents')}>
-                <div className={cx('petal-img')}>
-                  <div className={cx('editor')}>
-                    <div className={cx('header')}>
-                      <div className={cx('nation')}>
-                        {list[i].nation}
-                        <img
-                          className={cx('nationimg')}
-                          src={list[i].nationImageUrlPath}
-                          alt="preview"
-                        />
+    <section
+      style={{
+        width: '100%',
+        height: '100vh',
+        overflow: 'hidden',
+      }}
+    >
+      <div className={cx('container')}>
+        <img
+          className={cx('home-btn')}
+          src={iconimg}
+          onClick={home}
+          alt="home"
+        />
+        <div className={cx('petal-img')}>
+          {props.map(({ x, y, rot, scale }, i) => (
+            <animated.div className={cx('deck')} key={i} style={{ x, y }}>
+              {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
+              <animated.div
+                className={cx('petal')}
+                {...bind(i)}
+                style={{
+                  transform: interpolate([rot, scale], trans),
+                }}
+              >
+                <img
+                  className={cx('petals')}
+                  src={`${cards[0]}`}
+                  alt="petals"
+                />
+                <div className={cx('contents')}>
+                  <div className={cx('petal-img')}>
+                    <div className={cx('editor')}>
+                      <div className={cx('header')}>
+                        <div className={cx('nation')}>
+                          {list[i].nation}
+                          <img
+                            className={cx('nationimg')}
+                            src={list[i].nationImageUrlPath}
+                            alt="preview"
+                          />
+                        </div>
+                        <div className={cx('date')}> {list[i].createdDate}</div>
                       </div>
-                      <div className={cx('date')}> {list[i].createdDate}</div>
-                    </div>
-                    <div className={cx('scrollBar')}>
-                      <div className={cx('thumbnail')}>
-                        <div className={cx('default')}>
-                          {list[i].contentImageUrlPath ? (
-                            <>
+                      <div className={cx('scrollBar')}>
+                        <div className={cx('textarea')}>{list[i].message}</div>
+                        <div className={cx('thumbnail')}>
+                          <div className={cx('default')}>
+                            {list[i].contentImageUrlPath ? (
                               <div className={cx('preview-img')}>
                                 <img
                                   src={list[i].contentImageUrlPath}
                                   alt="preview"
                                 />
                               </div>
-                            </>
-                          ) : null}
+                            ) : null}
+                          </div>
                         </div>
                       </div>
-                      <textarea value={list[i].message} disabled />
+                      {/* {i + 1} */}
                     </div>
-                    {/* {i + 1} */}
                   </div>
                 </div>
-              </div>
+              </animated.div>
             </animated.div>
-          </animated.div>
-        ))}
+          ))}
+        </div>
+        <div className={cx('send-btn')} onClick={send}>
+          Send
+        </div>
       </div>
-      <div className={cx('send-btn')} onClick={send}>
-        Send
-      </div>
-    </div>
+    </section>
   );
 };
 

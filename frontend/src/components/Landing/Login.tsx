@@ -46,11 +46,11 @@ const Login = () => {
         setMember(data);
         navigate('/');
       } else {
-        toast.error(`😥아이디가 존재하지 않거나 
+        toast.error(`아이디가 존재하지 않거나 
         잘못된 비밀번호입니다😥`);
       }
     } catch {
-      toast.error(`😥아이디가 존재하지 않거나 
+      toast.error(`아이디가 존재하지 않거나 
         잘못된 비밀번호입니다😥`);
     }
   };
@@ -58,7 +58,7 @@ const Login = () => {
   return (
     <div className={cx('member-modal')}>
       {/* <Toaster /> */}
-      <h1>Mindlet</h1>
+      <h1 style={{ paddingTop: '15px' }}>Min'dlet</h1>
       <form>
         <div>
           <h3>아이디</h3>
@@ -76,6 +76,7 @@ const Login = () => {
           <input
             ref={passwordInput}
             id="passwordinput"
+            placeholder="Password"
             type="password"
             maxLength={20}
             onKeyDown={(e) => {
