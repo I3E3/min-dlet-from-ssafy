@@ -19,7 +19,7 @@ export const sound = async () => {
       sumSquares += amplitude * amplitude;
     }
 
-    if (sumSquares > 500) {
+    if (sumSquares > 100) {
       window.dispatchEvent(new CustomEvent('blow'));
       console.log(sumSquares);
       stream.getTracks()[0].stop();

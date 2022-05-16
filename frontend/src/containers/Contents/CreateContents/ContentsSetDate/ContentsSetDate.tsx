@@ -15,14 +15,6 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
   };
 
   const setData = () => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setForm({
-        ...form,
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
-    });
-
     console.log(form);
     onClick(4);
   };
