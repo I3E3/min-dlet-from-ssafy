@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 
-export default function FlyingSeedAnimation({ seedUp, wind, ready, appear }) {
+export default function FlyingSeedAnimation({
+  seedUp,
+  wind,
+  ready,
+  appear,
+  touch,
+}) {
   const [size, SetSize] = useState(8);
   const [state, SetState] = useState(false);
   const [down, SetDown] = useState(false);
@@ -44,13 +50,17 @@ export default function FlyingSeedAnimation({ seedUp, wind, ready, appear }) {
       let i = 0;
       for (i = 0; i < 57; i++) {
         actions[names[i]].play();
-        //무조건 로딩 안보이게
+        //Todo: 무조건 로딩 안보이게
       }
     }
   }, [wind]);
 
+  const eventClick = () => {
+    console.log('야야야');
+  };
+
   return (
-    <group ref={ref} dispose={null}>
+    <group ref={ref} dispose={null} onClick={eventClick}>
       <group name="Scene">
         <group name="Dandelion" rotation={[Math.PI / 2, 0, 0.84]} scale={size}>
           <group name="ani_seed">

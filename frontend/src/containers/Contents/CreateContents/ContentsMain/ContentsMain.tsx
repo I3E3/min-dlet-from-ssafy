@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentsMain.module.scss';
 import Plant from '../Plant/Plant';
@@ -6,6 +6,9 @@ import NewContentsEdit from '../NewContentsEdit/NewContentsEdit';
 import ContentsCheck from '../ContentsCheck/ContentsCheck';
 import Blow from '../Blow/Blow';
 import ContentsSetDate from '../ContentsSetDate/ContentsSetDate';
+import { getContents } from 'services/api/Contents';
+import toast from 'react-hot-toast';
+import { Navigate, useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 const ContentsMain = () => {
@@ -15,6 +18,7 @@ const ContentsMain = () => {
     message: '',
     date: '',
   });
+
   const handleformStep = (step: number) => {
     setFormStep(step);
   };

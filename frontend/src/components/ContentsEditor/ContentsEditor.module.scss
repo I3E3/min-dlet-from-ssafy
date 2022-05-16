@@ -13,17 +13,15 @@ $color: blue;
     margin: 20vh auto 0 auto;
     text-align: center;
     .petal {
-      -webkit-filter: blur(3px);
-      -moz-filter: blur(3px);
-      -o-filter: blur(3px);
-      -ms-filter: blur(3px);
-      filter: blur(2px);
+      transform: rotate(-20deg);
+      width: 90vw;
+      height: 65vh;
     }
     .editor {
       border: 2px solid white;
       box-shadow: 0px 2px 2px 1px rgb(199, 199, 199) inset;
-      top: 35%;
-      left: 50%;
+      top: 42%;
+      left: 48%;
       height: 200px;
       width: 250px;
       transform: translate(-50%, -50%);
@@ -39,13 +37,14 @@ $color: blue;
       }
       // TODO : center 안먹히는 이유 찾기
       .default {
-        height: 50px;
+        height: 52px;
         margin: 0 0 0 67px;
-        width: 50px;
+        padding: 2px;
+        width: 52px;
         box-shadow: 0px 2px 2px 1px rgb(199, 199, 199) inset;
         background-color: rgba(255, 255, 255, 0.514);
         border: 2px solid rgb(255, 255, 255);
-        border-radius: 20px;
+        border-radius: 10px;
         cursor: pointer;
 
         .upload-image {

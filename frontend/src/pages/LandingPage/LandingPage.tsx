@@ -4,17 +4,97 @@ import styles from './LandingPage.module.scss';
 import { useNavigate } from 'react-router';
 import toast, { Toaster } from 'react-hot-toast';
 import LandingModel from 'components/Landing/LandingModel';
+import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
 import GroupSelection from 'components/Landing/GroupSelection';
 import { ReactComponent as Menu } from 'assets/images/menu.svg';
-import { leftSeedCount } from 'services/api/Contents';
-
+import {
+  getContents,
+  leftSeedCount,
+  resetContentsState,
+} from 'services/api/Contents';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 const cx = classNames.bind(styles);
 const LandingPage = () => {
   const [isShowing, setIsShowing] = useState(true);
-  const [isGroupShowing, setIsGroupShowing] = useState(false)
+  const [isGroupShowing, setIsGroupShowing] = useState(false);
   let [xStart, yStart, xEnd, yEnd] = [0, 0, 0, 0];
+  const [loading, setLoading] = useState(false);
+  const [prevent, setPrevent] = useState(0);
+  const [throttle, setThrottle] = useState(false);
+  const setPetalData = useSetRecoilState(petalCatchResultList);
+  const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
+  const petaldata = useRecoilValue(petalCatchResultList);
+  const patalseq = useRecoilValue(petalCatchResultSeq);
+
   let howManyTouches = 0;
   const navigate = useNavigate();
+
+  const mocklist = [
+    {
+      contentImageUrlPath:
+        'https://blog.kakaocdn.net/dn/bVa1Ja/btqTtrb27nz/dF3Mr20K37IUZ6K2lGJGJ1/img.png',
+      createdDate: '2022-10-10',
+      message: '123',
+      nation: 'KOREA',
+      nationImageUrlPath: '123',
+      seq: 1,
+    },
+    {
+      contentImageUrlPath:
+        'https://blog.kakaocdn.net/dn/bVa1Ja/btqTtrb27nz/dF3Mr20K37IUZ6K2lGJGJ1/img.png',
+      createdDate: '2022-10-11',
+      message: '456',
+      nation: 'KOREA',
+      nationImageUrlPath: '123',
+      seq: 2,
+    },
+  ];
+
+  const moveListPage = async () => {
+    try {
+      setThrottle(true);
+      const result = await getContents();
+      console.log(result);
+      navigate('/contents/list');
+      if (result.status === 204) {
+        toast('현재 잡을 수 있는 씨앗이 없습니다.', {
+          icon: '🌼',
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        });
+        setThrottle(false);
+        const result = mocklist;
+        setPetalData(result.reverse());
+        setPetalSeq(122);
+        navigate('/contents/list');
+        //navigate('/');
+      } else if (result.status === 200) {
+        setPetalData(result.data.data.petalInfos.reverse());
+        setPetalSeq(result.data.data.dandelionSeq);
+        navigate('/contents/list');
+        setThrottle(false);
+        setLoading(true);
+      } else {
+        const result = mocklist;
+        setPetalData(result);
+        setPetalSeq(122);
+        navigate('/contents/list');
+      }
+      //const result = mocklist;
+      //console.log(result);
+
+      //setList(mocklist);
+      //setSeq(2);
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log('swipe down');
+  };
+
   const moveCreatePage = async () => {
     try {
       const result = await leftSeedCount();
@@ -52,19 +132,29 @@ const LandingPage = () => {
     xEnd = e.changedTouches[0].clientX;
     yEnd = e.changedTouches[0].clientY;
     if (Math.abs(xEnd - xStart) < 30) {
-      if (yEnd - yStart > 50) {
-        console.log('swipe down');
-        navigate('/contents/list');
-        setIsShowing(false);
+      if (yEnd - yStart > 50 && !throttle) {
+        moveListPage();
+        //setIsShowing(false);
       } else if (yEnd - yStart < -50) {
         moveCreatePage();
       }
     }
   };
 
+  const resetState = async () => {
+    const response = await resetContentsState(patalseq);
+    console.log(response);
+    setPetalData([{}]);
+    setPetalSeq(0);
+  };
+
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       navigate('/login');
+    }
+    console.log(patalseq);
+    if (patalseq !== 0) {
+      resetState();
     }
 
     window.addEventListener('touchstart', handleTouchStart);
@@ -85,16 +175,21 @@ const LandingPage = () => {
       }}
     >
       {/* <h1>제발!!</h1> */}
-      <button className={cx('menu-button')}
-        onClick={() => {setIsGroupShowing((isGroupShowing) => !isGroupShowing)}}>
-      {/* <button className={cx('menu-button')}> */}
-        {' '}
+      <button
+        className={cx('menu-button')}
+        onClick={() => {
+          setIsGroupShowing((isGroupShowing) => !isGroupShowing);
+        }}
+      >
+        {/* <button className={cx('menu-button')}> */}{' '}
         {/* <Toaster position="top-center" reverseOrder={false} /> */}
         <Menu className={cx('menu-svg')}></Menu>
       </button>
 
       {isShowing && <LandingModel></LandingModel>}
-      {isGroupShowing && <GroupSelection setIsGroupShowing={setIsGroupShowing} />}
+      {isGroupShowing && (
+        <GroupSelection setIsGroupShowing={setIsGroupShowing} />
+      )}
     </section>
   );
 };

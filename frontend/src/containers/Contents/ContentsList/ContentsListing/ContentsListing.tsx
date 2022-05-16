@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSprings, animated, to as interpolate } from '@react-spring/web';
-import petal from 'assets/images/img_petal_1.png';
-import test from 'assets/images/ImsiImage.jpg';
+import petal from 'assets/images/petal-yellow-4.png';
 import classNames from 'classnames/bind';
 import { useDrag } from '@use-gesture/react';
-import iconimg from 'assets/images/icon/icon_dandelion.png';
+import iconimg from 'assets/images/icon/earth-globe-white.png';
+import nationImg from 'assets/images/Flag_of_South_Korea.png';
 import styles from './ContentsList.module.scss';
+import { resetContentsState } from 'services/api/Contents';
 import { useNavigate } from 'react-router-dom';
-import { fDateDash } from 'utils/formatTime';
+import { ReactComponent as NationImg } from 'assets/images/Flag_of_South_Korea.svg';
+import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
+import { useSetRecoilState } from 'recoil';
+
 const cx = classNames.bind(styles);
 const cards = [petal, petal, petal, petal, petal, petal];
 
@@ -23,29 +27,34 @@ const to = (i: number) => ({
 const from = (_i: number) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 });
 // This is being used down there in the view, it interpolates rotation and scale into a css transform
 const trans = (r: number, s: number) =>
-  `perspective(1500px) rotateX(30deg) rotateY(${
-    r / 10
-  }deg) rotateZ(${r}deg) scale(${s})`;
+  `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
-const ContentsList = ({ onClick, form, setForm }: any) => {
+const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
   const navigate = useNavigate();
-  const [text, SetText] = useState('안녕하세요🎃');
-  const [imgFile, SetImg] = useState(test);
-  const date: string = new Date().toString();
-  const [gone] = useState(() => new Set()); // The set flags all the cards that are flicked out
-  const [props, api] = useSprings(cards.length, (i) => ({
+  const setPetalData = useSetRecoilState(petalCatchResultList);
+  const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
+  const [gone] = useState(() => new Set());
+  const [props, api] = useSprings(count, (i) => ({
     ...to(i),
     from: from(i),
-  })); // Create a bunch of springs using the helpers above
-  // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
+  }));
 
-  const home = () => {
+  const home = async () => {
+    const response = await resetContentsState(seq);
+    setPetalData([{}]);
+    setPetalSeq(0);
     navigate('/');
   };
 
   const send = () => {
     onClick(2);
   };
+
+  useEffect(() => {
+    console.log(list);
+    console.log(seq);
+    console.log(count);
+  }, []);
 
   const bind = useDrag(
     ({
@@ -71,7 +80,7 @@ const ContentsList = ({ onClick, form, setForm }: any) => {
           config: { friction: 50, tension: active ? 800 : isGone ? 200 : 500 },
         };
       });
-      if (!active && gone.size === cards.length)
+      if (!active && gone.size === count)
         setTimeout(() => {
           gone.clear();
           api.start((i) => to(i));
@@ -82,7 +91,7 @@ const ContentsList = ({ onClick, form, setForm }: any) => {
   return (
     <div className={cx('container')}>
       <img className={cx('home-btn')} src={iconimg} onClick={home} alt="home" />
-      <div className={cx('petal-img ')}>
+      <div className={cx('petal-img')}>
         {props.map(({ x, y, rot, scale }, i) => (
           <animated.div className={cx('deck')} key={i} style={{ x, y }}>
             {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
@@ -93,24 +102,37 @@ const ContentsList = ({ onClick, form, setForm }: any) => {
                 transform: interpolate([rot, scale], trans),
               }}
             >
-              <img className={cx('petals')} src={`${cards[i]}`} alt="petals" />
+              <img className={cx('petals')} src={`${cards[0]}`} alt="petals" />
               <div className={cx('contents')}>
                 <div className={cx('petal-img')}>
                   <div className={cx('editor')}>
-                    <div className={cx('date')}> {fDateDash(date)}</div>
+                    <div className={cx('header')}>
+                      <div className={cx('nation')}>
+                        {list[i].nation}
+                        <img
+                          className={cx('nationimg')}
+                          src={list[i].nationImageUrlPath}
+                          alt="preview"
+                        />
+                      </div>
+                      <div className={cx('date')}> {list[i].createdDate}</div>
+                    </div>
                     <div className={cx('scrollBar')}>
                       <div className={cx('thumbnail')}>
                         <div className={cx('default')}>
-                          {imgFile ? (
+                          {list[i].contentImageUrlPath ? (
                             <>
                               <div className={cx('preview-img')}>
-                                <img src={imgFile} alt="preview" />
+                                <img
+                                  src={list[i].contentImageUrlPath}
+                                  alt="preview"
+                                />
                               </div>
                             </>
                           ) : null}
                         </div>
                       </div>
-                      <textarea value={text} disabled />
+                      <textarea value={list[i].message} disabled />
                     </div>
                     {/* {i + 1} */}
                   </div>
