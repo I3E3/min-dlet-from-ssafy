@@ -458,4 +458,13 @@ public class DandelionServiceImpl implements DandelionService {
 
         return participationListPageSvcDto;
     }
+
+    @Override
+    public boolean isReady(Long dandelionSeq) {
+
+        Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
+
+        return findDandelion.getStatus() == Dandelion.Status.READY;
+    }
 }
