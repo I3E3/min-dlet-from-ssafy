@@ -108,3 +108,28 @@ $color: blue;
   justify-content: space-between;
   align-items: center;
 }
+
+.guideDown {
+  top: 2%;
+  left: 2%;
+  position: absolute;
+  z-index: 9999;
+  animation: ani 1s infinite alternate;
+}
+
+.guideUp {
+  bottom: 2%;
+  left: 2%;
+  position: absolute;
+  z-index: 9999;
+  animation: ani 1s infinite alternate;
+}
+
+@keyframes ani {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0, 8px);
+  }
+}

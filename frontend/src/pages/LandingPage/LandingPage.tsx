@@ -7,6 +7,8 @@ import LandingModel from 'components/Landing/LandingModel';
 import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
 import GroupSelection from 'components/Landing/GroupSelection';
 import { ReactComponent as Menu } from 'assets/images/menu.svg';
+import guideDown from 'assets/images/handleDown.png';
+import guideUp from 'assets/images/handleUp.png';
 import {
   getContents,
   leftSeedCount,
@@ -185,7 +187,6 @@ const LandingPage = () => {
         {/* <Toaster position="top-center" reverseOrder={false} /> */}
         <Menu className={cx('menu-svg')}></Menu>
       </button>
-
       {isShowing && <LandingModel></LandingModel>}
       {isGroupShowing && (
         <GroupSelection setIsGroupShowing={setIsGroupShowing} />
