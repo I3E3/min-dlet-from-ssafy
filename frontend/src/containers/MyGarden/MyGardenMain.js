@@ -16,7 +16,6 @@ const BaseURL = process.env.REACT_APP_BASE_URL;
 function MyGardenMain() {
   const navigate = useNavigate();
 
-  // const [dandelions, setDandelions] = useState(["a", "b", "c", "d", "e"]);
   const [dandelions, setDandelions] = useState([]);
   const onSettingsClick = () => {
     navigate(`/settings`);
@@ -29,10 +28,6 @@ function MyGardenMain() {
   const onCabinetClick = () => {
     navigate(`/mygarden/cabinet`);
   };
-
-  // const onDandelionClick = () => {
-  //   navigate(`/mygarden/`);
-  // };
 
   async function getGarden() {
     const token = localStorage.getItem("token");
