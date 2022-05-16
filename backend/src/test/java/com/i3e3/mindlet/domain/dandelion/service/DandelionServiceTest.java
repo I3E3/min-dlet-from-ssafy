@@ -2385,4 +2385,63 @@ class DandelionServiceTest {
     public String getContentImagePath(String imageFilename){
         return imageFilename == null ? null : fileStorageUrl + contentImagePath + imageFilename;
     }
+
+    @Test
+    @DisplayName("민들레 상태(Ready) 확인 - True")
+    void checkReadyTrue() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.READY);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isReady = dandelionService.isReady(savedDandelion.getSeq());
+
+        // then
+        assertThat(isReady).isTrue();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Ready) 확인 - False")
+    void checkReadyFalse() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.parse("2022-04-30"))
+                .community(Community.WORLD)
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        boolean isReady = dandelionService.isReady(savedDandelion.getSeq());
+
+        // then
+        assertThat(isReady).isFalse();
+    }
+
+    @Test
+    @DisplayName("민들레 상태(Ready) 확인 - 예외 발생")
+    void checkReadyException() {
+        // given
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> dandelionService.isReady(0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.INVALID_REQUEST.getMessage());
+    }
 }

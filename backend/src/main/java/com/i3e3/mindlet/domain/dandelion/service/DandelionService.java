@@ -49,4 +49,6 @@ public interface DandelionService {
     DandelionDetailSvcDto getDandelionDetail(Long dandelionSeq, Long memberSeq);
 
     ParticipationListPageSvcDto getParticipationInfo(Long memberSeq, Pageable pageable);
+
+    boolean isReady(Long dandelionSeq);
 }

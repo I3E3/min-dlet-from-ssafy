@@ -5,7 +5,6 @@ import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.service.DandelionService;
 import com.i3e3.mindlet.domain.dandelion.service.TagService;
 import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionDetailSvcDto;
-import com.i3e3.mindlet.domain.dandelion.service.dto.DandelionSeedDto;
 import com.i3e3.mindlet.domain.dandelion.service.dto.SeedCountDto;
 import com.i3e3.mindlet.global.constant.message.ErrorMessage;
 import com.i3e3.mindlet.global.dto.BaseResponseDto;
@@ -456,7 +455,8 @@ public class DandelionController {
                                                @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
         Long memberSeq = AuthenticationUtil.getMemberSeq();
 
-        if ((petalRegisterDto.getMessage() == null && imageFile == null) || !dandelionService.isHold(dandelionSeq)) {
+        if ((petalRegisterDto.getMessage() == null && imageFile == null) ||
+                (!dandelionService.isHold(dandelionSeq) && !dandelionService.isReady(dandelionSeq))) {
             throw new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage());
         } else {
             petalRegisterDto.addFile(imageFile == null ? null : (imageFile.isEmpty() ? null : imageFile));
