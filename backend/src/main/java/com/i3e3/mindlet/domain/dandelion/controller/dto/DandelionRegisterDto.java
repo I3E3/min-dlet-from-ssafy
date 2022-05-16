@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class DandelionRegisterDto {
 
     @Schema(title = "메시지", description = "민들레에 담길 메시지입니다.", example = "반가워요")
-    @Length(max = 100)
+    @Length(max = 250)
     private String message;
 
     @Schema(title = "민들레씨 반환 날짜", description = "사용자가 지정한 민들레 반환 날짜 입니다.", example = "2022-05-16")
