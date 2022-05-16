@@ -16,7 +16,8 @@ const BaseURL = process.env.REACT_APP_BASE_URL;
 function MyGardenMain() {
   const navigate = useNavigate();
 
-  const [dandelions, setDandelions] = useState(["a", "b", "c", "d", "e"]);
+  // const [dandelions, setDandelions] = useState(["a", "b", "c", "d", "e"]);
+  const [dandelions, setDandelions] = useState([]);
   const onSettingsClick = () => {
     navigate(`/settings`);
   };
@@ -47,7 +48,7 @@ function MyGardenMain() {
       .then((res) => {
         console.log("꽃밭 가져오기 성공");
         console.log(res.data.data);
-        // setDandelions(res.data.data);
+        setDandelions(res.data.data);
       })
       .catch((err) => {
         console.log("꽃밭 가져오기 실패");
