@@ -19,6 +19,7 @@ const ContentsMain = () => {
   const [seq, setSeq] = useState(0);
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const petaldata = useRecoilValue(petalCatchResultList);
   const patalseq = useRecoilValue(petalCatchResultSeq);
   const [list, setList] = useState([
@@ -31,6 +32,13 @@ const ContentsMain = () => {
       // seq: 0,
     },
   ]);
+
+  useEffect(() => {
+    if (patalseq === 0) {
+      navigate('/');
+    }
+  }, [formSteps]);
+
   useEffect(() => {
     setList(petaldata);
     setSeq(patalseq);
