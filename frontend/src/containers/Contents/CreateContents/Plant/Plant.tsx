@@ -9,6 +9,7 @@ import NewPlantAnimation from 'components/Animation/PlantAnimation/NewPlantAnima
 const cx = classNames.bind(styles);
 const Plant = ({ onClick }: any) => {
   const [endstate, SetEndstate] = useState(false);
+
   let [xStart, yStart, xEnd, yEnd] = [0, 0, 0, 0];
   let howManyTouches = 0;
 

@@ -6,9 +6,12 @@
   text-align: center;
   align-items: center;
   justify-content: center;
-
+  .calendar-btn {
+    color: white;
+  }
   .calendar {
     .calendar-title {
+      color: white;
       font-size: 1.3em;
     }
     .selected-date {

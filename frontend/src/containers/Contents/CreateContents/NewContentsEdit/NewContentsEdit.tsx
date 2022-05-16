@@ -2,7 +2,7 @@ import ContentsEditor from 'components/ContentsEditor/ContentsEditor';
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './NewContentsEdit.module.scss';
-import iconimg from 'assets/images/icon/icon_dandelion.png';
+import iconimg from 'assets/images/icon/earth-globe-white.png';
 import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
@@ -28,7 +28,7 @@ const NewContentsEdit = ({ onClick, form, setForm }: any) => {
     <>
       <div className={cx('')}>
         <img
-          className={cx('back-btn')}
+          className={cx('home-btn')}
           src={iconimg}
           onClick={home}
           alt="home"

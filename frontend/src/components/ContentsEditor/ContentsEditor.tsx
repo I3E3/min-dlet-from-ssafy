@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import petal from 'assets/images/img_petal_1.png';
+import petal from 'assets/images/petal-yellow-4.png';
 import classNames from 'classnames/bind';
 import styles from './ContentsEditor.module.scss';
-import { ReactComponent as ImageIcon } from 'assets/images/icon/image_white.svg';
+import { ReactComponent as ImageIcon } from 'assets/images/icon/uploadicon.svg';
 import { ReactComponent as DeleteImg } from 'assets/images/icon/icon_img_delete.svg';
 const cx = classNames.bind(styles);
 
@@ -21,12 +21,12 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
     const byte: number = str
       .split('')
       .map((s: string) => s.charCodeAt(0))
-      .reduce((prev, c) => prev + (c === 10 ? 2 : c >> 7 ? 2 : 1), 0);
-    if (byte <= 150) {
+      .reduce((prev, c) => prev + (c === 10 ? 1 : c >> 7 ? 1 : 1), 0);
+    if (byte <= 500) {
       SetLetters(byte);
     } else {
       // TODO : hot toast alert 적용 및 넘김 처리
-      alert('150자 초과!');
+      alert('초과!');
       SetText(text.substring(0, text.length - 1));
       msg(text.substring(0, text.length - 1));
     }
@@ -79,7 +79,7 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
               value={text}
               onChange={handleChange}
             />
-            <div className={cx('byte-limit')}>byte {letters}/150 </div>
+            <div className={cx('byte-limit')}>{letters}/250자 </div>
 
             <div className={cx('thumbnail')}>
               <div className={cx('default')} onClick={handleUploadBtnClick}>
@@ -112,13 +112,13 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
           </div>
         </div>
         <div>
-          {letters > 30 ? (
+          {letters >= 15 ? (
             <div className={cx('write-btn')} onClick={sendData}>
               Write
             </div>
           ) : (
             <div className={cx('minsize-msg')}>
-              최소 30byte 이상 작성해주세요✉
+              최소 15자 이상 작성해주세요✉
             </div>
           )}
         </div>

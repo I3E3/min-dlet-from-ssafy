@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentsSetDate.module.scss';
 import Calendar from 'react-calendar';
@@ -31,6 +31,11 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
     setForm({ ...form, date: fDateDash(e.toString()) });
     setDateState(e);
   };
+
+  useEffect(() => {
+    setForm({ ...form, date: fDateDash(date.toString()) });
+  }, []);
+
   return (
     <div className={cx('container')}>
       <div className={cx('calendar')}>
@@ -43,10 +48,10 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
           value={dateState}
           onChange={changeDate}
         />
-        <div className={cx('selected-date')}>
+        {/* <div className={cx('selected-date')}>
           Selected: {moment(dateState).format('MMMM Do, YYYY')}
-        </div>
-        <div>
+        </div> */}
+        <div className={cx('btn')}>
           <button className={cx('calendar-btn')} onClick={setData}>
             Send
           </button>
