@@ -65,12 +65,12 @@ const LandingPage = () => {
             color: '#fff',
           },
         });
-        setThrottle(false);
-        const result = mocklist;
-        setPetalData(result.reverse());
-        setPetalSeq(122);
-        navigate('/contents/list');
-        //navigate('/');
+        // setThrottle(false);
+        // const result = mocklist;
+        // setPetalData(result.reverse());
+        // setPetalSeq(122);
+        // navigate('/contents/list');
+        navigate('/');
       } else if (result.status === 200) {
         setPetalData(result.data.data.petalInfos.reverse());
         setPetalSeq(result.data.data.dandelionSeq);
