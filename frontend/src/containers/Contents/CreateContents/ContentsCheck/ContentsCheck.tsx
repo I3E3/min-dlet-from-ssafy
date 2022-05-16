@@ -57,6 +57,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
           <div className={cx('editor')}>
             <div className={cx('date')}> {fDateDash(date)}</div>
             <div className={cx('scrollBar')}>
+              <div className={cx('textarea')}>{text}</div>
               <div className={cx('thumbnail')}>
                 <div className={cx('default')}>
                   {imgFile ? (
@@ -66,7 +67,6 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
                   ) : null}
                 </div>
               </div>
-              <textarea value={text} disabled />
             </div>
           </div>
         </div>

@@ -1,9 +1,16 @@
-import React from "react";
-import { RecoilRoot } from "recoil";
-import Router from "routes/routes";
-import { BrowserView, MobileView } from "react-device-detect";
-import LoginRecoil from "utils/LoginRecoil";
-import { Toaster } from "react-hot-toast";
+import React from 'react';
+import { RecoilRoot } from 'recoil';
+import Router from 'routes/routes';
+import { BrowserView, MobileView } from 'react-device-detect';
+import LoginRecoil from 'utils/LoginRecoil';
+import { Toaster } from 'react-hot-toast';
+
+function setScreenSize() {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+setScreenSize();
+window.addEventListener('resize', setScreenSize);
 
 function App() {
   return (

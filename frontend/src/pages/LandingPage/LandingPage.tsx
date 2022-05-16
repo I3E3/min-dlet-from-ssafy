@@ -7,6 +7,8 @@ import LandingModel from 'components/Landing/LandingModel';
 import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
 import GroupSelection from 'components/Landing/GroupSelection';
 import { ReactComponent as Menu } from 'assets/images/menu.svg';
+import guideDown from 'assets/images/handleDown.png';
+import guideUp from 'assets/images/handleUp.png';
 import {
   getContents,
   leftSeedCount,
@@ -78,12 +80,12 @@ const LandingPage = () => {
             color: '#fff',
           },
         });
-        setThrottle(false);
-        const result = mocklist;
-        setPetalData(result.reverse());
-        setPetalSeq(122);
-        navigate('/contents/list');
-        //navigate('/');
+        // setThrottle(false);
+        // const result = mocklist;
+        // setPetalData(result.reverse());
+        // setPetalSeq(122);
+        // navigate('/contents/list');
+        navigate('/');
       } else if (result.status === 200) {
         setPetalData(result.data.data.petalInfos.reverse());
         setPetalSeq(result.data.data.dandelionSeq);
@@ -207,7 +209,6 @@ const LandingPage = () => {
         {/* <Toaster position="top-center" reverseOrder={false} /> */}
         <Menu className={cx('menu-svg')}></Menu>
       </button>
-
       {isShowing && <LandingModel></LandingModel>}
       {isGroupShowing && (
         <GroupSelection setIsGroupShowing={setIsGroupShowing} />

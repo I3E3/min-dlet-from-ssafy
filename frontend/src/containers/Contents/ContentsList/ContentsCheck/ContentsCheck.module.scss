@@ -21,7 +21,7 @@
   }
   .petal-img {
     position: relative;
-    margin: 20vh 0 0 0;
+    margin: 15vh 0 0 5vw;
     text-align: center;
 
     .petal {
@@ -48,7 +48,7 @@
         height: 85%;
         padding: 0 0 0 2%;
         overflow-y: scroll;
-        overflow-x: hidden;
+        overflow-x: scroll;
       }
       /* 아래의 모든 코드는 영역::코드로 사용 */
 
@@ -78,13 +78,10 @@
           width: 16px;
         }
       }
-      textarea {
-        font-size: 1em;
-        resize: none;
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
+      .textarea {
+        padding: 5px;
+        text-align: start;
+        white-space: pre-line;
       }
       // TODO : center 안먹히는 이유 찾기
       .default {
