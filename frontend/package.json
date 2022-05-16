@@ -42,6 +42,7 @@
     "sweetalert2": "^11.4.13",
     "three": "^0.140.0",
     "typescript": "^4.6.4",
+    "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
   "resolutions": {

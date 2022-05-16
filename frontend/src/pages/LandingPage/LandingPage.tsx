@@ -17,7 +17,9 @@ import memberState from 'utils/memberState';
 import { ReactComponent as Tap } from 'assets/images/Landing/tap.svg';
 import { ReactComponent as DownArrow } from 'assets/images/Landing/down-arrow.svg';
 import { ReactComponent as UpArrow } from 'assets/images/Landing/up-arrow.svg';
-import useSound from 'hooks/useSound';
+import { ReactComponent as Dandel } from 'assets/images/Landing/dandelion-2.svg';
+import { useSound } from 'use-sound'
+import Landing from 'assets/musics/Landing.mp3'
 
 const cx = classNames.bind(styles);
 const LandingPage = () => {
@@ -33,9 +35,12 @@ const LandingPage = () => {
   const patalseq = useRecoilValue(petalCatchResultSeq);
   const member = useRecoilValue(memberState)
   const [isGuideShowing, setIsGuideShowing] = useState(true)
+  const [isMusicOn, setIsMusicOn] = useState(false)
+  const [play] = useSound(Landing, {volume: 0.5})
 
   let howManyTouches = 0;
   const navigate = useNavigate();
+  let musicOn = false
 
   const mocklist = [
     {
@@ -157,7 +162,6 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
-    console.log(require('assets/musics/Landing.mp3'))
     setTimeout(() => {
       setIsGuideShowing(false)
     }, 6000)
@@ -184,6 +188,12 @@ const LandingPage = () => {
         width: '100%',
         height: '100vh',
         overflow: 'hidden',
+      }}
+      onClick={()=>{
+        if (!isMusicOn && !member.soundOff) { // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
+          play()
+          setIsMusicOn(true)
+        }
       }}
     >
       {/* <h1>제발!!</h1> */}
@@ -216,8 +226,14 @@ const LandingPage = () => {
           position: "fixed", bottom: "20vh", left: "12px", objectFit: "contain", display: "flex"}}>
           <UpArrow style={{height: "100%", width: "auto"}} />
           <Tap className={cx('swipe-guide')} />
+          {/* <button type="button" onClick={()=>{play()}}>플레이!</button> */}
         </div>
       </>)}
+      <Dandel style={{
+          height: "min(80px, 10vh)", width: "auto",
+          position: "fixed", bottom: "20px", right: "20px", objectFit: "contain"}}
+          onClick={() => {navigate('/mygarden')}} 
+      />
     </section>
   );
 };
