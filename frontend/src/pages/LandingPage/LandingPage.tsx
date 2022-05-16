@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import toast, { Toaster } from 'react-hot-toast';
 import LandingModel from 'components/Landing/LandingModel';
 import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
+import GroupSelection from 'components/Landing/GroupSelection';
 import { ReactComponent as Menu } from 'assets/images/menu.svg';
 import {
   getContents,
@@ -14,6 +15,8 @@ import {
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 const cx = classNames.bind(styles);
 const LandingPage = () => {
+  const [isShowing, setIsShowing] = useState(true);
+  const [isGroupShowing, setIsGroupShowing] = useState(false);
   let [xStart, yStart, xEnd, yEnd] = [0, 0, 0, 0];
   const [loading, setLoading] = useState(false);
   const [prevent, setPrevent] = useState(0);
@@ -145,8 +148,6 @@ const LandingPage = () => {
     setPetalSeq(0);
   };
 
-  const [isShowing, setIsShowing] = useState(true);
-
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       navigate('/login');
@@ -174,12 +175,21 @@ const LandingPage = () => {
       }}
     >
       {/* <h1>제발!!</h1> */}
-      <button className={cx('menu-button')}>
-        <Toaster position="top-center" reverseOrder={false} />
+      <button
+        className={cx('menu-button')}
+        onClick={() => {
+          setIsGroupShowing((isGroupShowing) => !isGroupShowing);
+        }}
+      >
+        {/* <button className={cx('menu-button')}> */}{' '}
+        {/* <Toaster position="top-center" reverseOrder={false} /> */}
         <Menu className={cx('menu-svg')}></Menu>
       </button>
 
       {isShowing && <LandingModel></LandingModel>}
+      {isGroupShowing && (
+        <GroupSelection setIsGroupShowing={setIsGroupShowing} />
+      )}
     </section>
   );
 };

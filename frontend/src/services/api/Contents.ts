@@ -1,4 +1,4 @@
-import instance from 'services/axios';
+import instance from "services/axios";
 
 const COMMON = '/dandelions';
 export const leftSeedCount = async () => {

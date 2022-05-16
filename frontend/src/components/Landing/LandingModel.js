@@ -42,7 +42,6 @@ export default function LandingModel() {
           intensity={1.7}
           // castShadow
         />
-
         <directionalLight
           // color="#b6fccd"
           position={[0.5, 10, 0.866]}

@@ -2,16 +2,67 @@
   height: 100vh;
   background-image: url("../../assets/images/garden_back.png");
   background-size: cover;
-  .inner-container {
-  }
+  padding: 20px;
+  // .inner-container {
+  // }
   .btns {
-    margin-left: auto;
-    margin-top: 30px;
-    margin-right: 30px;
+    display: inline;
+    text-align: right;
   }
   .btn {
     height: 30px;
     width: 30px;
     margin-bottom: 15px;
+  }
+  .blank {
+    height: 25%;
+  }
+  .sign_boxs {
+    position: relative;
+  }
+  .sign_box_1 {
+    position: absolute;
+    left: 20px;
+    top: 0px;
+    img {
+      height: 130px;
+      width: 130px;
+    }
+  }
+  .sign_box_2 {
+    position: absolute;
+    right: 15px;
+    top: 35px;
+    img {
+      height: 140px;
+      width: 140px;
+    }
+  }
+  .sign_box_3 {
+    position: absolute;
+    top: 145px;
+    right: 35%;
+    img {
+      height: 150px;
+      width: 150px;
+    }
+  }
+  .sign_box_4 {
+    position: absolute;
+    top: 270px;
+    right: 0px;
+    img {
+      height: 160px;
+      width: 160px;
+    }
+  }
+  .sign_box_5 {
+    position: absolute;
+    top: 320px;
+    left: 0px;
+    img {
+      height: 180px;
+      width: 180px;
+    }
   }
 }

@@ -104,7 +104,7 @@ const Login = () => {
 
   return (
 
-    <div className={cx('member-modal')}>
+    <section className={cx('member-modal')}>
         {/* <Toaster /> */}
         <h1>mindlet</h1>
         <form style={{marginTop: "20px", lineHeight: "120%"}}>
@@ -149,7 +149,7 @@ const Login = () => {
           </div>
           <button type="button" onClick={handleSignupClick}>회원가입</button>
         </form>
-    </div>
+    </section>
   );
 };
 

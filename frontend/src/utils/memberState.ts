@@ -6,7 +6,7 @@ const memberState = atom({
     language: 'KOREAN',
     id: '익명',
     community: 'KOREA',
-    soundOff: false,
+    soundOff: true,
     role: 'MEMBER',
     seq: 1
   }
