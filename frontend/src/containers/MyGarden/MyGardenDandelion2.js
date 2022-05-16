@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import sign from "assets/images/sign.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./MyGardenDandelion.module.scss";
@@ -19,6 +19,7 @@ const Sign = styled.div`
   font-size: 20px;
   position: relative;
   img {
+    position: relative;
     height: 190px;
     width: 190px;
   }
@@ -38,6 +39,13 @@ const Blank = styled.div`
   height: 37px;
 `;
 
+const Dday = styled.span`
+  position: absolute;
+  left: 23px;
+  top: 23px;
+  font-size: 15px;
+`;
+
 function MyGardenDandelion2({ dandelion }) {
   const navigate = useNavigate();
   const baseUrl = "http://localhost:8080/";
@@ -46,6 +54,7 @@ function MyGardenDandelion2({ dandelion }) {
     navigate(`/mygarden/dandelions/1`, { state: 1 });
   };
   const [show, setShow] = useState(false);
+  const [record, setRecord] = useState(false);
   const onOptionsClick = () => {
     setShow((prev) => !prev);
   };
@@ -66,9 +75,8 @@ function MyGardenDandelion2({ dandelion }) {
       cancelButtonText: "취소",
       showLoaderOnConfirm: true,
     }).then((res) => {
-      // registerDescription(dandelionId);
       if (res.isConfirmed) {
-        registerDescription();
+        registerDescription(dandelionId);
         Swal.fire({
           title: `[ ${res.value} ]를 등록하였습니다.`,
           confirmButtonText: "확인",
@@ -105,19 +113,20 @@ function MyGardenDandelion2({ dandelion }) {
     });
   };
 
-  async function registerDescription() {
+  async function registerDescription(dandelionId) {
     const token = localStorage.getItem("token");
     const config = {
       Authorization: "Bearer " + token,
     };
     await axios({
       // url: `baseUrl/dandelions/{id}/description`, 나중에 아이디 있는거로 교체
-      url: `dandelions/1/description`,
+      url: `dandelions/${dandelionId}/description`,
       method: "patch",
       baseURL: BaseURL,
       headers: config,
     })
       .then((res) => {
+        console.log(dandelionId);
         console.log("팻말 꽃말 등록 성공");
         console.log(res.data);
       })
@@ -173,7 +182,14 @@ function MyGardenDandelion2({ dandelion }) {
         console.log(err);
       });
   }
-
+  useEffect(() => {
+    if (dandelion.status === "FLYING") {
+      // setRecord(true);
+      setRecord(false);
+    } else if (dandelion.status === "RETURN") {
+      setRecord(false);
+    }
+  }, []);
   return (
     <div className={cx("container")}>
       <div onClick={onOptionsClick}>
@@ -183,13 +199,18 @@ function MyGardenDandelion2({ dandelion }) {
               <span>
                 <Icons src={cancel} alt="취소" />
               </span>
-              <span
-                onClick={() => {
-                  onRecordClick(1);
-                }}
-              >
-                <Icons src={pencil_check} alt="꽃말" />
-              </span>
+
+              {record ? (
+                <span>아직은 작성할 수 없습니다.</span>
+              ) : (
+                <span
+                  onClick={() => {
+                    onRecordClick(dandelion.seq);
+                  }}
+                >
+                  <Icons src={pencil_check} alt="꽃말" />
+                </span>
+              )}
               <span
                 onClick={() => {
                   onAlbumClick(1);
@@ -215,7 +236,11 @@ function MyGardenDandelion2({ dandelion }) {
           <div>
             <Blank></Blank>
             <Sign>
-              <img src={sign} alt="팻말" />
+              <div>
+                <img src={sign} alt="팻말" />
+                <Dday>{dandelion.blossomedDate}</Dday>
+                <span>{dandelion.status}</span>
+              </div>
             </Sign>
           </div>
         )}
