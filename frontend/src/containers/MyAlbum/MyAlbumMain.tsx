@@ -11,10 +11,10 @@ import axios from 'axios';
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
 
-const tempSide = [1]
+const tempSide = [1, 1]
 
 function MyAlbumMain() {
-  const [sides, setSides] = useState([1, 2, 3]) // 앨범이 총 몇 페이지 있는지 저장
+  const [sides, setSides] = useState([1]) // 앨범이 총 몇 페이지 있는지 저장
   // const [nowSide, setNowSide] = useState(1) // 현재 앨범 페이지
   const book = useRef<HTMLDivElement>(null)
   const token = localStorage.getItem("token");
@@ -45,7 +45,9 @@ function MyAlbumMain() {
     if (Math.abs(yEnd - yStart) < 30) {
       if (xEnd - xStart > 50) {
         // console.log('swipe right');
+        // console.log("여기까진1")
         if (tempSide[0] > 1) {
+          // console.log("여기까진2")
           const inp = document.getElementById(`page-${tempSide[0] - 1}`)
           const target: HTMLInputElement = inp as HTMLInputElement
           target.checked = false
@@ -54,7 +56,7 @@ function MyAlbumMain() {
 
       } else if (xEnd - xStart < -50) {
         // console.log('swipe left');
-        if (tempSide[0] < sides.length) {
+        if (tempSide[0] < tempSide[1]) {
           const inp = document.getElementById(`page-${tempSide[0]}`)
           const target: HTMLInputElement = inp as HTMLInputElement
           target.checked = true
@@ -86,11 +88,14 @@ function MyAlbumMain() {
           headers: config,
         }).then((res) => {
           if (res.data.data.totalDandelionCount === 0) {
+            tempSide[1] = 0
+            setSides([])
             return
           } else {
+            tempSide[1] = res.data.data.totalPageNum
             setSides(customRange(res.data.data.totalPageNum))
           }
-        })
+        }).catch((err) => {setSides([])})
 
     
 
@@ -141,7 +146,7 @@ function MyAlbumMain() {
   return (
     <div className={cx("container")}>
       <div>
-        <span>앨범</span>
+        {/* <span>앨범</span> */}
       </div>
       <div className={cx("btns")}>
         <div>
@@ -200,6 +205,7 @@ function MyAlbumMain() {
           </div> */}
 
           <div className={cx('book__page')}>
+            <h1 style={{marginLeft: "20%", marginTop: "50%", fontSize: "1.2rem"}}>추억을 한 송이씩 채워보세요!</h1>
           </div>
         </div>
       </div>
