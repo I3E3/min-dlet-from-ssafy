@@ -118,9 +118,7 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
                       <div className={cx('date')}> {list[i].createdDate}</div>
                     </div>
                     <div className={cx('scrollBar')}>
-                      <div className={cx('textarea')}>
-                        <pre>{list[i].message} </pre>
-                      </div>
+                      <div className={cx('textarea')}>{list[i].message}</div>
                       <div className={cx('thumbnail')}>
                         <div className={cx('default')}>
                           {list[i].contentImageUrlPath ? (
