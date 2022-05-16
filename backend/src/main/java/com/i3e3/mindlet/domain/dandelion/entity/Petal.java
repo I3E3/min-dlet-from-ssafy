@@ -21,7 +21,7 @@ public class Petal extends BaseLastModifiedEntity {
     @Column(name = "petal_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
-    @Column(length = 100)
+    @Column(length = 250)
     private String message;
 
     private String imageFilename;
