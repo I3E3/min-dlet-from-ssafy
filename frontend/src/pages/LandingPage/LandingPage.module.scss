@@ -7,7 +7,7 @@ $color: blue;
 }
 
 .menu-button {
-  position: absolute;
+  position: fixed;
   right: 10px; 
   top: 10px; 
   border-radius: 20%;
@@ -107,4 +107,51 @@ $color: blue;
   // flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.swipe-guide{
+  animation-timing-function: ease-out;
+  -moz-animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-out;
+  -moz-animation-duration: 0.5s;
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -moz-animation-name: slidein;
+  -webkit-animation-name: slidein;
+  animation-name: slidein;
+  -moz-animation-iteration-count: 20;
+  -webkit-animation-iteration-count: 20;
+  animation-iteration-count: 20;
+  -moz-animation-direction: alternate;
+  -webkit-animation-direction: alternate;
+  animation-direction: alternate;
+
+  &__second {
+    -moz-animation-name: slideout;
+    -webkit-animation-name: slideout;
+    animation-name: slideout;
+    animation-timing-function: ease-in-out;
+    -moz-animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes slidein {
+  0% {
+    transform: translateY(-15px) rotate(0deg);
+  }
+
+  100% {
+    transform: translateY(15px) rotate(-30deg);
+  }
+}
+
+@keyframes slideout {
+  0% {
+    transform: translateY(15px) rotate(-30deg);
+  }
+
+  100% {
+    transform: translateY(-15px) rotate(0deg);
+  }
 }

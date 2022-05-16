@@ -3,6 +3,7 @@ import { useRecoilState } from 'recoil';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 import memberState from 'utils/memberState';
+import axios from 'axios';
 
 const BaseURL = process.env.REACT_APP_BASE_URL
 
@@ -12,6 +13,16 @@ function LoginRecoil() {
   const location = useLocation()
   const [, setMember] = useRecoilState(memberState)
 
+  const parseJwt = (token: string) => {
+    try {
+      // return Buffer.from(token, 'base64')
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
+
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (!token) {
@@ -20,27 +31,47 @@ function LoginRecoil() {
       }
       return
     } else {
-      const checkData = {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      }
+      const seq = parseJwt(token).seq
+      // const checkData = {
+      //   method: 'GET',
+      //   headers: {
+      //     'Authorization': `Bearer ${token}`,
+      //     'Content-Type': 'application/json'
+      //   }
+      // }
 
-      // 회원정보 조회
-      fetch(`${BaseURL}members`, checkData)
-        .then((res) => res.json())
+      axios({
+        // url: `baseUrl/dandelions/{id}/description`, 나중에 아이디 있는거로 교체
+        url: `members/${seq}`,
+        method: "GET",
+        baseURL: BaseURL,
+        headers: {
+          Authorization: "Bearer " + token,
+        },})
         .then((result) => {
           if (result.status !== 200) {
             localStorage.removeItem('token')
             navigate('/login')
             return
           }
-          const data = result.data
+          const data = result.data.data
           setMember(data)
         })
         .catch((err) => {console.error(err)} )
+
+      // 회원정보 조회
+      // fetch(`${BaseURL}members`, checkData)
+      //   .then((res) => res.json())
+      //   .then((result) => {
+      //     if (result.status !== 200) {
+      //       localStorage.removeItem('token')
+      //       navigate('/login')
+      //       return
+      //     }
+      //     const data = result.data
+      //     setMember(data)
+      //   })
+      //   .catch((err) => {console.error(err)} )
   }}, [])
 
 

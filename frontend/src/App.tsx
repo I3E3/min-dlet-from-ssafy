@@ -10,7 +10,7 @@ function App() {
     <div>
       <RecoilRoot>
         <Toaster position="top-center" />
-        {/* <LoginRecoil /> */}
+        <LoginRecoil />
         <BrowserView>
           <h1> 모바일에 최적화 된 페이지 입니다. 모바일로 접속해주세요! </h1>
         </BrowserView>

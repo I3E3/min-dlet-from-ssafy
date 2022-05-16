@@ -8,6 +8,7 @@ import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import MyGardenDandelion from "./MyGardenDandelion";
 import MyGardenDandelion2 from "./MyGardenDandelion2";
+import MyGardenDandelion3 from "./MyGardenDandelion3";
 import axios from "axios";
 
 const cx = classNames.bind(styles);
@@ -89,12 +90,12 @@ function MyGardenMain() {
         </div>
         <div className={cx("sign_box_2")}>
           {dandelions.slice(1, 2).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} />
+            <MyGardenDandelion3 dandelion={dandelion} />
           ))}
         </div>
         <div className={cx("sign_box_3")}>
           {dandelions.slice(2, 3).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} />
+            <MyGardenDandelion3 dandelion={dandelion} />
           ))}
         </div>
         <div className={cx("sign_box_4")}>
