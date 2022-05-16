@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PetalRegisterDto {
 
     @Schema(title = "메시지", description = "민들레에 담길 메시지입니다.", example = "반가워요")
-    @Length(max = 100)
+    @Length(max = 250)
     private String message;
 
     @Schema(title = "사진", description = "사용자가 올린 사진 파일입니다.")
