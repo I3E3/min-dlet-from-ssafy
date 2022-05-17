@@ -4,6 +4,7 @@ import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,4 +23,8 @@ public interface DandelionRepository extends JpaRepository<Dandelion, Long>, Dan
 
     @Query("SELECT COUNT(d) > 0 FROM Dandelion d WHERE d.seq = :seq AND d.isDeleted = FALSE")
     boolean existsBySeq(@Param("seq") Long seq);
+
+    @Modifying
+    @Query("UPDATE Dandelion d SET d.status = 'READY' WHERE (d.status = 'FLYING' OR d.status = 'HOLD') AND d.isDeleted = FALSE")
+    void updateFlyingOrHoldingDandelionToReady();
 }
