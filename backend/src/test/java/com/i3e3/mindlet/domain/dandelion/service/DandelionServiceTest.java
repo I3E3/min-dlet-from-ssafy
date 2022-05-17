@@ -1965,6 +1965,59 @@ class DandelionServiceTest {
     }
 
     @Test
+    @DisplayName("꽃잎 추가 - 성공(READY 상태 유지)")
+    void addPetalSuccessReady() throws IOException {
+        // given
+        Member newMember = Member.builder()
+                .id("newId")
+                .password("newPassword")
+                .build();
+        AppConfig.builder()
+                .member(newMember)
+                .language(AppConfig.Language.KOREAN)
+                .build();
+        Member newSavedMember = memberRepository.save(newMember);
+        em.flush();
+        em.clear();
+
+        DandelionCreateSvcDto newDandelion = DandelionCreateSvcDto.builder()
+                .message("하하하하하")
+                .imageFile(null)
+                .blossomedDate(LocalDate.parse("2022-05-30"))
+                .nation("KOREA")
+                .build();
+        Dandelion savedDandelion = dandelionService.createDandelion(newSavedMember.getSeq(), newDandelion);
+
+        Member savedMember1 = memberRepository.save(member1);
+        PetalCreateSvcDto newPetalCreateSvcDto = PetalCreateSvcDto.builder()
+                .message("하하하하하하하")
+                .imageFile(null)
+                .nation("KOREA")
+                .build();
+        Dandelion flyingDandelion = dandelionRepository.findBySeq(savedDandelion.getSeq())
+                .orElse(null);
+        flyingDandelion.changeStatus(Dandelion.Status.READY);
+        em.flush();
+        em.clear();
+
+        // when
+        Petal savedPetal = dandelionService.addPetal(savedMember1.getSeq(), savedDandelion.getSeq(), newPetalCreateSvcDto);
+        em.flush();
+        em.clear();
+        Petal findPetal = petalRepository.findBySeq(savedPetal.getSeq())
+                .orElse(null);
+        Dandelion findDandelion1 = dandelionRepository.findBySeq(savedDandelion.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion1.getPetals().size()).isEqualTo(2);
+        assertThat(findDandelion1.getStatus()).isEqualTo(Dandelion.Status.READY);
+        assertThat(findPetal.getMessage()).isEqualTo(newPetalCreateSvcDto.getMessage());
+        assertThat(findPetal.getImageFilename()).isNull();
+        assertThat(findPetal.getNation()).isEqualTo("KOREA");
+    }
+
+    @Test
     @DisplayName("꽃잎 추가 - 예외 발생 : 중복 추가")
     void addPetalExceptionWhenMultiplePetal() throws IOException {
         // given
