@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { sound } from 'utils/soundRecognize';
+import classNames from 'classnames/bind';
 import BlowAnimation from 'components/Animation/BlowAnimation/BlowAnimation';
 import toast, { Toaster } from 'react-hot-toast';
+import styles from './Blow.module.scss';
 import { postContentsAdd } from 'services/api/Contents';
+import { useNavigate } from 'react-router-dom';
+const cx = classNames.bind(styles);
 
 const Blow = ({ onClick, form, setForm, seq }: any) => {
   const [isShowing, setIsShowing] = useState(true);
   const [loading, SetLoading] = useState(false);
   const [endstate, SetEndstate] = useState(false);
+  const [touchstate, SetTouchstate] = useState(false);
   const [throttle, setThrottle] = useState(false);
   const [checkState, SetCheckState] = useState(0);
   const [possibleState, SetState] = useState(0);
@@ -41,6 +45,12 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
     }
   }, [loading]);
 
+  useEffect(() => {
+    if (touchstate === true) {
+      SetWind(true);
+    }
+  }, [touchstate]);
+
   const stateDetect = (state: boolean) => {
     SetEndstate(state);
   };
@@ -51,7 +61,10 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
   const possible = (state: number) => {
     SetState(state);
   };
-  // 초기값 0 가능하면 1 불가능하면 2
+
+  const touchDetect = (state: boolean) => {
+    SetTouchstate(true);
+  };
 
   const sendDataForm = async () => {
     console.log(form.date);
@@ -123,12 +136,18 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
     >
       <Toaster position="top-center" reverseOrder={false} />
       {isShowing && (
-        <BlowAnimation
-          endstate={stateDetect}
-          msgCheck={msgDetect}
-          isPossible={possible}
-          windState={wind}
-        ></BlowAnimation>
+        <>
+          {possibleState && !wind && (
+            <div className={cx('windGuide')}>바람을 불어주세요</div>
+          )}
+          <BlowAnimation
+            endstate={stateDetect}
+            msgCheck={msgDetect}
+            isPossible={possible}
+            windState={wind}
+            touchEvt={touchDetect}
+          />
+        </>
       )}
     </div>
   );

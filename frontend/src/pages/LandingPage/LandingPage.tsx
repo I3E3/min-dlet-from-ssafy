@@ -167,97 +167,91 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <Suspense>
-      <section
-        style={{
-          width: '100%',
-          height: '100vh',
-          overflow: 'hidden',
-        }}
+    <section
+      style={{
+        width: '100%',
+        height: '100vh',
+        overflow: 'hidden',
+      }}
+      onClick={() => {
+        if (!musicOn[0] && member.soundOff) {
+          // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
+          console.log('이상하다...');
+          play();
+          musicOn[0] = true;
+        }
+      }}
+    >
+      <div className={cx('leftseed')}>
+        <SeedIcon className={cx('leftseedicon')} width={30} height={30} />
+        {seedNum} / 5
+      </div>
+
+      <button
+        className={cx('menu-button')}
         onClick={() => {
-          if (!musicOn[0] && member.soundOff) {
-            // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
-            console.log('이상하다...');
-            play();
-            musicOn[0] = true;
-          }
+          setIsGroupShowing((isGroupShowing) => !isGroupShowing);
         }}
       >
-        <div className={cx('leftseed')}>
-          <SeedIcon className={cx('leftseedicon')} width={28} height={28} />X{' '}
-          {seedNum}
-        </div>
+        {/* <button className={cx('menu-button')}> */}{' '}
+        {/* <Toaster position="top-center" reverseOrder={false} /> */}
+        <Menu className={cx('menu-svg')} />
+      </button>
+      {isShowing && <LandingModel />}
+      {isGroupShowing && (
+        <GroupSelection setIsGroupShowing={setIsGroupShowing} />
+      )}
 
-        <button
-          className={cx('menu-button')}
-          onClick={() => {
-            setIsGroupShowing((isGroupShowing) => !isGroupShowing);
-          }}
-        >
-          {/* <button className={cx('menu-button')}> */}{' '}
-          {/* <Toaster position="top-center" reverseOrder={false} /> */}
-          <Menu className={cx('menu-svg')} />
-        </button>
-        {isShowing && <LandingModel></LandingModel>}
-        {isGroupShowing && (
-          <GroupSelection setIsGroupShowing={setIsGroupShowing} />
-        )}
-
-        {isGuideShowing && (
-          <>
-            <div
-              style={{
-                height: 'min(80px, 10vh)',
-                position: 'fixed',
-                top: '20vh',
-                left: '12px',
-                objectFit: 'contain',
-                display: 'flex',
-              }}
-            >
-              <DownArrow style={{ height: '100%', width: 'auto' }} />
-              <Tap
-                className={`${cx('swipe-guide')} ${cx('swipe-guide__second')}`}
-              />
-            </div>
-            <div
-              style={{
-                height: 'min(80px, 10vh)',
-                position: 'fixed',
-                bottom: '20vh',
-                left: '12px',
-                objectFit: 'contain',
-                display: 'flex',
-              }}
-            >
-              <UpArrow style={{ height: '100%', width: 'auto' }} />
-              <Tap className={cx('swipe-guide')} />
-            </div>
-          </>
-        )}
-        <Dandel
-          style={{
-            height: 'min(80px, 10vh)',
-            width: 'auto',
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            objectFit: 'contain',
-          }}
-          onClick={() => {
-            navigate('/mygarden');
-          }}
-        />
-        {/* <button onClick={(e) => {
+      {isGuideShowing && (
+        <>
+          <div
+            style={{
+              height: 'min(80px, 10vh)',
+              position: 'fixed',
+              top: '20vh',
+              left: '12px',
+              objectFit: 'contain',
+              display: 'flex',
+            }}
+          >
+            <DownArrow style={{ height: '100%', width: 'auto' }} />
+            <Tap
+              className={`${cx('swipe-guide')} ${cx('swipe-guide__second')}`}
+            />
+          </div>
+          <div
+            style={{
+              height: 'min(80px, 10vh)',
+              position: 'fixed',
+              bottom: '20vh',
+              left: '12px',
+              objectFit: 'contain',
+              display: 'flex',
+            }}
+          >
+            <UpArrow style={{ height: '100%', width: 'auto' }} />
+            <Tap className={cx('swipe-guide')} />
+          </div>
+        </>
+      )}
+      <div
+        className={cx('garden')}
+        style={{}}
+        onClick={() => {
+          navigate('/mygarden');
+        }}
+      >
+        내 꽃밭
+      </div>
+      {/* <button onClick={(e) => {
         e.stopPropagation();
         stop()
       }} style={{position: "fixed", bottom: "10px", fontSize: "50px"}}>얍!</button> */}
-        {/* <button onClick={(e) => {
+      {/* <button onClick={(e) => {
         console.log('눌림')
         sound._muted = false
       }} style={{position: "fixed", bottom: "10px", fontSize: "50px", right: "10px"}}>호우!!</button> */}
-      </section>
-    </Suspense>
+    </section>
   );
 };
 

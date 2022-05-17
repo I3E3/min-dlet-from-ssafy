@@ -21,6 +21,7 @@ const ContentsEdit = ({ onClick, form, setForm }: any) => {
   };
 
   const back = () => {
+    setForm({ ...form, image: img, message: msg });
     onClick(1);
   };
 

@@ -107,12 +107,14 @@ const ContentsMain = () => {
             );
           case 4:
             return (
-              <Blow
-                seq={seq}
-                onClick={handleformStep}
-                form={form}
-                setForm={handleFormSet}
-              />
+              <>
+                <Blow
+                  seq={seq}
+                  onClick={handleformStep}
+                  form={form}
+                  setForm={handleFormSet}
+                />
+              </>
             );
         }
       })()}
