@@ -170,10 +170,17 @@ public class DandelionServiceImpl implements DandelionService {
         }
 
         List<Dandelion> dandelions = dandelionRepository.findActiveDandelionListByMemberSeq(memberSeq);
-        List<ResponseGardenInfoDto> responseGardenInfos = new ArrayList<ResponseGardenInfoDto>();
+
+        int listSize = DandelionConst.MAX_USING_DANDELION_COUNT.getValue();
+
+        List<ResponseGardenInfoDto> responseGardenInfos = new ArrayList<>(listSize);
+        for (int i = 0; i < listSize; i++) {
+            responseGardenInfos.add(null);
+        }
 
         for (Dandelion dandelion : dandelions) {
-            responseGardenInfos.add(
+            int index = dandelion.getFlowerSignNumber() - 1;
+            responseGardenInfos.set(index,
                     ResponseGardenInfoDto.builder()
                             .blossomedDate(dandelion.getBlossomedDate())
                             .description(dandelion.getDescription())

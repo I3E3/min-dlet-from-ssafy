@@ -821,7 +821,7 @@ class DandelionServiceTest {
         dandelion3 = Dandelion.builder()
                 .blossomedDate(LocalDate.parse("2022-04-30"))
                 .community(Community.WORLD)
-                .flowerSignNumber(3)
+                .flowerSignNumber(5)
                 .member(member1)
                 .build();
         dandelion2.changeStatus(Dandelion.Status.BLOSSOMED);
@@ -836,13 +836,14 @@ class DandelionServiceTest {
         List<ResponseGardenInfoDto> responseGardenInfos = dandelionService.getGardenInfoList(savedMember.getSeq());
 
         // then
-        assertThat(responseGardenInfos.size()).isEqualTo(3);
+        assertThat(responseGardenInfos.size()).isEqualTo(5);
+        assertThat(responseGardenInfos.get(3)).isNull();
         assertThat(responseGardenInfos.get(0).getStatus()).isEqualTo("FLYING");
         assertThat(responseGardenInfos.get(1).getStatus()).isEqualTo("BLOSSOMED");
-        assertThat(responseGardenInfos.get(2).getStatus()).isEqualTo("RETURN");
+        assertThat(responseGardenInfos.get(4).getStatus()).isEqualTo("RETURN");
         assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
         assertThat(responseGardenInfos.get(1).getSeq()).isEqualTo(savedDandelion2.getSeq());
-        assertThat(responseGardenInfos.get(2).getSeq()).isEqualTo(savedDandelion3.getSeq());
+        assertThat(responseGardenInfos.get(4).getSeq()).isEqualTo(savedDandelion3.getSeq());
     }
 
     @Test
@@ -903,7 +904,7 @@ class DandelionServiceTest {
         // when
         List<ResponseGardenInfoDto> responseGardenInfos = dandelionService.getGardenInfoList(savedMember.getSeq());
         // then
-        assertThat(responseGardenInfos.size()).isEqualTo(1);
+        assertThat(responseGardenInfos.size()).isEqualTo(5);
         assertThat(responseGardenInfos.get(0).getStatus()).isEqualTo("FLYING");
         assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
     }
@@ -936,7 +937,7 @@ class DandelionServiceTest {
         List<ResponseGardenInfoDto> responseGardenInfos = dandelionService.getGardenInfoList(savedMember.getSeq());
 
         // then
-        assertThat(responseGardenInfos.size()).isEqualTo(2);
+        assertThat(responseGardenInfos.size()).isEqualTo(5);
         assertThat(responseGardenInfos.get(0).getStatus()).isEqualTo("FLYING");
         assertThat(responseGardenInfos.get(1).getStatus()).isEqualTo("FLYING");
         assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
@@ -971,7 +972,7 @@ class DandelionServiceTest {
         List<ResponseGardenInfoDto> responseGardenInfos = dandelionService.getGardenInfoList(savedMember.getSeq());
 
         // then
-        assertThat(responseGardenInfos.size()).isEqualTo(2);
+        assertThat(responseGardenInfos.size()).isEqualTo(5);
         assertThat(responseGardenInfos.get(0).getStatus()).isEqualTo("FLYING");
         assertThat(responseGardenInfos.get(1).getStatus()).isEqualTo("FLYING");
         assertThat(responseGardenInfos.get(0).getSeq()).isEqualTo(savedDandelion1.getSeq());
