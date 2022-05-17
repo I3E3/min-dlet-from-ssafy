@@ -21,7 +21,7 @@ import { ReactComponent as DownArrow } from 'assets/images/Landing/down-arrow.sv
 import { ReactComponent as UpArrow } from 'assets/images/Landing/up-arrow.svg';
 import { ReactComponent as Dandel } from 'assets/images/Landing/dandelion-2.svg';
 import { useSound } from 'use-sound'
-import Landing from 'assets/musics/Landing.mp3'
+import Landing from 'assets/musics/Landing2.mp3'
 
 const cx = classNames.bind(styles);
 const LandingPage = () => {
@@ -36,9 +36,9 @@ const LandingPage = () => {
   const petaldata = useRecoilValue(petalCatchResultList);
   const patalseq = useRecoilValue(petalCatchResultSeq);
   const member = useRecoilValue(memberState)
-  const [isGuideShowing, setIsGuideShowing] = useState(true)
+  const [isGuideShowing, setIsGuideShowing] = useState(false)
   const [soundEnabled, setSoundEnabled] = useState(member.soundOff)
-  const [play, { stop, sound }] = useSound(Landing, {volume: 0.5, soundEnabled, interrupt: true})
+  const [play, { stop, sound }] = useSound(Landing, {volume: 0.5, interrupt: true})
 
   let howManyTouches = 0;
   const navigate = useNavigate();
@@ -165,8 +165,11 @@ const LandingPage = () => {
 
   useEffect(() => {
     setTimeout(() => {
+      setIsGuideShowing(true)
+    }, 4000)
+    setTimeout(() => {
       setIsGuideShowing(false)
-    }, 6000)
+    }, 10000)
     if (!localStorage.getItem('token')) {
       navigate('/login');
     }
@@ -189,11 +192,12 @@ const LandingPage = () => {
       style={{
         width: '100%',
         height: '100vh',
+        // minHeight: '100vh',
+        minHeight: '-webkit-fill-available',
         overflow: 'hidden',
       }}
       onClick={()=>{
-        if (!musicOn[0] && member.soundOff) { // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
-          console.log('이상하다...')
+        if (!musicOn[0] && !member.soundOff) { // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
           play()
           musicOn[0] = true
         }
@@ -219,22 +223,28 @@ const LandingPage = () => {
       <>
         <div style={{
           height: "min(80px, 10vh)", 
-          position: "fixed", top: "20vh", left: "12px", objectFit: "contain", display: "flex"}}>
+          position: "fixed", top: "15vh", left: "12px", objectFit: "contain", display: "flex"}}>
           <DownArrow style={{height: "100%", width: "auto"}} />
           <Tap className={`${cx('swipe-guide')} ${cx('swipe-guide__second')}`} />
         </div>
         <div style={{
           height: "min(80px, 10vh)", 
-          position: "fixed", bottom: "20vh", left: "12px", objectFit: "contain", display: "flex"}}>
+          position: "fixed", bottom: "15vh", left: "12px", objectFit: "contain", display: "flex"}}>
           <UpArrow style={{height: "100%", width: "auto"}} />
           <Tap className={cx('swipe-guide')} />
         </div>
       </>)}
-      <Dandel style={{
+      <h1 style={{
+          height: "min(80px, 10vh)", width: "auto", color: "white", fontSize: "20px",
+          position: "fixed", bottom: "20px", right: "20px", objectFit: "contain", cursor: "pointer"}}
+          onClick={() => {navigate('/mygarden')}} >
+        flower garden
+      </h1>
+      {/* <Dandel style={{
           height: "min(80px, 10vh)", width: "auto",
           position: "fixed", bottom: "20px", right: "20px", objectFit: "contain"}}
           onClick={() => {navigate('/mygarden')}} 
-      />
+      /> */}
       {/* <button onClick={(e) => {
         e.stopPropagation();
         stop()

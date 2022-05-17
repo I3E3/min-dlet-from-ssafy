@@ -1,8 +1,10 @@
 .container {
   height: 100vh;
+  width: 100%;
   background-image: url("../../assets/images/garden_back.webp");
   background-size: cover;
   padding: 20px;
+  background-position: center;
   // .inner-container {
   // }
   .btns {
@@ -21,45 +23,48 @@
     position: relative;
   }
   .sign_box_1 {
-    position: absolute;
+    position: fixed;
     left: 20px;
-    top: 0px;
+    bottom: 43vh;
+    transform: scale(0.85);
     img {
       height: 130px;
       width: 130px;
     }
   }
   .sign_box_2 {
-    position: absolute;
+    position: fixed;
     right: 15px;
-    top: 35px;
+    bottom: 37vh;
+    transform: scale(0.9);
     img {
       height: 140px;
       width: 140px;
     }
   }
   .sign_box_3 {
-    position: absolute;
-    top: 145px;
+    position: fixed;
+    bottom: 24vh;
     right: 35%;
+    transform: scale(0.95);
     img {
       height: 150px;
       width: 150px;
     }
   }
   .sign_box_4 {
-    position: absolute;
-    top: 270px;
-    right: 0px;
+    position: fixed;
+    bottom: 5vh;
+    right: 8px;
     img {
       height: 160px;
       width: 160px;
     }
   }
   .sign_box_5 {
-    position: absolute;
-    top: 320px;
-    left: 0px;
+    position: fixed;
+    bottom: 0vh;
+    left: 15px;
     img {
       height: 180px;
       width: 180px;
