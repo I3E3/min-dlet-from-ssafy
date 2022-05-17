@@ -7,6 +7,10 @@ import garden from "assets/images/garden.png";
 import pencil from "assets/images/pencil.png";
 import MyAlbumSide from './MyAlbumSide';
 import axios from 'axios';
+import ButtonEffect from 'assets/musics/button_effect.wav';
+import { useSound } from 'use-sound';
+import { useRecoilValue } from "recoil";
+import memberState from "utils/memberState";
 // import Flip from 'assets/musics/page-flip-7.wav'
 // import useSound from 'use-sound';
 
@@ -19,7 +23,12 @@ function MyAlbumMain() {
   const [sides, setSides] = useState([1]) // 앨범이 총 몇 페이지 있는지 저장
   // const [nowSide, setNowSide] = useState(1) // 현재 앨범 페이지
   const book = useRef<HTMLDivElement>(null)
+  const member = useRecoilValue(memberState);
   // const [play, { stop, sound }] = useSound(Flip, {volume: 0.9, interrupt: true})
+  const [play, ] = useSound(ButtonEffect, {
+    volume: 0.4,
+    interrupt: true,
+  });
 
   const token = localStorage.getItem("token");
   const config = {
@@ -156,17 +165,26 @@ function MyAlbumMain() {
       </div>
       <div className={cx("btns")}>
         <div>
-          <button onClick={onSettingsClick}>
+          <button onClick={(e) => {
+            if (!member.soundOff) {
+            play()}
+            onSettingsClick()}}>
             <img className={cx("btn")} src={gear} alt="설정" />
           </button>
         </div>
         <div>
-          <button onClick={onGardenClick}>
+          <button onClick={(e) => {
+            if (!member.soundOff) {
+            play()}
+            onGardenClick()}}>
             <img className={cx("btn")} src={garden} alt="꽃밭" />
           </button>
         </div>
         <div>
-          <button onClick={onCabinetClick}>
+          <button onClick={(e) => {
+            if (!member.soundOff) {
+            play()}
+            onCabinetClick()}}>
             <img className={cx("btn")} src={pencil} alt="기록보관함" />
           </button>
         </div>
