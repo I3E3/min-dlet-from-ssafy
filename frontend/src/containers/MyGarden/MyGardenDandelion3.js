@@ -1,15 +1,16 @@
-import styled from "styled-components";
-import sign from "assets/images/sign.png";
-import flower from "assets/images/flower.png";
-import { useEffect, useState } from "react";
-import classNames from "classnames/bind";
-import styles from "./MyGardenDandelion2.module.scss";
-import bin2 from "assets/images/bin2.png";
-import photo from "assets/images/photo-album.png";
-import shovel from "assets/images/shovel.png";
-import pencil_check from "assets/images/pencil_check.png";
-import axios from "axios";
-import Swal from "sweetalert2";
+import styled from 'styled-components';
+import sign from 'assets/images/sign.png';
+import flower from 'assets/images/flower.png';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import classNames from 'classnames/bind';
+import styles from './MyGardenDandelion2.module.scss';
+import bin2 from 'assets/images/bin2.png';
+import photo from 'assets/images/photo-album.png';
+import shovel from 'assets/images/shovel.png';
+import pencil_check from 'assets/images/pencil_check.png';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -119,11 +120,12 @@ const Dday = styled.span`
 function MyGardenDandelion3({ dandelion }) {
   const [show, setShow] = useState(false); // 아이콘들 show
   const [record, setRecord] = useState(false); // 연필 아이콘
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState('');
   const [status, setStatus] = useState(dandelion.status);
   const [returned, setReturned] = useState(false); // returned. 삽도 보여줌!
   const [blossom, setBlossom] = useState(false);
   const [randomNum] = useState(Math.floor(Math.random() * 4 + 1));
+  const navigate = new useNavigate();
   // function ============================================
   function getDiff(targetDate) {
     const today = new Date();
@@ -144,16 +146,20 @@ function MyGardenDandelion3({ dandelion }) {
     setShow((prev) => !prev);
   };
 
+  const getList = (dandelionId) => {
+    navigate(`dandelions/${dandelionId}`);
+  };
+
   const onRecordClick = (dandelionId) => {
     Swal.fire({
-      title: "꽃말을 입력하세요",
-      input: "text",
+      title: '꽃말을 입력하세요',
+      input: 'text',
       inputAttributes: {
-        autocapitalize: "off",
+        autocapitalize: 'off',
       },
       showCancelButton: true,
-      confirmButtonText: "등록",
-      cancelButtonText: "취소",
+      confirmButtonText: '등록',
+      cancelButtonText: '취소',
       showLoaderOnConfirm: true,
     }).then((res) => {
       if (res.isConfirmed) {
@@ -164,10 +170,10 @@ function MyGardenDandelion3({ dandelion }) {
 
   const onAlbumClick = (dandelionId) => {
     Swal.fire({
-      title: "보관함에 저장 하시겠습니까?",
+      title: '보관함에 저장 하시겠습니까?',
       showCancelButton: true,
-      confirmButtonText: "저장",
-      cancelButtonText: "취소",
+      confirmButtonText: '저장',
+      cancelButtonText: '취소',
     }).then((res) => {
       if (res.isConfirmed) {
         saveDandelion(dandelionId);
@@ -177,10 +183,10 @@ function MyGardenDandelion3({ dandelion }) {
 
   const onPlantClick = (dandelionId) => {
     Swal.fire({
-      title: "씨앗을 심겠습니까?",
+      title: '씨앗을 심겠습니까?',
       showCancelButton: true,
-      confirmButtonText: "심기",
-      cancelButtonText: "취소",
+      confirmButtonText: '심기',
+      cancelButtonText: '취소',
     }).then((res) => {
       if (res.isConfirmed) {
         plantDandelion(dandelionId);
@@ -190,10 +196,10 @@ function MyGardenDandelion3({ dandelion }) {
 
   const onDeleteClick = (dandelionId) => {
     Swal.fire({
-      title: "민들레를 삭제 하시겠습니까?",
+      title: '민들레를 삭제 하시겠습니까?',
       showCancelButton: true,
-      confirmButtonText: "삭제",
-      cancelButtonText: "취소",
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
     }).then((res) => {
       if (res.isConfirmed) {
         deleteDandelion(dandelionId);
@@ -206,13 +212,13 @@ function MyGardenDandelion3({ dandelion }) {
 
   // async function ============================================
   async function registerDescription(dandelionId, description) {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const config = {
-      Authorization: "Bearer " + token,
+      Authorization: 'Bearer ' + token,
     };
     await axios({
       url: `dandelions/${dandelionId}/description`,
-      method: "patch",
+      method: 'patch',
       data: { description: description },
       baseURL: BaseURL,
       headers: config,
@@ -220,106 +226,106 @@ function MyGardenDandelion3({ dandelion }) {
       .then((res) => {
         Swal.fire({
           title: `[ ${description} ]를 등록하였습니다.`,
-          confirmButtonText: "확인",
+          confirmButtonText: '확인',
         });
-        console.log("팻말 꽃말 등록 성공");
+        console.log('팻말 꽃말 등록 성공');
       })
       .catch((err) => {
         Swal.fire({
           title: `꽃말 등록을 실패했습니다.`,
-          confirmButtonText: "확인",
+          confirmButtonText: '확인',
         });
 
-        console.log("팻말 꽃말 등록 성공 실패");
+        console.log('팻말 꽃말 등록 성공 실패');
         console.log(err);
       });
   }
 
   async function saveDandelion(dandelionId) {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const config = {
-      Authorization: "Bearer " + token,
+      Authorization: 'Bearer ' + token,
     };
     await axios({
       url: `dandelions/${dandelionId}/status`,
-      method: "patch",
+      method: 'patch',
       data: {
-        status: "ALBUM",
+        status: 'ALBUM',
       },
       baseURL: BaseURL,
       headers: config,
     })
       .then((res) => {
-        Swal.fire("보관함에 저장 성공!", "", "success");
-        console.log("보관함에 저장 성공");
-        setStatus("ALBUM");
+        Swal.fire('보관함에 저장 성공!', '', 'success');
+        console.log('보관함에 저장 성공');
+        setStatus('ALBUM');
       })
       .catch((err) => {
-        Swal.fire("보관함에 저장 실패!", "", "warning");
-        console.log("보관함에 저장 실패");
+        Swal.fire('보관함에 저장 실패!', '', 'warning');
+        console.log('보관함에 저장 실패');
         console.log(err);
       });
   }
 
   async function plantDandelion(dandelionId) {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const config = {
-      Authorization: "Bearer " + token,
+      Authorization: 'Bearer ' + token,
     };
     await axios({
       url: `dandelions/${dandelionId}/status`,
-      method: "patch",
+      method: 'patch',
       data: {
-        status: "BLOSSOMED",
+        status: 'BLOSSOMED',
       },
       baseURL: BaseURL,
       headers: config,
     })
       .then((res) => {
-        Swal.fire("씨앗 심기 성공!", "", "success");
-        console.log("씨앗 심기 성공");
+        Swal.fire('씨앗 심기 성공!', '', 'success');
+        console.log('씨앗 심기 성공');
         setRecord(true);
         setReturned(false);
         setBlossom(true);
-        setStatus("BLOSSOMED");
+        setStatus('BLOSSOMED');
       })
       .catch((err) => {
-        Swal.fire("씨앗 심기 실패!", "", "warning");
-        console.log("씨앗 심기 실패");
+        Swal.fire('씨앗 심기 실패!', '', 'warning');
+        console.log('씨앗 심기 실패');
         console.log(err);
       });
   }
 
   async function deleteDandelion(dandelionId) {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const config = {
-      Authorization: "Bearer " + token,
+      Authorization: 'Bearer ' + token,
     };
     await axios({
       url: `dandelions/${dandelionId}`,
-      method: "delete",
+      method: 'delete',
       baseURL: BaseURL,
       headers: config,
     })
       .then((res) => {
-        Swal.fire("민들레 삭제 완료!", "", "success");
-        console.log("민들레 삭제 성공");
+        Swal.fire('민들레 삭제 완료!', '', 'success');
+        console.log('민들레 삭제 성공');
       })
       .catch((err) => {
-        Swal.fire("민들레 삭제 실패!", "", "warning");
-        console.log("민들레 삭제 실패");
+        Swal.fire('민들레 삭제 실패!', '', 'warning');
+        console.log('민들레 삭제 실패');
         console.log(err);
       });
   }
   useEffect(() => {
     getDiff(dandelion.blossomedDate);
-    if (status === "FLYING" || status === "ALBUM") {
+    if (status === 'FLYING' || status === 'ALBUM') {
       setRecord(false);
-    } else if (status === "RETURN") {
+    } else if (status === 'RETURN') {
       setRecord(true);
       setReturned(true);
-      console.log("뭐냐");
-    } else if (status === "BLOSSOMED") {
+      console.log('뭐냐');
+    } else if (status === 'BLOSSOMED') {
       setRecord(true);
       setReturned(false);
       setBlossom(true);
@@ -329,8 +335,8 @@ function MyGardenDandelion3({ dandelion }) {
   }, []);
 
   return (
-    <div className={cx("container")}>
-      <div className={cx("icons")} onClick={onOptionsClick}>
+    <div className={cx('container')}>
+      <div className={cx('icons')} onClick={onOptionsClick}>
         {/* {show && <IconCover>
             <Icons src={cancel} alt="취소" />
           </IconCover>} */}
@@ -375,15 +381,15 @@ function MyGardenDandelion3({ dandelion }) {
           </IconCover>
         )}
       </div>
-      <div onClick={onOptionsClick} className={cx("sign-flower")}>
+      <div onClick={onOptionsClick} className={cx('sign-flower')}>
         {returned ? (
-          <div className={cx("returned-sign")}>
-            <img style={{ width: "100%" }} src={sign} alt="팻말" />
+          <div className={cx('returned-sign')}>
+            <img style={{ width: '100%' }} src={sign} alt="팻말" />
             <Dday>{date}</Dday>
           </div>
         ) : (
-          <div className={cx("normal-sign")}>
-            <img style={{ width: "100%" }} src={sign} alt="팻말" />
+          <div className={cx('normal-sign')}>
+            <img style={{ width: '100%' }} src={sign} alt="팻말" />
             <Dday>{date}</Dday>
           </div>
         )}
@@ -392,6 +398,7 @@ function MyGardenDandelion3({ dandelion }) {
             <img
               src={require(`assets/images/MyGarden/dand${randomNum}_garden.png`)}
               alt="꽃"
+              onClick={() => getList(dandelion.seq)}
             />
           </Blossom>
         )}
