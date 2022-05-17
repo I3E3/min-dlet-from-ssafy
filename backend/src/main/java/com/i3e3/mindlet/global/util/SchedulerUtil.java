@@ -20,4 +20,10 @@ public class SchedulerUtil {
         long elapsedMinute = 30L;
         dandelionRepository.updateHoldingDandelionToFlying(elapsedMinute);
     }
+
+    @Transactional
+    @Scheduled(cron = "0 25 23 * * *")
+    public void readyDandelion() {
+        dandelionRepository.updateFlyingOrHoldingDandelionToReady();
+    }
 }
