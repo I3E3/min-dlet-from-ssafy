@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -149,5 +150,17 @@ public class DandelionRepositoryImpl implements DandelionRepositoryCustom {
         }
 
         return Optional.ofNullable(dandelions);
+    }
+
+    @Override
+    public void updateFlyingOrHoldingDandelionToReady() {
+        queryFactory
+                .update(dandelion)
+                .set(dandelion.status, Dandelion.Status.READY)
+                .where(
+                        dandelion.blossomedDate.eq(LocalDate.now().plusDays(1L)),
+                        dandelion.status.eq(Dandelion.Status.FLYING).or(dandelion.status.eq(Dandelion.Status.HOLD)),
+                        dandelion.isDeleted.isFalse())
+                .execute();
     }
 }
