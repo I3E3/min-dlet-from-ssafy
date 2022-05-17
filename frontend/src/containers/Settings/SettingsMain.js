@@ -17,7 +17,7 @@ const MemberForm = styled.div`
 `;
 
 function SettingsMain() {
-  // memberSeq는 atom에서 받아와야함
+  // 변경해야함 recoil로
   const [memberSeq, setMemberSeq] = useState(0);
   const soundOnOff = async (sound) => {
     await axios({
@@ -71,36 +71,15 @@ function SettingsMain() {
       cancelButtonText: "취소",
     }).then((res) => {
       if (res.isConfirmed) {
-        logoutMember();
+        if (localStorage.getItem("token")) {
+          localStorage.removeItem("token");
+          navigate("/");
+        }
       }
     });
   };
 
   async function deleteMember() {
-    const token = localStorage.getItem("token");
-    const config = {
-      Authorization: "Bearer " + token,
-    };
-    await axios({
-      // 회원 seq받아와야함
-      url: `members/${memberSeq}`,
-      method: "delete",
-      baseURL: BaseURL,
-      headers: config,
-    })
-      .then((res) => {
-        Swal.fire("회원탈퇴 성공", "", "success");
-        console.log("회원탈퇴 성공");
-        navigate("/");
-      })
-      .catch((err) => {
-        Swal.fire("회원탈퇴 실패", "", "success");
-        console.log("회원탈퇴 실패");
-        console.log(err);
-      });
-  }
-
-  async function logoutMember() {
     const token = localStorage.getItem("token");
     const config = {
       Authorization: "Bearer " + token,
