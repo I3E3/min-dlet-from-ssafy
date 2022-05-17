@@ -7,9 +7,9 @@ $color: blue;
 }
 
 .menu-button {
-  position: absolute;
-  right: 10px;
-  top: 10px;
+  position: fixed;
+  right: 10px; 
+  top: 10px; 
   border-radius: 20%;
   border: 1px solid white;
   z-index: 3;
@@ -109,27 +109,49 @@ $color: blue;
   align-items: center;
 }
 
-.guideDown {
-  top: 2%;
-  left: 2%;
-  position: absolute;
-  z-index: 9999;
-  animation: ani 1s infinite alternate;
-}
+.swipe-guide{
+  animation-timing-function: ease-out;
+  -moz-animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-out;
+  -moz-animation-duration: 0.5s;
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -moz-animation-name: slidein;
+  -webkit-animation-name: slidein;
+  animation-name: slidein;
+  -moz-animation-iteration-count: 20;
+  -webkit-animation-iteration-count: 20;
+  animation-iteration-count: 20;
+  -moz-animation-direction: alternate;
+  -webkit-animation-direction: alternate;
+  animation-direction: alternate;
 
-.guideUp {
-  bottom: 2%;
-  left: 2%;
-  position: absolute;
-  z-index: 9999;
-  animation: ani 1s infinite alternate;
-}
-
-@keyframes ani {
-  0% {
-    transform: translate(0, 0);
+  &__second {
+    -moz-animation-name: slideout;
+    -webkit-animation-name: slideout;
+    animation-name: slideout;
+    animation-timing-function: ease-in-out;
+    -moz-animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out;
   }
+}
+
+@keyframes slidein {
+  0% {
+    transform: translateY(-15px) rotate(0deg);
+  }
+
   100% {
-    transform: translate(0, 8px);
+    transform: translateY(15px) rotate(-30deg);
+  }
+}
+
+@keyframes slideout {
+  0% {
+    transform: translateY(15px) rotate(-30deg);
+  }
+
+  100% {
+    transform: translateY(-15px) rotate(0deg);
   }
 }

@@ -15,6 +15,14 @@ import {
   resetContentsState,
 } from 'services/api/Contents';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import memberState from 'utils/memberState';
+import { ReactComponent as Tap } from 'assets/images/Landing/tap.svg';
+import { ReactComponent as DownArrow } from 'assets/images/Landing/down-arrow.svg';
+import { ReactComponent as UpArrow } from 'assets/images/Landing/up-arrow.svg';
+import { ReactComponent as Dandel } from 'assets/images/Landing/dandelion-2.svg';
+import { useSound } from 'use-sound'
+import Landing from 'assets/musics/Landing.mp3'
+
 const cx = classNames.bind(styles);
 const LandingPage = () => {
   const [isShowing, setIsShowing] = useState(true);
@@ -27,9 +35,14 @@ const LandingPage = () => {
   const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
   const petaldata = useRecoilValue(petalCatchResultList);
   const patalseq = useRecoilValue(petalCatchResultSeq);
+  const member = useRecoilValue(memberState)
+  const [isGuideShowing, setIsGuideShowing] = useState(true)
+  const [soundEnabled, setSoundEnabled] = useState(member.soundOff)
+  const [play, { stop, sound }] = useSound(Landing, {volume: 0.5, soundEnabled, interrupt: true})
 
   let howManyTouches = 0;
   const navigate = useNavigate();
+  const musicOn = [false]
 
   const mocklist = [
     {
@@ -151,6 +164,9 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
+    setTimeout(() => {
+      setIsGuideShowing(false)
+    }, 6000)
     if (!localStorage.getItem('token')) {
       navigate('/login');
     }
@@ -175,6 +191,13 @@ const LandingPage = () => {
         height: '100vh',
         overflow: 'hidden',
       }}
+      onClick={()=>{
+        if (!musicOn[0] && member.soundOff) { // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
+          console.log('이상하다...')
+          play()
+          musicOn[0] = true
+        }
+      }}
     >
       {/* <h1>제발!!</h1> */}
       <button
@@ -191,6 +214,35 @@ const LandingPage = () => {
       {isGroupShowing && (
         <GroupSelection setIsGroupShowing={setIsGroupShowing} />
       )}
+
+      {isGuideShowing && (
+      <>
+        <div style={{
+          height: "min(80px, 10vh)", 
+          position: "fixed", top: "20vh", left: "12px", objectFit: "contain", display: "flex"}}>
+          <DownArrow style={{height: "100%", width: "auto"}} />
+          <Tap className={`${cx('swipe-guide')} ${cx('swipe-guide__second')}`} />
+        </div>
+        <div style={{
+          height: "min(80px, 10vh)", 
+          position: "fixed", bottom: "20vh", left: "12px", objectFit: "contain", display: "flex"}}>
+          <UpArrow style={{height: "100%", width: "auto"}} />
+          <Tap className={cx('swipe-guide')} />
+        </div>
+      </>)}
+      <Dandel style={{
+          height: "min(80px, 10vh)", width: "auto",
+          position: "fixed", bottom: "20px", right: "20px", objectFit: "contain"}}
+          onClick={() => {navigate('/mygarden')}} 
+      />
+      {/* <button onClick={(e) => {
+        e.stopPropagation();
+        stop()
+      }} style={{position: "fixed", bottom: "10px", fontSize: "50px"}}>얍!</button> */}
+      {/* <button onClick={(e) => {
+        console.log('눌림')
+        sound._muted = false
+      }} style={{position: "fixed", bottom: "10px", fontSize: "50px", right: "10px"}}>호우!!</button> */}
     </section>
   );
 };
