@@ -8,6 +8,8 @@ import garden from "assets/images/garden.png";
 import pencil from "assets/images/pencil.png";
 import album from "assets/images/photo-album.png";
 import Swal from "sweetalert2";
+import { useRecoilState } from "recoil";
+import memberState from "utils/memberState";
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -18,8 +20,10 @@ const MemberForm = styled.div`
 
 function SettingsMain() {
   // 변경해야함 recoil로
-  const [memberSeq, setMemberSeq] = useState(0);
+  const [member, setMember] = useRecoilState(memberState);
+
   const soundOnOff = async (sound) => {
+    const memberSeq = member.seq;
     await axios({
       url: `${BaseURL}/${memberSeq}/sound`,
       method: "patch",
@@ -80,6 +84,7 @@ function SettingsMain() {
   };
 
   async function deleteMember() {
+    const memberSeq = member.seq;
     const token = localStorage.getItem("token");
     const config = {
       Authorization: "Bearer " + token,
