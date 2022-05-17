@@ -9,8 +9,9 @@ import ContentsCreatePage from 'pages/ContentsCreatePage/ContentsCreatePage';
 import ContentsListPage from 'pages/ContentsListPage/ContentsListPage';
 import LoginPage from 'pages/LandingPage/LoginPage';
 import SignupPage from 'pages/LandingPage/SignupPage';
-import MyGardenDandelionDetail from 'containers/MyGarden/MyGardenDandelionDetail';
+import MyGardenDandelionDetail from 'pages/MyGardenPage/MyDandelDetailPage';
 import Background from 'layouts/background';
+import MyDandelDetailPage from 'pages/MyGardenPage/MyDandelDetailPage';
 
 export default function Router() {
   return useRoutes([

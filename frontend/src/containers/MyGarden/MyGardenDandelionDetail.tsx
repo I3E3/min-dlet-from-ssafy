@@ -1,16 +1,13 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSprings, animated, to as interpolate } from '@react-spring/web';
 import petal from 'assets/images/petal-yellow-4.png';
-import classNames from 'classnames/bind';
 import { useDrag } from '@use-gesture/react';
+import classNames from 'classnames/bind';
 import iconimg from 'assets/images/icon/earth-globe-white.png';
-import styles from './ContentsList.module.scss';
-import { resetContentsState } from 'services/api/Contents';
-import { useNavigate } from 'react-router-dom';
-import { ReactComponent as NationImg } from 'assets/images/Flag_of_South_Korea.svg';
-import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
-import { useSetRecoilState } from 'recoil';
-
+import { getDandelionDetail } from 'services/api/MyGardenApi';
+import styles from './MyGardenDandelionDetail.module.scss';
+import { useNavigate, useParams } from 'react-router-dom';
 const cx = classNames.bind(styles);
 const cards = [petal, petal, petal, petal, petal, petal];
 
@@ -28,31 +25,93 @@ const from = (_i: number) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 });
 const trans = (r: number, s: number) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
-const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
+const MyGardenDandelionDetail = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const setPetalData = useSetRecoilState(petalCatchResultList);
-  const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
+  const baseUrl = 'http://localhost:8080/';
+  const [count, setCount] = useState(0);
+  const [list, setList] = useState([
+    {
+      contentImageUrlPath: '',
+      createdDate: '',
+      message: '',
+      nation: '',
+      nationImageUrlPath: '',
+      seq: 0,
+    },
+  ]);
+
   const [gone] = useState(() => new Set());
   const [props, api] = useSprings(count, (i) => ({
     ...to(i),
     from: from(i),
   }));
 
-  const home = async () => {
-    const response = await resetContentsState(seq);
-    setPetalData([{}]);
-    setPetalSeq(0);
-    navigate('/');
+  const Back = () => {
+    navigate('/mygarden');
   };
 
-  const send = () => {
-    onClick(2);
-  };
+  // const onDeleteDandelionClick = async () => {
+  //   await axios({
+  //     // url: `${baseUrl}/dandelions/${id}`,
+  //     url: `${baseUrl}/dandelions/1`,
+  //     method: 'delete',
+  //   })
+  //     .then((res) => {
+  //       console.log('민들레 상세보기 삭제 성공');
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log('민들레 상세보기 삭제 실패');
+  //       console.log(err);
+  //     });
+  // };
 
+  // const onStoreDandelionClick = async () => {
+  //   await axios({
+  //     // url: `${baseUrl}/dandelions/${id}/status`,
+  //     url: `${baseUrl}/dandelions/1/status`,
+  //     method: 'patch',
+  //     data: {
+  //       status: 'ALBUM',
+  //     },
+  //   })
+  //     .then((res) => {
+  //       console.log('민들레 보관하기 성공');
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log('민들레 보관하기 실패');
+  //       console.log(err);
+  //     });
+  // };
+
+  const getDetail = async () => {
+    // await axios({
+    //   // url: `baseUrl/dandelions/${id}`,
+    //   url: `${baseUrl}/dandelions/1`,
+    //   method: 'get',
+    // })
+    //   .then((res) => {
+    //     console.log('민들레 상세보기 조회 성공');
+    //     console.log(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log('민들레 상세보기 조회 실패');
+    //     console.log(err);
+    //   });
+
+    const num = Number(id);
+    console.log(num);
+
+    const response = await getDandelionDetail(num);
+    console.log(response);
+    setList(response.data.data.petalInfos);
+    console.log(response.data.data.totalPetalCount);
+    setCount(response.data.data.totalPetalCount);
+  };
   useEffect(() => {
-    console.log(list);
-    console.log(seq);
-    console.log(count);
+    getDetail();
   }, []);
 
   const bind = useDrag(
@@ -86,7 +145,7 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
         }, 600);
     }
   );
-  // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
+
   return (
     <section
       style={{
@@ -96,12 +155,6 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
       }}
     >
       <div className={cx('container')}>
-        <img
-          className={cx('home-btn')}
-          src={iconimg}
-          onClick={home}
-          alt="home"
-        />
         <div className={cx('petal-img')}>
           {props.map(({ x, y, rot, scale }, i) => (
             <animated.div className={cx('deck')} key={i} style={{ x, y }}>
@@ -155,12 +208,11 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
             </animated.div>
           ))}
         </div>
-        <div className={cx('send-btn')} onClick={send}>
-          Send
+        <div className={cx('send-btn')} onClick={Back}>
+          Back
         </div>
       </div>
     </section>
   );
 };
-
-export default ContentsList;
+export default MyGardenDandelionDetail;
