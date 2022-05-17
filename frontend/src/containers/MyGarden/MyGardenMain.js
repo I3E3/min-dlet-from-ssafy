@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import gear from "assets/images/gear.png";
 import pencil from "assets/images/pencil.png";
 import album from "assets/images/photo-album.png";
-import sign from "assets/images/sign.png";
 import styles from "./MyGarden.module.scss";
 import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
