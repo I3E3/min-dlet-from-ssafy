@@ -26,4 +26,10 @@ public class SchedulerUtil {
     public void readyDandelion() {
         dandelionRepository.updateFlyingOrHoldingDandelionToReady();
     }
+
+    @Transactional
+    @Scheduled(cron = "0 59 23 * * *")
+    public void changeReadyToReturn() {
+        dandelionRepository.updateReadyDandelionToReturn();
+    }
 }

@@ -23,4 +23,8 @@ public interface DandelionRepository extends JpaRepository<Dandelion, Long>, Dan
 
     @Query("SELECT COUNT(d) > 0 FROM Dandelion d WHERE d.seq = :seq AND d.isDeleted = FALSE")
     boolean existsBySeq(@Param("seq") Long seq);
+
+    @Modifying
+    @Query("UPDATE Dandelion d SET d.status = 'RETURN' WHERE d.status = 'READY' AND d.isDeleted = FALSE")
+    void updateReadyDandelionToReturn();
 }

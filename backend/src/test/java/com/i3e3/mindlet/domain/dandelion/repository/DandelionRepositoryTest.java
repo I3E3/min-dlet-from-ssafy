@@ -1445,4 +1445,49 @@ class DandelionRepositoryTest {
         assertThat(findDandelion.getMember().getSeq()).isEqualTo(savedDandelion.getMember().getSeq());
         assertThat(findDandelion.getStatus()).isEqualTo(savedDandelion.getStatus());
     }
+
+    @Test
+    @DisplayName("Ready상태의 민들레를 Return으로 바꾸기 - 성공")
+    void changeDandelionStatusReadyToReturn() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelion1.changeStatus(Dandelion.Status.READY);
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionRepository.updateReadyDandelionToReturn();
+        Dandelion newDandelion1 = dandelionRepository.findBySeq(dandelion1.getSeq()).orElse(null);
+        Dandelion newDandelion2 = dandelionRepository.findBySeq(dandelion2.getSeq()).orElse(null);
+
+        // then
+        assertThat(newDandelion1.getStatus()).isEqualTo(Dandelion.Status.RETURN);
+        assertThat(newDandelion2.getStatus()).isEqualTo(Dandelion.Status.FLYING);
+    }
+
+    @Test
+    @DisplayName("Ready상태의 민들레를 Return으로 바꾸기 - 삭제된 민들레의 경우")
+    void changeDandelionStatusReadyToReturnIsDeleted() {
+        // given
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        dandelion1.changeStatus(Dandelion.Status.READY);
+        dandelion1.delete();
+        dandelionRepository.save(dandelion1);
+        dandelionRepository.save(dandelion2);
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionRepository.updateReadyDandelionToReturn();
+        Dandelion newDandelion1 = dandelionRepository.findBySeqContainsDeleted(dandelion1.getSeq()).orElse(null);
+        Dandelion newDandelion2 = dandelionRepository.findBySeq(dandelion2.getSeq()).orElse(null);
+
+        // then
+        assertThat(newDandelion1.getStatus()).isEqualTo(Dandelion.Status.READY);
+        assertThat(newDandelion2.getStatus()).isEqualTo(Dandelion.Status.FLYING);
+    }
 }
