@@ -37,12 +37,12 @@ const LandingPage = () => {
   const patalseq = useRecoilValue(petalCatchResultSeq);
   const member = useRecoilValue(memberState)
   const [isGuideShowing, setIsGuideShowing] = useState(true)
-  const [isMusicOn, setIsMusicOn] = useState(false)
-  const [play] = useSound(Landing, {volume: 0.5})
+  const [soundEnabled, setSoundEnabled] = useState(member.soundOff)
+  const [play, { stop, sound }] = useSound(Landing, {volume: 0.5, soundEnabled, interrupt: true})
 
   let howManyTouches = 0;
   const navigate = useNavigate();
-  let musicOn = false
+  const musicOn = [false]
 
   const mocklist = [
     {
@@ -192,9 +192,10 @@ const LandingPage = () => {
         overflow: 'hidden',
       }}
       onClick={()=>{
-        if (!isMusicOn && !member.soundOff) { // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
+        if (!musicOn[0] && member.soundOff) { // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
+          console.log('이상하다...')
           play()
-          setIsMusicOn(true)
+          musicOn[0] = true
         }
       }}
     >
@@ -227,7 +228,6 @@ const LandingPage = () => {
           position: "fixed", bottom: "20vh", left: "12px", objectFit: "contain", display: "flex"}}>
           <UpArrow style={{height: "100%", width: "auto"}} />
           <Tap className={cx('swipe-guide')} />
-          {/* <button type="button" onClick={()=>{play()}}>플레이!</button> */}
         </div>
       </>)}
       <Dandel style={{
@@ -235,6 +235,14 @@ const LandingPage = () => {
           position: "fixed", bottom: "20px", right: "20px", objectFit: "contain"}}
           onClick={() => {navigate('/mygarden')}} 
       />
+      {/* <button onClick={(e) => {
+        e.stopPropagation();
+        stop()
+      }} style={{position: "fixed", bottom: "10px", fontSize: "50px"}}>얍!</button> */}
+      {/* <button onClick={(e) => {
+        console.log('눌림')
+        sound._muted = false
+      }} style={{position: "fixed", bottom: "10px", fontSize: "50px", right: "10px"}}>호우!!</button> */}
     </section>
   );
 };

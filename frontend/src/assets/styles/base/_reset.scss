@@ -16,6 +16,8 @@ body {
   // background: linear-gradient(180deg, #92c4ff 0%, #ffffff 100%);
   width: 100vw;
   height: 100vh;
+  min-height: 100vh;
+  min-height: -webkit-fill-available; 
   position: relative;
   overflow: hidden;
   background: linear-gradient(180deg, #568bda 0%, #ffb8b8 80%, #ffd5b7 100%);

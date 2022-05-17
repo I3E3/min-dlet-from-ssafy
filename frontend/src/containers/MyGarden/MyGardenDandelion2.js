@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import sign from "assets/images/sign.png";
+import flower from "assets/images/flower.png";
 import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./MyGardenDandelion.module.scss";
 import cancel from "assets/images/cancel.png";
 import photo from "assets/images/photo-album.png";
+import shovel from "assets/images/shovel.png";
 import flower_scissors from "assets/images/flower_scissors.png";
 import pencil_check from "assets/images/pencil_check.png";
 import axios from "axios";
@@ -23,6 +25,64 @@ const Sign = styled.div`
     width: 190px;
   }
 `;
+
+const Blossom = styled.div`
+  img {
+    position: absolute;
+    top: 50px;
+    max-height: 110px;
+    max-width: 110px;
+  }
+`;
+
+const ReturnedSign = styled.div`
+  color: white;
+  font-size: 20px;
+  position: relative;
+  animation: shake 1.5s;
+  animation-iteration-count: infinite;
+  @keyframes shake {
+    0% {
+      transform: translate(1px, 1px) rotate(0deg);
+    }
+    10% {
+      transform: translate(-1px, -2px) rotate(-1deg);
+    }
+    20% {
+      transform: translate(-3px, 0px) rotate(1deg);
+    }
+    30% {
+      transform: translate(3px, 2px) rotate(0deg);
+    }
+    40% {
+      transform: translate(1px, -1px) rotate(1deg);
+    }
+    50% {
+      transform: translate(-1px, 2px) rotate(-1deg);
+    }
+    60% {
+      transform: translate(-3px, 1px) rotate(0deg);
+    }
+    70% {
+      transform: translate(3px, 1px) rotate(-1deg);
+    }
+    80% {
+      transform: translate(-1px, -1px) rotate(1deg);
+    }
+    90% {
+      transform: translate(1px, 2px) rotate(0deg);
+    }
+    100% {
+      transform: translate(1px, -2px) rotate(-1deg);
+    }
+  }
+  img {
+    position: relative;
+    height: 190px;
+    width: 190px;
+  }
+`;
+
 const IconBox = styled.div`
   display: flex;
   text-align: center;
@@ -50,14 +110,32 @@ const Blank = styled.div`
 
 const Dday = styled.span`
   position: absolute;
-  left: 23px;
-  top: 23px;
-  font-size: 15px;
+  left: 37px;
+  top: 20px;
+  font-size: 20px;
 `;
 
 function MyGardenDandelion2({ dandelion }) {
   const [show, setShow] = useState(false);
+  const [showPlant, setShowPlant] = useState(false);
   const [record, setRecord] = useState(false);
+  const [date, setDate] = useState("");
+  const [status, setStatus] = useState("");
+  const [returned, setReturned] = useState(false);
+  const [blossom, setBlossom] = useState(false);
+
+  // function ============================================
+  function getDiff(targetDate) {
+    const today = new Date();
+    const dDay = new Date(targetDate);
+    const diff = Math.floor(
+      (dDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    setDate(`D - ${diff}`);
+    // console.log(`Dday까지 ${dDay < 10 ? `0${diff}` : diff}일 남았습니다.`);
+  }
+
+  // onClick ============================================
   const onOptionsClick = () => {
     setShow((prev) => !prev);
   };
@@ -93,6 +171,19 @@ function MyGardenDandelion2({ dandelion }) {
     });
   };
 
+  const onPlantClick = (dandelionId) => {
+    Swal.fire({
+      title: "씨앗을 심겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "심기",
+      cancelButtonText: "취소",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        plantDandelion(dandelionId);
+      }
+    });
+  };
+
   const onDeleteClick = (dandelionId) => {
     Swal.fire({
       title: "민들레를 삭제 하시겠습니까?",
@@ -106,6 +197,7 @@ function MyGardenDandelion2({ dandelion }) {
     });
   };
 
+  // async function ============================================
   async function registerDescription(dandelionId, description) {
     const token = localStorage.getItem("token");
     const config = {
@@ -155,8 +247,33 @@ function MyGardenDandelion2({ dandelion }) {
         console.log("보관함에 저장 성공");
       })
       .catch((err) => {
-        Swal.fire("보관함에 저장 실패!", "", "danger");
+        Swal.fire("보관함에 저장 실패!", "", "warning");
         console.log("보관함에 저장 실패");
+        console.log(err);
+      });
+  }
+
+  async function plantDandelion(dandelionId) {
+    const token = localStorage.getItem("token");
+    const config = {
+      Authorization: "Bearer " + token,
+    };
+    await axios({
+      url: `dandelions/${dandelionId}/status`,
+      method: "patch",
+      data: {
+        status: "BLOSSOMED",
+      },
+      baseURL: BaseURL,
+      headers: config,
+    })
+      .then((res) => {
+        Swal.fire("씨앗 심기 성공!", "", "success");
+        console.log("씨앗 심기 성공");
+      })
+      .catch((err) => {
+        Swal.fire("씨앗 심기 실패!", "", "warning");
+        console.log("씨앗 심기 실패");
         console.log(err);
       });
   }
@@ -177,19 +294,27 @@ function MyGardenDandelion2({ dandelion }) {
         console.log("민들레 삭제 성공");
       })
       .catch((err) => {
-        Swal.fire("민들레 삭제 실패!", "", "danger");
+        Swal.fire("민들레 삭제 실패!", "", "warning");
         console.log("민들레 삭제 실패");
         console.log(err);
       });
   }
   useEffect(() => {
-    if (dandelion.status === "FLYING") {
-      // setRecord(true);
+    getDiff(dandelion.blossomedDate);
+    setStatus(dandelion.status);
+    if (status === "FLYING" || status === "FLYING") {
       setRecord(false);
-    } else if (dandelion.status === "RETURN") {
-      setRecord(false);
+    } else if (status === "RETURN") {
+      setRecord(true);
+      setReturned(true);
+      setShowPlant(true);
+    } else if (status === "BLOSSOMED") {
+      setRecord(true);
+      setReturned(false);
+      setShowPlant(false);
+      setBlossom(true);
     }
-  }, []);
+  }, [status]);
   return (
     <div className={cx("container")}>
       <div onClick={onOptionsClick}>
@@ -200,9 +325,7 @@ function MyGardenDandelion2({ dandelion }) {
                 <Icons src={cancel} alt="취소" />
               </IconCover>
 
-              {record ? (
-                <span>아직은 작성할 수 없습니다.</span>
-              ) : (
+              {record && blossom ? (
                 <IconCover
                   onClick={() => {
                     onRecordClick(dandelion.seq);
@@ -210,14 +333,34 @@ function MyGardenDandelion2({ dandelion }) {
                 >
                   <Icons src={pencil_check} alt="꽃말" />
                 </IconCover>
+              ) : (
+                <span></span>
               )}
-              <IconCover
-                onClick={() => {
-                  onAlbumClick(dandelion.seq);
-                }}
-              >
-                <Icons src={photo} alt="보관함" />
-              </IconCover>
+
+              {record && blossom ? (
+                <IconCover
+                  onClick={() => {
+                    onAlbumClick(dandelion.seq);
+                  }}
+                >
+                  <Icons src={photo} alt="보관함" />
+                </IconCover>
+              ) : (
+                <span></span>
+              )}
+
+              {showPlant ? (
+                <IconCover
+                  onClick={() => {
+                    onPlantClick(dandelion.seq);
+                  }}
+                >
+                  <Icons src={shovel} alt="씨앗 심기" />
+                </IconCover>
+              ) : (
+                <span></span>
+              )}
+
               <IconCover
                 onClick={() => {
                   onDeleteClick(dandelion.seq);
@@ -229,17 +372,38 @@ function MyGardenDandelion2({ dandelion }) {
             <div>
               <Sign>
                 <img src={sign} alt="팻말" />
-                <Dday>{dandelion.blossomedDate}</Dday>
+                <Dday>{date}</Dday>
+                {blossom ? (
+                  <Blossom>
+                    <img src={flower} alt="꽃" />
+                  </Blossom>
+                ) : (
+                  <div></div>
+                )}
               </Sign>
             </div>
           </div>
         ) : (
           <div>
             <Blank></Blank>
-            <Sign>
-              <img src={sign} alt="팻말" />
-              <Dday>{dandelion.blossomedDate}</Dday>
-            </Sign>
+            {returned ? (
+              <ReturnedSign>
+                <img src={sign} alt="팻말" />
+                <Dday>{date}</Dday>
+              </ReturnedSign>
+            ) : (
+              <Sign>
+                <img src={sign} alt="팻말" />
+                <Dday>{date}</Dday>
+                {blossom ? (
+                  <Blossom>
+                    <img src={flower} alt="꽃" />
+                  </Blossom>
+                ) : (
+                  <div></div>
+                )}
+              </Sign>
+            )}
           </div>
         )}
       </div>
