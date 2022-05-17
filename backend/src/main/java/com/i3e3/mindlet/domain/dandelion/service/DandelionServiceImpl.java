@@ -296,7 +296,9 @@ public class DandelionServiceImpl implements DandelionService {
         Dandelion findDandelion = dandelionRepository.findBySeq(dandelionSeq)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessage.INVALID_REQUEST.getMessage()));
 
-        findDandelion.changeStatus(Dandelion.Status.FLYING);
+        if (findDandelion.getStatus() == Dandelion.Status.HOLD) {
+            findDandelion.changeStatus(Dandelion.Status.FLYING);
+        }
 
         return createPetal(findMember, findDandelion, petalCreateSvcDto);
     }
