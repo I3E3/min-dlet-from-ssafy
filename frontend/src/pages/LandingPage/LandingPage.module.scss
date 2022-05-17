@@ -8,12 +8,12 @@ $color: blue;
 
 .menu-button {
   position: fixed;
-  right: 10px; 
-  top: 10px; 
+  right: 10px;
+  top: 10px;
   border-radius: 20%;
-  border: 1px solid white;
+  border: 3px solid white;
   z-index: 3;
-  padding: 4px;
+  padding: 4px 6px;
   padding-top: 8px;
 }
 
@@ -109,7 +109,7 @@ $color: blue;
   align-items: center;
 }
 
-.swipe-guide{
+.swipe-guide {
   animation-timing-function: ease-out;
   -moz-animation-timing-function: ease-out;
   -webkit-animation-timing-function: ease-out;
@@ -146,6 +146,16 @@ $color: blue;
   }
 }
 
+.leftseed {
+  position: absolute;
+  right: 20%;
+  font-size: 1.5em;
+  color: white;
+  top: 0%;
+  padding: 3% 0 0 0;
+  .leftseedicon {
+  }
+}
 @keyframes slideout {
   0% {
     transform: translateY(15px) rotate(-30deg);

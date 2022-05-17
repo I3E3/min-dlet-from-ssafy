@@ -1,4 +1,4 @@
-import instance from "services/axios";
+import instance from 'services/axios';
 
 const COMMON = '/dandelions';
 export const leftSeedCount = async () => {
@@ -12,8 +12,6 @@ export const postContents = async (formData: any) => {
 };
 
 export const postContentsAdd = async ({ formData, seq }: any) => {
-  console.log(formData);
-  console.log(seq);
   const result = await instance.post(COMMON + `/${seq}/petals`, formData);
   console.log(result);
   return result;
