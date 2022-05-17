@@ -1418,4 +1418,31 @@ class DandelionRepositoryTest {
         assertThat(findDandelion.getMember().getSeq()).isEqualTo(savedDandelion.getMember().getSeq());
         assertThat(findDandelion.getStatus()).isEqualTo(savedDandelion.getStatus());
     }
+
+    @Test
+    @DisplayName("민들레 READY 상태로 변경 - 변화 없음(Not Yet Blossomed)")
+    void updateDandelionStatusToReadyNotYetBlossomed() {
+        // given
+        memberRepository.save(member1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.now().plusDays(2L))
+                .community(member2.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionRepository.updateFlyingOrHoldingDandelionToReady();
+        Dandelion findDandelion = dandelionRepository.findBySeq(savedDandelion.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion.getSeq());
+        assertThat(findDandelion.getMember().getSeq()).isEqualTo(savedDandelion.getMember().getSeq());
+        assertThat(findDandelion.getStatus()).isEqualTo(savedDandelion.getStatus());
+    }
 }
