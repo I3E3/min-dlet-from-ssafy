@@ -7,6 +7,7 @@ import LandingModel from 'components/Landing/LandingModel';
 import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
 import GroupSelection from 'components/Landing/GroupSelection';
 import { ReactComponent as Menu } from 'assets/images/menu.svg';
+import { ReactComponent as SeedIcon } from 'assets/images/icon/dandelion-icon-white.svg';
 import guideDown from 'assets/images/handleDown.png';
 import guideUp from 'assets/images/handleUp.png';
 import {
@@ -21,7 +22,7 @@ const LandingPage = () => {
   const [isGroupShowing, setIsGroupShowing] = useState(false);
   let [xStart, yStart, xEnd, yEnd] = [0, 0, 0, 0];
   const [loading, setLoading] = useState(false);
-  const [prevent, setPrevent] = useState(0);
+  const [seedNum, setSeedNum] = useState(0);
   const [throttle, setThrottle] = useState(false);
   const setPetalData = useSetRecoilState(petalCatchResultList);
   const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
@@ -30,28 +31,6 @@ const LandingPage = () => {
 
   let howManyTouches = 0;
   const navigate = useNavigate();
-
-  const mocklist = [
-    {
-      contentImageUrlPath:
-        'https://blog.kakaocdn.net/dn/bVa1Ja/btqTtrb27nz/dF3Mr20K37IUZ6K2lGJGJ1/img.png',
-      createdDate: '2022-10-10',
-      message: '123',
-      nation: 'KOREA',
-      nationImageUrlPath: '123',
-      seq: 1,
-    },
-    {
-      contentImageUrlPath:
-        'https://blog.kakaocdn.net/dn/bVa1Ja/btqTtrb27nz/dF3Mr20K37IUZ6K2lGJGJ1/img.png',
-      createdDate: '2022-10-11',
-      message: '456',
-      nation: 'KOREA',
-      nationImageUrlPath: '123',
-      seq: 2,
-    },
-  ];
-
   const moveListPage = async () => {
     try {
       setThrottle(true);
@@ -67,11 +46,6 @@ const LandingPage = () => {
             color: '#fff',
           },
         });
-        // setThrottle(false);
-        // const result = mocklist;
-        // setPetalData(result.reverse());
-        // setPetalSeq(122);
-        // navigate('/contents/list');
         navigate('/');
       } else if (result.status === 200) {
         setPetalData(result.data.data.petalInfos.reverse());
@@ -80,10 +54,7 @@ const LandingPage = () => {
         setThrottle(false);
         setLoading(true);
       } else {
-        const result = mocklist;
-        setPetalData(result);
-        setPetalSeq(122);
-        navigate('/contents/list');
+        navigate('/');
       }
       //const result = mocklist;
       //console.log(result);
@@ -150,6 +121,11 @@ const LandingPage = () => {
     setPetalSeq(0);
   };
 
+  const seedApi = async (pagemove: boolean) => {
+    const Seedresult = await leftSeedCount();
+    setSeedNum(Seedresult.data.leftSeedCount);
+  };
+
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       navigate('/login');
@@ -158,6 +134,7 @@ const LandingPage = () => {
     if (patalseq !== 0) {
       resetState();
     }
+    seedApi(false);
 
     window.addEventListener('touchstart', handleTouchStart);
     window.addEventListener('touchend', handleTouchEnd);
@@ -176,7 +153,11 @@ const LandingPage = () => {
         overflow: 'hidden',
       }}
     >
-      {/* <h1>제발!!</h1> */}
+      <div className={cx('leftseed')}>
+        <SeedIcon className={cx('leftseedicon')} width={28} height={28} />X{' '}
+        {seedNum}
+      </div>
+
       <button
         className={cx('menu-button')}
         onClick={() => {
@@ -185,7 +166,7 @@ const LandingPage = () => {
       >
         {/* <button className={cx('menu-button')}> */}{' '}
         {/* <Toaster position="top-center" reverseOrder={false} /> */}
-        <Menu className={cx('menu-svg')}></Menu>
+        <Menu className={cx('menu-svg')} />
       </button>
       {isShowing && <LandingModel></LandingModel>}
       {isGroupShowing && (

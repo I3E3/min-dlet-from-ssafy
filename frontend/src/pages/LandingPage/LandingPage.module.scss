@@ -11,9 +11,9 @@ $color: blue;
   right: 10px;
   top: 10px;
   border-radius: 20%;
-  border: 1px solid white;
+  border: 3px solid white;
   z-index: 3;
-  padding: 4px;
+  padding: 4px 6px;
   padding-top: 8px;
 }
 
@@ -123,6 +123,17 @@ $color: blue;
   position: absolute;
   z-index: 9999;
   animation: ani 1s infinite alternate;
+}
+
+.leftseed {
+  position: absolute;
+  top: 2%;
+  right: 20%;
+  font-size: 1.25em;
+  color: white;
+  .leftseedicon {
+    padding: 10% 0 0 0;
+  }
 }
 
 @keyframes ani {
