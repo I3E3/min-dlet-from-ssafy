@@ -405,6 +405,7 @@ function MyGardenDandelion2({ dandelion }) {
               <Sign>
                 <img src={sign} alt="팻말" />
                 <Dday>{date}</Dday>
+                {/* <span>{dandelion.status}</span> */}
                 {blossom ? (
                   <Blossom>
                     <img src={flower} alt="꽃" />
@@ -416,13 +417,6 @@ function MyGardenDandelion2({ dandelion }) {
             )}
           </div>
         )}
-        {/* {blossom ? (
-          <Blossom>
-            <img src={flower} alt="꽃" />
-          </Blossom>
-        ) : (
-          <div></div>
-        )} */}
       </div>
     </div>
   );
