@@ -25,10 +25,6 @@ const Blow = ({ onClick, form, setForm }: any) => {
     //setTimeout(pagemove, 300);
   };
 
-  const pagemove = () => {
-    navigate('/');
-  };
-
   const sendDataForm = async () => {
     console.log(form.date);
     const formData = new FormData();

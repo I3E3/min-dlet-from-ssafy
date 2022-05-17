@@ -11,7 +11,7 @@ export default function Earth() {
 
   useFrame(() => {
     // dandle.current.rotation.y += 0.005;
-    if (earth.current.position.y < 90) earth.current.position.y += 0.5;
+    if (earth.current.position.y < 70) earth.current.position.y += 0.9;
   });
 
   return (
