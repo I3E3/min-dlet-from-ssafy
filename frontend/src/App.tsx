@@ -4,10 +4,12 @@ import Router from 'routes/routes';
 import { BrowserView, MobileView } from 'react-device-detect';
 import LoginRecoil from 'utils/LoginRecoil';
 import { Toaster } from 'react-hot-toast';
+import MobileGuidePage from 'pages/MobileGuidePage/MobileGuidePage';
 
 function setScreenSize() {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', `${vh}px`);
+  console.log('실행!');
 }
 setScreenSize();
 window.addEventListener('resize', setScreenSize);
@@ -19,7 +21,7 @@ function App() {
         <Toaster position="top-center" />
         <LoginRecoil />
         <BrowserView>
-          <h1> 모바일에 최적화 된 페이지 입니다. 모바일로 접속해주세요! </h1>
+          <MobileGuidePage />
         </BrowserView>
         <MobileView>
           <Router />
