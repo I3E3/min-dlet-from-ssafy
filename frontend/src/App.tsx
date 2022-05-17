@@ -3,7 +3,6 @@ import { RecoilRoot } from 'recoil';
 import Router from 'routes/routes';
 import { BrowserView, MobileView } from 'react-device-detect';
 import LoginRecoil from 'utils/LoginRecoil';
-import Fullscreen from 'utils/Fullscreen';
 import { Toaster } from 'react-hot-toast';
 import MobileGuidePage from 'pages/MobileGuidePage/MobileGuidePage';
 
@@ -17,11 +16,14 @@ window.addEventListener('resize', setScreenSize);
 
 function App() {
   return (
-    <div>
+    <div onClick={() => {
+      if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen()
+      }
+    }}>
       <RecoilRoot>
         <Toaster position="top-center" />
         <LoginRecoil />
-        <Fullscreen />
         <BrowserView>
           <MobileGuidePage />
         </BrowserView>

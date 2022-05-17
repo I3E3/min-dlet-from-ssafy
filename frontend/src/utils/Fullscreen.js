@@ -7,6 +7,7 @@ export default function Fullscreen () {
 	document.documentElement.webkitRequestFullScreen;
 
   function requestFullscreen(element) {
+    console.log('히히')
     if (element.requestFullscreen) {
       element.requestFullscreen();
     } else if (element.mozRequestFullScreen) {
@@ -17,10 +18,12 @@ export default function Fullscreen () {
   }
 
   useEffect(()=> {
+    console.log('하이', document.fullscreenEnabled)
     if (document.fullscreenEnabled) {
       console.log("hello")
+      console.log(document.documentElement)
       requestFullscreen(document.documentElement);
     }
   }, [])
-  return null
+  return <button onClick={() =>{requestFullscreen(document.documentElement)}}>눌러봐!</button>
 }
