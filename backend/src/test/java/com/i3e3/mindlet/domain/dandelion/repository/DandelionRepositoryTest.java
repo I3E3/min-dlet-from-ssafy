@@ -1350,4 +1350,26 @@ class DandelionRepositoryTest {
         assertThat(findDandelion1.getMember().getSeq()).isEqualTo(savedDandelion1.getMember().getSeq());
         assertThat(findDandelion1.getStatus()).isEqualTo(Dandelion.Status.READY);
     }
+
+    @Test
+    @DisplayName("민들레 READY 상태로 변경 - 변화 없음(From FLYING And Deleted)")
+    void updateDandelionStatusToReadySuccessFromFlyingAndDeleted() {
+        // given
+        memberRepository.save(member1);
+        dandelion1.delete();
+        dandelion1.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        em.flush();
+        em.clear();
+
+        // when
+        dandelionRepository.updateFlyingOrHoldingDandelionToReady();
+        Dandelion findDandelion1 = dandelionRepository.findBySeqContainsDeleted(savedDandelion1.getSeq())
+                .orElse(null);
+
+        // then
+        assertThat(findDandelion1.getSeq()).isEqualTo(savedDandelion1.getSeq());
+        assertThat(findDandelion1.getMember().getSeq()).isEqualTo(savedDandelion1.getMember().getSeq());
+        assertThat(findDandelion1.getStatus()).isEqualTo(savedDandelion1.getStatus());
+    }
 }
