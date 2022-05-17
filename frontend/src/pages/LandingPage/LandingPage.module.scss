@@ -17,6 +17,22 @@ $color: blue;
   padding-top: 8px;
 }
 
+.music-button {
+  position: fixed;
+  right: 11px;
+  top: 70px;
+  border-radius: 50%;
+  border: 2px solid white;
+  z-index: 3;
+  object-fit: cover;
+  padding: 6px;
+  svg {
+    width: 25px;
+    height: 25px;
+    margin-left: -2px;
+  }
+}
+
 .menu-svg {
   z-index: 3;
   width: 24px;

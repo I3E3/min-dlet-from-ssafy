@@ -7,22 +7,41 @@ import album from "assets/images/photo-album.png";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useEffect } from "react";
+import { useSound } from 'use-sound';
+import ButtonEffect from 'assets/musics/button_effect.wav'
+import { useRecoilValue } from "recoil";
+import memberState from "utils/memberState";
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
 
 function MyCabinetMain() {
   const navigate = useNavigate();
+  const member = useRecoilValue(memberState);
   // const { isLoading, data } = useQuery(["getCabinets"], () => getCabinets());
+  const [play, ] = useSound(ButtonEffect, {
+    volume: 0.4,
+    interrupt: true,
+  });
+  
   const onSettingsClick = () => {
+    if (!member.soundOff) {
+      play()
+    }
     navigate(`/settings`);
   };
 
   const onAlbumClick = () => {
+    if (!member.soundOff) {
+      play()
+    }
     navigate(`/mygarden/album`);
   };
 
   const onGardenClick = () => {
+    if (!member.soundOff) {
+      play()
+    }
     navigate(`/mygarden`);
   };
 

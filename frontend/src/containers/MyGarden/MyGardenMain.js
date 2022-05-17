@@ -10,12 +10,21 @@ import MyGardenDandelion3 from "./MyGardenDandelion3";
 import MyGardenNoDandelion from "./MyGardenNoDandelion";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { useSound } from 'use-sound';
+import ButtonEffect from 'assets/musics/button_effect.wav'
+import { useRecoilValue } from "recoil";
+import memberState from "utils/memberState";
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
 
 function MyGardenMain() {
+  const member = useRecoilValue(memberState);
   const navigate = useNavigate();
+  const [play, ] = useSound(ButtonEffect, {
+    volume: 0.4,
+    interrupt: true,
+  });
 
   const [dandelions, setDandelions] = useState([]);
   const [dandelion0, setDandelion0] = useState(true);
@@ -25,17 +34,24 @@ function MyGardenMain() {
   const [dandelion4, setDandelion4] = useState(true);
 
   const onHomeClick = () => {
+    if (!member.soundOff) {
+    play()}
     navigate(`/`);
   };
   const onSettingsClick = () => {
+    if (!member.soundOff) {
+    play()}
     navigate(`/settings`);
   };
 
   const onAlbumClick = () => {
+    if (!member.soundOff) {
+    play()}
     navigate(`/mygarden/album`);
   };
 
   const onCabinetClick = () => {
+    play()
     navigate(`/mygarden/cabinet`);
   };
 

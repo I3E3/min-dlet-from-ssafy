@@ -8,8 +8,11 @@ import garden from "assets/images/garden.png";
 import pencil from "assets/images/pencil.png";
 import album from "assets/images/photo-album.png";
 import Swal from "sweetalert2";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import memberState from "utils/memberState";
+import { useSound } from 'use-sound';
+import ButtonEffect from 'assets/musics/button_effect.wav'
+
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -20,7 +23,11 @@ const MemberForm = styled.div`
 
 function SettingsMain() {
   // 변경해야함 recoil로
-  const [member, setMember] = useRecoilState(memberState);
+  const member = useRecoilValue(memberState);
+  const [play, ] = useSound(ButtonEffect, {
+    volume: 0.4,
+    interrupt: true,
+  });
 
   const soundOnOff = async (sound) => {
     const memberSeq = member.seq;
@@ -43,14 +50,23 @@ function SettingsMain() {
 
   const navigate = useNavigate();
   const onGardenClick = () => {
+    if (!member.soundOff) {
+      play()
+    }
     navigate(`/mygarden`);
   };
 
   const onAlbumClick = () => {
+    if (!member.soundOff) {
+      play()
+    }
     navigate(`/mygarden/album`);
   };
 
   const onCabinetClick = () => {
+    if (!member.soundOff) {
+      play()
+    }
     navigate(`/mygarden/cabinet`);
   };
 

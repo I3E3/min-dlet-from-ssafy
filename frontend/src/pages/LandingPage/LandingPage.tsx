@@ -13,16 +13,20 @@ import {
   leftSeedCount,
   resetContentsState,
 } from "services/api/Contents";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import memberState from "utils/memberState";
 import { ReactComponent as Tap } from "assets/images/Landing/tap.svg";
 import { ReactComponent as DownArrow } from "assets/images/Landing/down-arrow.svg";
 import { ReactComponent as UpArrow } from "assets/images/Landing/up-arrow.svg";
 import { ReactComponent as Dandel } from "assets/images/Landing/dandelion-2.svg";
+import { ReactComponent as MusicOn } from "assets/images/Landing/music.svg";
+import { ReactComponent as MusicOff } from "assets/images/Landing/music_muted.svg";
 import { useSound } from "use-sound";
 import Landing from "assets/musics/Landing2.mp3";
 import ButtonEffect from "assets/musics/button_effect.wav";
+import axios from "axios";
 
+const BaseURL = process.env.REACT_APP_BASE_URL;
 const cx = classNames.bind(styles);
 const musicOn = [false];
 
@@ -37,12 +41,12 @@ const LandingPage = () => {
   const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
   const petaldata = useRecoilValue(petalCatchResultList);
   const patalseq = useRecoilValue(petalCatchResultSeq);
-  const member = useRecoilValue(memberState);
+  const [member, setMember] = useRecoilState(memberState);
   const [isGardenShowing, setIsGardenShowing] = useState(false);
   const [isGuideShowing, setIsGuideShowing] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(member.soundOff);
   const [play1, obj1] = useSound(Landing, {
-    volume: 0.5,
+    volume: 0.35,
     interrupt: true,
   });
   const sound1 = obj1.sound
@@ -149,6 +153,30 @@ const LandingPage = () => {
     setSeedNum(Seedresult.data.leftSeedCount);
   };
 
+  const handleMute = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!member.soundOff) {
+      sound1.mute(true)
+    } else {
+      sound1.mute(false)
+    }
+    // const memberSeq = member.seq;
+    // const res = await axios({
+    //   url: `${BaseURL}/${memberSeq}/sound`,
+    //   method: "patch",
+    //   data: {
+    //     soundOff: !member.soundOff,
+    //   },
+    //   headers: {
+    //     Authorization: "Bearer " + localStorage.getItem('token'),
+    //   }
+    // })
+    // console.log(res)
+    const newMember = {...member}
+    newMember.soundOff = !member.soundOff
+    setMember(newMember)
+  }
+
   useEffect(() => {
     setTimeout(() => {
       setIsGardenShowing(true);
@@ -213,6 +241,9 @@ const LandingPage = () => {
             className={cx('menu-button')}
             onClick={(e) => {
               e.stopPropagation();
+              if (!member.soundOff) {
+                play2()
+              }
               setIsGroupShowing((isGroupShowing) => !isGroupShowing);
             }}
           >
@@ -224,6 +255,18 @@ const LandingPage = () => {
           </div>
         </>
       )}
+    
+    {isGardenShowing && !member.soundOff &&
+      (<button className={cx('music-button')}
+      onClick={handleMute}>
+        <MusicOn />
+      </button>)}
+    {isGardenShowing && member.soundOff &&
+    (<button className={cx('music-button')}
+    onClick={handleMute}>
+        <MusicOff />
+      </button>)}
+
       {isShowing && <LandingModel />}
       {isGroupShowing && (
         <GroupSelection setIsGroupShowing={setIsGroupShowing} />
@@ -272,7 +315,8 @@ const LandingPage = () => {
         <div
           className={cx('garden')}
           style={{}}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             navigate('/mygarden');
           }}
         >
