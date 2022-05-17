@@ -23,6 +23,7 @@ import { ReactComponent as UpArrow } from "assets/images/Landing/up-arrow.svg";
 import { ReactComponent as Dandel } from "assets/images/Landing/dandelion-2.svg";
 import { useSound } from "use-sound";
 import Landing from "assets/musics/Landing2.mp3";
+import ButtonEffect from "assets/musics/button_effect.wav";
 
 const cx = classNames.bind(styles);
 const musicOn = [false];
@@ -41,10 +42,16 @@ const LandingPage = () => {
   const member = useRecoilValue(memberState);
   const [isGuideShowing, setIsGuideShowing] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(member.soundOff);
-  const [play, { stop, sound }] = useSound(Landing, {
+  const [play1, obj1] = useSound(Landing, {
     volume: 0.5,
     interrupt: true,
   });
+  const sound1 = obj1.sound
+  const [play2, obj2] = useSound(ButtonEffect, {
+    volume: 0.4,
+    interrupt: true,
+  });
+  const sound2 = obj2.sound
 
   let howManyTouches = 0;
   const navigate = useNavigate();
@@ -181,8 +188,8 @@ const LandingPage = () => {
       onClick={() => {
         if (!musicOn[0] && !member.soundOff) {
           // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
-          if (sound) {
-            play();
+          if (sound1) {
+            play1();
             musicOn[0] = true;
           }
         }
@@ -193,6 +200,7 @@ const LandingPage = () => {
         className={cx("menu-button")}
         onClick={(e) => {
           e.stopPropagation();
+          play2()
           setIsGroupShowing((isGroupShowing) => !isGroupShowing);
         }}
       >
@@ -248,16 +256,27 @@ const LandingPage = () => {
       <div
         className={cx('garden')}
         style={{}}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation()
           navigate('/mygarden');
         }}
       >
         내 꽃밭
       </div>
-      {/* <button onClick={(e) => {
+      <button onClick={(e) => {
         e.stopPropagation();
-        stop()
-      }} style={{position: "fixed", bottom: "10px", fontSize: "50px"}}>얍!</button> */}
+        console.log('되는디...')
+        console.log(document.querySelectorAll("audio"))
+        console.log(sound1)
+        sound1.mute(true)
+      }} style={{position: "fixed", bottom: "10px", fontSize: "50px"}}>얍!</button>
+      <button onClick={(e) => {
+        e.stopPropagation();
+        // console.log('되는디...')
+        // console.log(document.querySelectorAll("audio"))
+        // console.log(sound)
+        sound1.mute(false)
+      }} style={{position: "fixed", bottom: "150px", fontSize: "50px"}}>얍!</button>
       {/* <button onClick={(e) => {
         console.log('눌림')
         sound._muted = false

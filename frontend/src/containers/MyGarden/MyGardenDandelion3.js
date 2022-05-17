@@ -313,6 +313,7 @@ function MyGardenDandelion3({ dandelion }) {
   }
   useEffect(() => {
     getDiff(dandelion.blossomedDate);
+    console.log("이번 것", status, dandelion)
     if (status === "FLYING" || status === "ALBUM") {
       setRecord(false);
     } else if (status === "RETURN") {
@@ -324,8 +325,6 @@ function MyGardenDandelion3({ dandelion }) {
       setReturned(false);
       setBlossom(true);
     }
-    setBlossom(true);
-    setReturned(false);
   }, []);
 
   return (

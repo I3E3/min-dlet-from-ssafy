@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import MyGardenDandelion3 from "./MyGardenDandelion3";
 import MyGardenNoDandelion from "./MyGardenNoDandelion";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -79,6 +80,26 @@ function MyGardenMain() {
 
   return (
     <div className={cx("container")}>
+      <motion.div
+        key={1}
+        initial="hidden"
+        animate="visible"
+        exit={{marginTop: "-300px",
+        opacity: 0,}}
+        variants={{
+          hidden: {
+            marginTop: "-300px",
+            opacity: 0,
+          },
+          visible: {
+            marginTop: 0,
+            opacity: 1,
+            transition: {
+              delay: 0.5,
+            },
+          },
+        }}
+      >
       <div className={cx("btns")}>
         <div>
           <button type="button" onClick={onHomeClick}>
@@ -106,7 +127,7 @@ function MyGardenMain() {
 
       <div className={cx("sign_boxs")}>
         {dandelion0 ? (
-          <div className={cx("sign_box_1")}>
+          <div className={cx("sign_box_5")}>
             {dandelions
               .slice(0, 1)
               .map((dandelion, index) =>
@@ -125,13 +146,13 @@ function MyGardenMain() {
           ))} */}
           </div>
         ) : (
-          <div className={cx("sign_box_1")}>
+          <div className={cx("sign_box_5")}>
             <MyGardenNoDandelion />
           </div>
         )}
 
         {dandelion1 ? (
-          <div className={cx("sign_box_2")}>
+          <div className={cx("sign_box_4")}>
             {dandelions
               .slice(1, 2)
               .map((dandelion, index) =>
@@ -150,7 +171,7 @@ function MyGardenMain() {
           ))} */}
           </div>
         ) : (
-          <div className={cx("sign_box_2")}>
+          <div className={cx("sign_box_4")}>
             <MyGardenNoDandelion />
           </div>
         )}
@@ -181,7 +202,7 @@ function MyGardenMain() {
         )}
 
         {dandelion3 ? (
-          <div className={cx("sign_box_4")}>
+          <div className={cx("sign_box_2")}>
             {dandelions
               .slice(3, 4)
               .map((dandelion, index) =>
@@ -200,13 +221,13 @@ function MyGardenMain() {
           ))} */}
           </div>
         ) : (
-          <div className={cx("sign_box_4")}>
+          <div className={cx("sign_box_2")}>
             <MyGardenNoDandelion />
           </div>
         )}
 
         {dandelion4 ? (
-          <div className={cx("sign_box_5")}>
+          <div className={cx("sign_box_1")}>
             {dandelions
               .slice(4, 5)
               .map((dandelion, index) =>
@@ -225,7 +246,7 @@ function MyGardenMain() {
           ))} */}
           </div>
         ) : (
-          <div className={cx("sign_box_5")}>
+          <div className={cx("sign_box_1")}>
             <MyGardenNoDandelion />
           </div>
         )}
@@ -256,6 +277,7 @@ function MyGardenMain() {
             )}
         </div> */}
       </div>
+      </motion.div>
     </div>
   );
 }
