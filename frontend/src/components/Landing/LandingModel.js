@@ -9,14 +9,14 @@ const dandles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 function FallbackTitle() {
   return (
     <Html center>
-      <h1 style={{ color: 'white' }}>
+      <div style={{ color: 'white', fontSize: '3em', fontWeight: '1000' }}>
         Blow
         <br />
         Your
         <br />
         Dandelion
         <br />
-      </h1>
+      </div>
     </Html>
   );
 }

@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { sound } from 'utils/soundRecognize';
 import BlowAnimation from 'components/Animation/BlowAnimation/BlowAnimation';
+import classNames from 'classnames/bind';
 import { postContents } from 'services/api/Contents';
 import toast, { Toaster } from 'react-hot-toast';
+import styles from './Blow.module.scss';
+const cx = classNames.bind(styles);
 const Blow = ({ onClick, form, setForm }: any) => {
   const [isShowing, setIsShowing] = useState(true);
   const [loading, SetLoading] = useState(false);
   const [endstate, SetEndstate] = useState(false);
+  const [touchstate, SetTouchstate] = useState(false);
   const [throttle, setThrottle] = useState(false);
   const [checkState, SetCheckState] = useState(0);
   const [possibleState, SetState] = useState(0);
@@ -92,6 +96,10 @@ const Blow = ({ onClick, form, setForm }: any) => {
     SetState(state);
   };
 
+  const touchDetect = (state: boolean) => {
+    SetTouchstate(true);
+  };
+
   const handleSend = () => {
     if (throttle) return;
     if (!throttle) {
@@ -119,12 +127,18 @@ const Blow = ({ onClick, form, setForm }: any) => {
     >
       <Toaster position="top-center" reverseOrder={false} />
       {isShowing && (
-        <BlowAnimation
-          endstate={stateDetect}
-          msgCheck={msgDetect}
-          isPossible={possible}
-          windState={wind}
-        ></BlowAnimation>
+        <>
+          {possibleState && !wind && (
+            <div className={cx('windGuide')}>바람을 불어주세요</div>
+          )}
+          <BlowAnimation
+            endstate={stateDetect}
+            msgCheck={msgDetect}
+            isPossible={possible}
+            windState={wind}
+            touchEvt={touchDetect}
+          />
+        </>
       )}
     </div>
   );

@@ -56,7 +56,8 @@ export default function FlyingSeedAnimation({
   }, [wind]);
 
   const eventClick = () => {
-    console.log('야야야');
+    console.log('터치 이벤트');
+    touch(true);
   };
 
   return (

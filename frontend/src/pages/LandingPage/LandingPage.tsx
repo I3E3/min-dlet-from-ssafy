@@ -198,11 +198,11 @@ const LandingPage = () => {
       >
         <Menu className={cx("menu-svg")} />
       </button>
-      <div className={cx("leftseed")}>
-        <SeedIcon className={cx("leftseedicon")} width={28} height={28} />X{" "}
-        {seedNum}
+      <div className={cx('leftseed')}>
+        <SeedIcon className={cx('leftseedicon')} width={30} height={30} />
+        {seedNum} / 5
       </div>
-      {isShowing && <LandingModel></LandingModel>}
+      {isShowing && <LandingModel />}
       {isGroupShowing && (
         <GroupSelection setIsGroupShowing={setIsGroupShowing} />
       )}
@@ -232,8 +232,8 @@ const LandingPage = () => {
               height: "min(80px, 10vh)",
               position: "fixed",
               bottom: "15vh",
-              left: "12px",
               objectFit: "contain",
+              left: "12px",
               display: "flex",
             }}
           >
@@ -245,29 +245,15 @@ const LandingPage = () => {
           </div>
         </>
       )}
-      <h1
-        style={{
-          height: "min(80px, 10vh)",
-          width: "auto",
-          color: "white",
-          fontSize: "20px",
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          objectFit: "contain",
-          cursor: "pointer",
-        }}
+      <div
+        className={cx('garden')}
+        style={{}}
         onClick={() => {
-          navigate("/mygarden");
+          navigate('/mygarden');
         }}
       >
-        flower garden
-      </h1>
-      {/* <Dandel style={{
-          height: "min(80px, 10vh)", width: "auto",
-          position: "fixed", bottom: "20px", right: "20px", objectFit: "contain"}}
-          onClick={() => {navigate('/mygarden')}} 
-      /> */}
+        내 꽃밭
+      </div>
       {/* <button onClick={(e) => {
         e.stopPropagation();
         stop()

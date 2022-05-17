@@ -38,6 +38,7 @@ export default function BlowAnimation({
   msgCheck,
   isPossible,
   windState,
+  touchEvt,
 }) {
   const [appear, SetAppear] = useState(false);
   const [nextstate, SetNext] = useState(false);
@@ -71,6 +72,10 @@ export default function BlowAnimation({
 
   const petalAppear = (petal) => {
     SetPetal(petal);
+  };
+
+  const touchEvent = (state) => {
+    touchEvt(state);
   };
 
   useEffect(() => {
@@ -109,6 +114,7 @@ export default function BlowAnimation({
             wind={windState}
             ready={detectReady}
             appear={appearState}
+            touch={touchEvent}
           />
         )}
         <directionalLight position={[-1, -0.3, -0.866]} intensity={1} />

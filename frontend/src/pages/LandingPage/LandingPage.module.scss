@@ -11,7 +11,7 @@ $color: blue;
   right: 10px;
   top: 10px;
   border-radius: 20%;
-  border: 3px solid white;
+  border: 2px solid white;
   z-index: 3;
   padding: 4px 6px;
   padding-top: 8px;
@@ -110,12 +110,13 @@ $color: blue;
 }
 
 .swipe-guide {
+  opacity: 0.5;
   animation-timing-function: ease-out;
   -moz-animation-timing-function: ease-out;
   -webkit-animation-timing-function: ease-out;
-  -moz-animation-duration: 0.5s;
-  -webkit-animation-duration: 0.5s;
-  animation-duration: 0.5s;
+  -moz-animation-duration: 1s;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
   -moz-animation-name: slidein;
   -webkit-animation-name: slidein;
   animation-name: slidein;
@@ -136,6 +137,7 @@ $color: blue;
   }
 
   &__arrow1 {
+    opacity: 0.5;
     -moz-animation-name: slidein2;
     -webkit-animation-name: slidein2;
     animation-name: slidein2;
@@ -145,6 +147,7 @@ $color: blue;
   }
 
   &__arrow2 {
+    opacity: 0.5;
     -moz-animation-name: slideout2;
     -webkit-animation-name: slideout2;
     animation-name: slideout2;
@@ -172,6 +175,7 @@ $color: blue;
   top: 0%;
   padding: 3% 0 0 0;
   .leftseedicon {
+    padding: 0 3% 0 0;
   }
 }
 @keyframes slideout {
@@ -182,6 +186,16 @@ $color: blue;
   100% {
     transform: translateY(-15px) rotate(0deg);
   }
+}
+.garden {
+  padding: 1vh 3vw;
+  width: auto;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  objectfit: contain;
+  color: white;
+  border: 2px solid white;
 }
 
 @keyframes slideout2 {
