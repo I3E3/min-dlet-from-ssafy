@@ -20,4 +20,6 @@ public interface DandelionRepositoryCustom {
     long countParticipationDandelions(Long memberSeq);
 
     Optional<List<Dandelion>> findParticipationByMemberSeqAndPageable(Long memberSeq, Pageable pageable);
+
+    void updateFlyingOrHoldingDandelionToReady();
 }
