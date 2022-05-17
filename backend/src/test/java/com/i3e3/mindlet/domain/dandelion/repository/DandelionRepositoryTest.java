@@ -1311,87 +1311,111 @@ class DandelionRepositoryTest {
 
     @Test
     @DisplayName("민들레 READY 상태로 변경 - 성공(From FLYING)")
-    void updateDandelionStatusToReadySuccessFromFlying() {
+    void updateDandelionStatusToReadyFromFlying() {
         // given
         memberRepository.save(member1);
-        dandelion1.changeStatus(Dandelion.Status.FLYING);
-        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.now().plusDays(1L))
+                .community(member2.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
         em.flush();
         em.clear();
 
         // when
         dandelionRepository.updateFlyingOrHoldingDandelionToReady();
-        Dandelion findDandelion1 = dandelionRepository.findBySeq(savedDandelion1.getSeq())
+        Dandelion findDandelion = dandelionRepository.findBySeq(savedDandelion.getSeq())
                 .orElse(null);
 
         // then
-        assertThat(findDandelion1.getSeq()).isEqualTo(savedDandelion1.getSeq());
-        assertThat(findDandelion1.getMember().getSeq()).isEqualTo(savedDandelion1.getMember().getSeq());
-        assertThat(findDandelion1.getStatus()).isEqualTo(Dandelion.Status.READY);
+        assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion.getSeq());
+        assertThat(findDandelion.getMember().getSeq()).isEqualTo(savedDandelion.getMember().getSeq());
+        assertThat(findDandelion.getStatus()).isEqualTo(Dandelion.Status.READY);
     }
 
     @Test
     @DisplayName("민들레 READY 상태로 변경 - 성공(From HOLD)")
-    void updateDandelionStatusToReadySuccessFromHold() {
+    void updateDandelionStatusToReadyFromHold() {
         // given
         memberRepository.save(member1);
-        dandelion1.changeStatus(Dandelion.Status.HOLD);
-        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.now().plusDays(1L))
+                .community(member2.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.changeStatus(Dandelion.Status.HOLD);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
         em.flush();
         em.clear();
 
         // when
         dandelionRepository.updateFlyingOrHoldingDandelionToReady();
-        Dandelion findDandelion1 = dandelionRepository.findBySeq(savedDandelion1.getSeq())
+        Dandelion findDandelion = dandelionRepository.findBySeq(savedDandelion.getSeq())
                 .orElse(null);
 
         // then
-        assertThat(findDandelion1.getSeq()).isEqualTo(savedDandelion1.getSeq());
-        assertThat(findDandelion1.getMember().getSeq()).isEqualTo(savedDandelion1.getMember().getSeq());
-        assertThat(findDandelion1.getStatus()).isEqualTo(Dandelion.Status.READY);
+        assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion.getSeq());
+        assertThat(findDandelion.getMember().getSeq()).isEqualTo(savedDandelion.getMember().getSeq());
+        assertThat(findDandelion.getStatus()).isEqualTo(Dandelion.Status.READY);
     }
 
     @Test
     @DisplayName("민들레 READY 상태로 변경 - 변화 없음(From FLYING And Deleted)")
-    void updateDandelionStatusToReadySuccessFromFlyingAndDeleted() {
+    void updateDandelionStatusToReadyFromFlyingAndDeleted() {
         // given
         memberRepository.save(member1);
-        dandelion1.delete();
-        dandelion1.changeStatus(Dandelion.Status.FLYING);
-        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.now().plusDays(1L))
+                .community(member2.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.delete();
+        newDandelion.changeStatus(Dandelion.Status.FLYING);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
         em.flush();
         em.clear();
 
         // when
         dandelionRepository.updateFlyingOrHoldingDandelionToReady();
-        Dandelion findDandelion1 = dandelionRepository.findBySeqContainsDeleted(savedDandelion1.getSeq())
+        Dandelion findDandelion = dandelionRepository.findBySeqContainsDeleted(savedDandelion.getSeq())
                 .orElse(null);
 
         // then
-        assertThat(findDandelion1.getSeq()).isEqualTo(savedDandelion1.getSeq());
-        assertThat(findDandelion1.getMember().getSeq()).isEqualTo(savedDandelion1.getMember().getSeq());
-        assertThat(findDandelion1.getStatus()).isEqualTo(savedDandelion1.getStatus());
+        assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion.getSeq());
+        assertThat(findDandelion.getMember().getSeq()).isEqualTo(savedDandelion.getMember().getSeq());
+        assertThat(findDandelion.getStatus()).isEqualTo(savedDandelion.getStatus());
     }
 
     @Test
     @DisplayName("민들레 READY 상태로 변경 - 변화 없음(From HOLD And Deleted)")
-    void updateDandelionStatusToReadySuccessFromHoldAndDeleted() {
+    void updateDandelionStatusToReadyFromHoldAndDeleted() {
         // given
         memberRepository.save(member1);
-        dandelion1.delete();
-        dandelion1.changeStatus(Dandelion.Status.HOLD);
-        Dandelion savedDandelion1 = dandelionRepository.save(dandelion1);
+        Dandelion newDandelion = Dandelion.builder()
+                .blossomedDate(LocalDate.now().plusDays(1L))
+                .community(member2.getAppConfig().getCommunity())
+                .flowerSignNumber(1)
+                .member(member1)
+                .build();
+        newDandelion.delete();
+        newDandelion.changeStatus(Dandelion.Status.HOLD);
+        Dandelion savedDandelion = dandelionRepository.save(newDandelion);
         em.flush();
         em.clear();
 
         // when
         dandelionRepository.updateFlyingOrHoldingDandelionToReady();
-        Dandelion findDandelion1 = dandelionRepository.findBySeqContainsDeleted(savedDandelion1.getSeq())
+        Dandelion findDandelion = dandelionRepository.findBySeqContainsDeleted(savedDandelion.getSeq())
                 .orElse(null);
 
         // then
-        assertThat(findDandelion1.getSeq()).isEqualTo(savedDandelion1.getSeq());
-        assertThat(findDandelion1.getMember().getSeq()).isEqualTo(savedDandelion1.getMember().getSeq());
-        assertThat(findDandelion1.getStatus()).isEqualTo(savedDandelion1.getStatus());
+        assertThat(findDandelion.getSeq()).isEqualTo(savedDandelion.getSeq());
+        assertThat(findDandelion.getMember().getSeq()).isEqualTo(savedDandelion.getMember().getSeq());
+        assertThat(findDandelion.getStatus()).isEqualTo(savedDandelion.getStatus());
     }
 }
