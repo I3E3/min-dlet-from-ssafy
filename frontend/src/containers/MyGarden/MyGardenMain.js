@@ -6,6 +6,7 @@ import styles from "./MyGarden.module.scss";
 import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import MyGardenDandelion2 from "./MyGardenDandelion2";
+import MyGardenDandelion3 from "./MyGardenDandelion3";
 import axios from "axios";
 
 const cx = classNames.bind(styles);

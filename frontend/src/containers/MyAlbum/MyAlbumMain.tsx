@@ -7,6 +7,7 @@ import garden from "assets/images/garden.png";
 import pencil from "assets/images/pencil.png";
 import MyAlbumSide from './MyAlbumSide';
 import axios from 'axios';
+import Flip from 'assets/musics/flip.wav'
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
