@@ -1,28 +1,26 @@
-import React, { Suspense, useEffect, useState } from "react";
-import classNames from "classnames/bind";
-import styles from "./LandingPage.module.scss";
-import { useNavigate } from "react-router";
-import toast, { Toaster } from "react-hot-toast";
-import LandingModel from "components/Landing/LandingModel";
-import { petalCatchResultList, petalCatchResultSeq } from "atoms/atoms";
-import GroupSelection from "components/Landing/GroupSelection";
-import { ReactComponent as Menu } from "assets/images/menu.svg";
-import { ReactComponent as SeedIcon } from "assets/images/icon/dandelion-icon-white.svg";
-import guideDown from "assets/images/handleDown.png";
-import guideUp from "assets/images/handleUp.png";
+import React, { Suspense, useEffect, useState } from 'react';
+import classNames from 'classnames/bind';
+import styles from './LandingPage.module.scss';
+import { useNavigate } from 'react-router';
+import toast, { Toaster } from 'react-hot-toast';
+import LandingModel from 'components/Landing/LandingModel';
+import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
+import GroupSelection from 'components/Landing/GroupSelection';
+import { ReactComponent as Menu } from 'assets/images/menu.svg';
+import { ReactComponent as SeedIcon } from 'assets/images/icon/dandelion-icon-white.svg';
 import {
   getContents,
   leftSeedCount,
   resetContentsState,
-} from "services/api/Contents";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import memberState from "utils/memberState";
-import { ReactComponent as Tap } from "assets/images/Landing/tap.svg";
-import { ReactComponent as DownArrow } from "assets/images/Landing/down-arrow.svg";
-import { ReactComponent as UpArrow } from "assets/images/Landing/up-arrow.svg";
-import { ReactComponent as Dandel } from "assets/images/Landing/dandelion-2.svg";
-import { useSound } from "use-sound";
-import Landing from "assets/musics/Landing2.mp3";
+} from 'services/api/Contents';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import memberState from 'utils/memberState';
+import { ReactComponent as Tap } from 'assets/images/Landing/tap.svg';
+import { ReactComponent as DownArrow } from 'assets/images/Landing/down-arrow.svg';
+import { ReactComponent as UpArrow } from 'assets/images/Landing/up-arrow.svg';
+import { ReactComponent as Dandel } from 'assets/images/Landing/dandelion-2.svg';
+import { useSound } from 'use-sound';
+import Landing from 'assets/musics/Landing2.mp3';
 
 const cx = classNames.bind(styles);
 const musicOn = [false];
@@ -39,6 +37,7 @@ const LandingPage = () => {
   const petaldata = useRecoilValue(petalCatchResultList);
   const patalseq = useRecoilValue(petalCatchResultSeq);
   const member = useRecoilValue(memberState);
+  const [isGardenShowing, setIsGardenShowing] = useState(false);
   const [isGuideShowing, setIsGuideShowing] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(member.soundOff);
   const [play, { stop, sound }] = useSound(Landing, {
@@ -53,26 +52,25 @@ const LandingPage = () => {
     try {
       setThrottle(true);
       const result = await getContents();
-      console.log(result);
-      navigate("/contents/list");
+      navigate('/contents/list');
       if (result.status === 204) {
-        toast("현재 잡을 수 있는 씨앗이 없습니다.", {
-          icon: "🌼",
+        toast('현재 잡을 수 있는 씨앗이 없습니다.', {
+          icon: '🌼',
           style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
           },
         });
-        navigate("/");
+        navigate('/');
       } else if (result.status === 200) {
         setPetalData(result.data.data.petalInfos.reverse());
         setPetalSeq(result.data.data.dandelionSeq);
-        navigate("/contents/list");
+        navigate('/contents/list');
         setThrottle(false);
         setLoading(true);
       } else {
-        navigate("/");
+        navigate('/');
       }
       //const result = mocklist;
       //console.log(result);
@@ -83,7 +81,7 @@ const LandingPage = () => {
       console.log(error);
     }
 
-    console.log("swipe down");
+    console.log('swipe down');
   };
 
   const moveCreatePage = async () => {
@@ -92,15 +90,15 @@ const LandingPage = () => {
       setIsShowing(true);
       if (result.data.leftSeedCount > 0) {
         console.log(result.data.leftSeedCount);
-        console.log("action: swipe up");
-        navigate("/contents/create");
+        console.log('action: swipe up');
+        navigate('/contents/create');
       } else {
-        toast("남은 씨앗 수가 없습니다.", {
-          icon: "🌼",
+        toast('남은 씨앗 수가 없습니다.', {
+          icon: '🌼',
           style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
           },
         });
       }
@@ -146,37 +144,39 @@ const LandingPage = () => {
 
   useEffect(() => {
     setTimeout(() => {
+      setIsGardenShowing(true);
+    }, 3000);
+    setTimeout(() => {
       setIsGuideShowing(true);
-    }, 4000);
+    }, 6000);
     setTimeout(() => {
       setIsGuideShowing(false);
-    }, 10000);
-    if (!localStorage.getItem("token")) {
-      navigate("/login");
+    }, 15000);
+    if (!localStorage.getItem('token')) {
+      navigate('/login');
     }
-    console.log(patalseq);
     if (patalseq !== 0) {
       resetState();
     }
     seedApi(false);
 
-    window.addEventListener("touchstart", handleTouchStart);
-    window.addEventListener("touchend", handleTouchEnd);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
   return (
     <section
       style={{
-        width: "100%",
-        height: "100vh",
+        width: '100%',
+        height: '100vh',
         // minHeight: '100vh',
-        minHeight: "-webkit-fill-available",
-        overflow: "hidden",
+        minHeight: '-webkit-fill-available',
+        overflow: 'hidden',
       }}
       onClick={() => {
         if (!musicOn[0] && !member.soundOff) {
@@ -189,19 +189,23 @@ const LandingPage = () => {
       }}
     >
       {/* <h1>제발!!</h1> */}
-      <button
-        className={cx("menu-button")}
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsGroupShowing((isGroupShowing) => !isGroupShowing);
-        }}
-      >
-        <Menu className={cx("menu-svg")} />
-      </button>
-      <div className={cx('leftseed')}>
-        <SeedIcon className={cx('leftseedicon')} width={30} height={30} />
-        {seedNum} / 5
-      </div>
+      {isGardenShowing && (
+        <>
+          <button
+            className={cx('menu-button')}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsGroupShowing((isGroupShowing) => !isGroupShowing);
+            }}
+          >
+            <Menu className={cx('menu-svg')} />
+          </button>
+          <div className={cx('leftseed')}>
+            <SeedIcon className={cx('leftseedicon')} width={35} height={35} />
+            {seedNum} / 5
+          </div>
+        </>
+      )}
       {isShowing && <LandingModel />}
       {isGroupShowing && (
         <GroupSelection setIsGroupShowing={setIsGroupShowing} />
@@ -211,49 +215,51 @@ const LandingPage = () => {
         <>
           <div
             style={{
-              height: "min(80px, 10vh)",
-              position: "fixed",
-              top: "15vh",
-              left: "12px",
-              objectFit: "contain",
-              display: "flex",
+              height: 'min(80px, 10vh)',
+              position: 'fixed',
+              top: '15vh',
+              left: '12px',
+              objectFit: 'contain',
+              display: 'flex',
             }}
           >
             <DownArrow
-              className={`${cx("swipe-guide")} ${cx("swipe-guide__arrow2")}`}
-              style={{ height: "100%", width: "auto" }}
+              className={`${cx('swipe-guide')} ${cx('swipe-guide__arrow2')}`}
+              style={{ height: '100%', width: 'auto' }}
             />
             <Tap
-              className={`${cx("swipe-guide")} ${cx("swipe-guide__second")}`}
+              className={`${cx('swipe-guide')} ${cx('swipe-guide__second')}`}
             />
           </div>
           <div
             style={{
-              height: "min(80px, 10vh)",
-              position: "fixed",
-              bottom: "15vh",
-              objectFit: "contain",
-              left: "12px",
-              display: "flex",
+              height: 'min(80px, 10vh)',
+              position: 'fixed',
+              bottom: '15vh',
+              objectFit: 'contain',
+              left: '12px',
+              display: 'flex',
             }}
           >
             <UpArrow
-              className={`${cx("swipe-guide")} ${cx("swipe-guide__arrow1")}`}
-              style={{ height: "100%", width: "auto" }}
+              className={`${cx('swipe-guide')} ${cx('swipe-guide__arrow1')}`}
+              style={{ height: '100%', width: 'auto' }}
             />
-            <Tap className={cx("swipe-guide")} />
+            <Tap className={cx('swipe-guide')} />
           </div>
         </>
       )}
-      <div
-        className={cx('garden')}
-        style={{}}
-        onClick={() => {
-          navigate('/mygarden');
-        }}
-      >
-        내 꽃밭
-      </div>
+      {isGardenShowing && (
+        <div
+          className={cx('garden')}
+          style={{}}
+          onClick={() => {
+            navigate('/mygarden');
+          }}
+        >
+          My Garden
+        </div>
+      )}
       {/* <button onClick={(e) => {
         e.stopPropagation();
         stop()
