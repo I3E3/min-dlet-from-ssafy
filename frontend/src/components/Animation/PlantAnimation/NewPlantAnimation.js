@@ -4,12 +4,13 @@ import { OrbitControls, Html } from '@react-three/drei';
 import DandelionFlower from '../DandelionFlower';
 import DandelionPetalUp from '../DandelionPetalUp';
 import Dandelion from '../../Landing/Dandelion';
+import LoadingImg from 'assets/images/mindletGif.gif';
 function FallbackTitle() {
   return (
     <Html center>
       <h1 style={{ color: 'white' }}>
         <br />
-        Loading...
+        <img src={LoadingImg} alt="loading" />
         <br />
       </h1>
     </Html>

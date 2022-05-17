@@ -6,6 +6,7 @@ import DandelionSeedUp from '../DandelionSeedUp';
 import DandelionPetalDown from '../DandelionPetalDown';
 import FlyingSeed from '../FlyingSeed';
 import Grass from '../Grass';
+import LoadingImg from 'assets/images/mindletGif.gif';
 import FlyingSeedAnimation from '../FlyingSeedAnimation';
 
 function FallbackTitle() {
@@ -13,8 +14,7 @@ function FallbackTitle() {
     <Html center>
       <h1 style={{ color: 'white' }}>
         <br />
-        Min'dLet
-        {/* 화면을  */}
+        <img src={LoadingImg} alt="loading" />
         <br />
       </h1>
     </Html>

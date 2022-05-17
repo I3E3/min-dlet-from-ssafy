@@ -6,16 +6,20 @@ import toast, { Toaster } from 'react-hot-toast';
 import styles from './Blow.module.scss';
 import { postContentsAdd } from 'services/api/Contents';
 import { useNavigate } from 'react-router-dom';
+import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
+import { useSetRecoilState } from 'recoil';
 const cx = classNames.bind(styles);
 
 const Blow = ({ onClick, form, setForm, seq }: any) => {
+  const setPetalData = useSetRecoilState(petalCatchResultList);
+  const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
   const [isShowing, setIsShowing] = useState(true);
   const [loading, SetLoading] = useState(false);
   const [endstate, SetEndstate] = useState(false);
   const [touchstate, SetTouchstate] = useState(false);
   const [throttle, setThrottle] = useState(false);
   const [checkState, SetCheckState] = useState(0);
-  const [possibleState, SetState] = useState(0);
+  const [possibleState, SetState] = useState(false);
   const [wind, SetWind] = useState(false);
   const navigate = useNavigate();
   const blow = () => {
@@ -58,7 +62,7 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
     SetCheckState(state);
   };
 
-  const possible = (state: number) => {
+  const possible = (state: boolean) => {
     SetState(state);
   };
 
@@ -90,6 +94,8 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
       if (response.status === 201) {
         console.log('성공');
         setThrottle(false);
+        setPetalData([{}]);
+        setPetalSeq(0);
       } else {
         console.log(response);
         setThrottle(false);

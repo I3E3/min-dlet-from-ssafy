@@ -8,6 +8,7 @@ import pencil from "assets/images/pencil.png";
 import MyAlbumSide from './MyAlbumSide';
 import axios from 'axios';
 import ButtonEffect from 'assets/musics/button_effect.wav';
+import { useSound } from 'use-sound'
 // import Flip from 'assets/musics/page-flip-7.wav'
 // import useSound from 'use-sound';
 

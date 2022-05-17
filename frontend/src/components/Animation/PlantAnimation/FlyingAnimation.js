@@ -4,6 +4,7 @@ import { OrbitControls, Html } from '@react-three/drei';
 import DandelionUp from '../DandelionUp';
 import DandelionPetalUp from '../DandelionPetalUp';
 import DandelionSeedDown from '../DandelionSeedDown';
+import LoadingImg from 'assets/images/mindletGif.gif';
 import Grass from '../Grass';
 
 function FallbackTitle() {
@@ -11,13 +12,12 @@ function FallbackTitle() {
     <Html center>
       <h1 style={{ color: 'white' }}>
         <br />
-        Loading...
+        <img src={LoadingImg} alt="loading" />
         <br />
       </h1>
     </Html>
   );
 }
-
 export default function FlyingAnimation({ endstate, msgCheck, isPossible }) {
   const [nextstate, SetNext] = useState(false);
   const [grassState, SetGrass] = useState(false);
