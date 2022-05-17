@@ -80,30 +80,78 @@ function MyGardenMain() {
       <div className={cx("sign_boxs")}>
         <div className={cx("sign_box_1")}>
           {dandelions.slice(0, 1).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} key={index} />
-          ))}
+            dandelion?
+            <MyGardenDandelion3 dandelion={dandelion} key={index} />
+          : null))}
+          {/* {[null, null, null, null, {seq: 11, 
+          blossomedDate: new Date('2022-05-19'),
+          status: "RETURN",
+          }].slice(4, 5).map((dandelion, index) => (
+            dandelion === null ? null:
+            (<div key={index}>
+              <MyGardenDandelion3 dandelion={dandelion} key={index} />
+            </div>)
+          ))} */}
         </div>
         <div className={cx("sign_box_2")}>
           {dandelions.slice(1, 2).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} key={index} />
-          ))}
+            dandelion?
+            <MyGardenDandelion3 dandelion={dandelion} key={index} />
+          : null))}
+          {/* {[null, null, null, null, {seq: 11, 
+          blossomedDate: new Date('2022-05-19'),
+          status: "RETURN",
+          }].slice(4, 5).map((dandelion, index) => (
+            dandelion === null ? null:
+            (<div key={index}>
+              <MyGardenDandelion3 dandelion={dandelion} key={index} />
+            </div>)
+          ))} */}
         </div>
         <div className={cx("sign_box_3")}>
           {dandelions.slice(2, 3).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} key={index} />
-          ))}
+            dandelion?
+            <MyGardenDandelion3 dandelion={dandelion} key={index} />
+          : null))}
+          {/* {[null, null, null, null, {seq: 11, 
+          blossomedDate: new Date('2022-05-19'),
+          status: "RETURN",
+          }].slice(4, 5).map((dandelion, index) => (
+            dandelion === null ? null:
+            (<div key={index}>
+              <MyGardenDandelion3 dandelion={dandelion} key={index} />
+            </div>)
+          ))} */}
         </div>
         <div className={cx("sign_box_4")}>
           {dandelions.slice(3, 4).map((dandelion, index) => (
-            <MyGardenDandelion2 dandelion={dandelion} key={index} />
-          ))}
+            dandelion?
+            <MyGardenDandelion3 dandelion={dandelion} key={index} />
+          : null))}
+          {/* {[null, null, null, null, {seq: 11, 
+          blossomedDate: new Date('2022-05-19'),
+          status: "RETURN",
+          }].slice(4, 5).map((dandelion, index) => (
+            dandelion === null ? null:
+            (<div key={index}>
+              <MyGardenDandelion3 dandelion={dandelion} key={index} />
+            </div>)
+          ))} */}
         </div>
         <div className={cx("sign_box_5")}>
-          {dandelions.slice(4, 5).map((dandelion, index) => (
-            <div>
-              <MyGardenDandelion2 dandelion={dandelion} key={index} />
-            </div>
+          {[null, null, null, null, {seq: 11, 
+          blossomedDate: new Date('2022-05-19'),
+          status: "RETURN",
+          }].slice(4, 5).map((dandelion, index) => (
+            dandelion === null ? null:
+            (
+              <MyGardenDandelion3 dandelion={dandelion} key={index} />
+            )
           ))}
+          {dandelions.slice(4, 5).map((dandelion, index) => (
+            dandelion?
+              <MyGardenDandelion3 dandelion={dandelion} key={index} />
+          : null))}
         </div>
       </div>
     </div>

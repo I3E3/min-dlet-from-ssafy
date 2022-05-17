@@ -134,6 +134,24 @@ $color: blue;
     -moz-animation-timing-function: ease-in-out;
     -webkit-animation-timing-function: ease-in-out;
   }
+
+  &__arrow1 {
+    -moz-animation-name: slidein2;
+    -webkit-animation-name: slidein2;
+    animation-name: slidein2;
+    animation-timing-function: ease-in-out;
+    -moz-animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out;
+  }
+
+  &__arrow2 {
+    -moz-animation-name: slideout2;
+    -webkit-animation-name: slideout2;
+    animation-name: slideout2;
+    animation-timing-function: ease-in-out;
+    -moz-animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out;
+  }
 }
 
 @keyframes slidein {
@@ -163,5 +181,25 @@ $color: blue;
 
   100% {
     transform: translateY(-15px) rotate(0deg);
+  }
+}
+
+@keyframes slideout2 {
+  0% {
+    transform: translateY(15px);
+  }
+
+  100% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes slidein2 {
+  0% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(15px);
   }
 }

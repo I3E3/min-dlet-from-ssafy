@@ -7,7 +7,8 @@ import garden from "assets/images/garden.png";
 import pencil from "assets/images/pencil.png";
 import MyAlbumSide from './MyAlbumSide';
 import axios from 'axios';
-import Flip from 'assets/musics/flip.wav'
+// import Flip from 'assets/musics/page-flip-7.wav'
+// import useSound from 'use-sound';
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -18,6 +19,8 @@ function MyAlbumMain() {
   const [sides, setSides] = useState([1]) // 앨범이 총 몇 페이지 있는지 저장
   // const [nowSide, setNowSide] = useState(1) // 현재 앨범 페이지
   const book = useRef<HTMLDivElement>(null)
+  // const [play, { stop, sound }] = useSound(Flip, {volume: 0.9, interrupt: true})
+
   const token = localStorage.getItem("token");
   const config = {
     Authorization: "Bearer " + token,
@@ -53,6 +56,7 @@ function MyAlbumMain() {
           const target: HTMLInputElement = inp as HTMLInputElement
           target.checked = false
           tempSide[0] -= 1
+          // play()
         }
 
       } else if (xEnd - xStart < -50) {
@@ -62,6 +66,7 @@ function MyAlbumMain() {
           const target: HTMLInputElement = inp as HTMLInputElement
           target.checked = true
           tempSide[0] += 1
+          // play()
         }
       }
     }
