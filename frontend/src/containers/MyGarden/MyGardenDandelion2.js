@@ -120,7 +120,7 @@ function MyGardenDandelion2({ dandelion }) {
   const [showPlant, setShowPlant] = useState(false);
   const [record, setRecord] = useState(false);
   const [date, setDate] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(dandelion.status);
   const [returned, setReturned] = useState(false);
   const [blossom, setBlossom] = useState(false);
 
@@ -245,6 +245,7 @@ function MyGardenDandelion2({ dandelion }) {
       .then((res) => {
         Swal.fire("보관함에 저장 성공!", "", "success");
         console.log("보관함에 저장 성공");
+        setStatus("ALBUM");
       })
       .catch((err) => {
         Swal.fire("보관함에 저장 실패!", "", "warning");
@@ -270,6 +271,12 @@ function MyGardenDandelion2({ dandelion }) {
       .then((res) => {
         Swal.fire("씨앗 심기 성공!", "", "success");
         console.log("씨앗 심기 성공");
+        setStatus("BLOSSOMED");
+        setReturned(false);
+        setBlossom(true);
+        console.log("==========");
+        console.log(status);
+        console.log("==========");
       })
       .catch((err) => {
         Swal.fire("씨앗 심기 실패!", "", "warning");
@@ -300,15 +307,18 @@ function MyGardenDandelion2({ dandelion }) {
       });
   }
   useEffect(() => {
+    console.log("블라썸 확인");
+    console.log(blossom + `${dandelion.seq}`);
+
     getDiff(dandelion.blossomedDate);
-    setStatus(dandelion.status);
-    if (status === "FLYING" || status === "FLYING") {
+    // setStatus(dandelion.status);
+    if (dandelion.status === "FLYING" || dandelion.status === "HOLD") {
       setRecord(false);
-    } else if (status === "RETURN") {
+    } else if (dandelion.status === "RETURN") {
       setRecord(true);
       setReturned(true);
       setShowPlant(true);
-    } else if (status === "BLOSSOMED") {
+    } else if (dandelion.status === "BLOSSOMED") {
       setRecord(true);
       setReturned(false);
       setShowPlant(false);
@@ -395,6 +405,7 @@ function MyGardenDandelion2({ dandelion }) {
               <Sign>
                 <img src={sign} alt="팻말" />
                 <Dday>{date}</Dday>
+                {/* <span>{dandelion.status}</span> */}
                 {blossom ? (
                   <Blossom>
                     <img src={flower} alt="꽃" />

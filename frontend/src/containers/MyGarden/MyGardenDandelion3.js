@@ -4,14 +4,12 @@ import flower from "assets/images/flower.png";
 import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./MyGardenDandelion2.module.scss";
-import cancel from "assets/images/cancel.png";
+import bin2 from "assets/images/bin2.png";
 import photo from "assets/images/photo-album.png";
 import shovel from "assets/images/shovel.png";
-import flower_scissors from "assets/images/flower_scissors.png";
 import pencil_check from "assets/images/pencil_check.png";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { set } from "date-fns";
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -118,15 +116,14 @@ const Dday = styled.span`
   font-size: 20px;
 `;
 
-
 function MyGardenDandelion3({ dandelion }) {
   const [show, setShow] = useState(false); // 아이콘들 show
   const [record, setRecord] = useState(false); // 연필 아이콘
-  const [date, setDate] = useState(""); 
+  const [date, setDate] = useState("");
   const [status, setStatus] = useState(dandelion.status);
   const [returned, setReturned] = useState(false); // returned. 삽도 보여줌!
   const [blossom, setBlossom] = useState(false);
-  const [randomNum] = useState(Math.floor(Math.random() * 4 + 1))
+  const [randomNum] = useState(Math.floor(Math.random() * 4 + 1));
   // function ============================================
   function getDiff(targetDate) {
     const today = new Date();
@@ -134,7 +131,11 @@ function MyGardenDandelion3({ dandelion }) {
     const diff = Math.floor(
       (dDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
     );
-    setDate(`D - ${diff}`);
+    if (diff + 1 === 0) {
+      setDate(`D - day`);
+    } else {
+      setDate(`D - ${diff + 1}`);
+    }
     // console.log(`Dday까지 ${dDay < 10 ? `0${diff}` : diff}일 남았습니다.`);
   }
 
@@ -197,7 +198,8 @@ function MyGardenDandelion3({ dandelion }) {
       if (res.isConfirmed) {
         deleteDandelion(dandelionId);
         setTimeout(() => {
-        window.location.reload()}, 1000)
+          window.location.reload();
+        }, 1000);
       }
     });
   };
@@ -316,75 +318,83 @@ function MyGardenDandelion3({ dandelion }) {
     } else if (status === "RETURN") {
       setRecord(true);
       setReturned(true);
+      console.log("뭐냐");
     } else if (status === "BLOSSOMED") {
       setRecord(true);
       setReturned(false);
       setBlossom(true);
     }
     setBlossom(true);
-    setReturned(false)
+    setReturned(false);
   }, []);
 
   return (
     <div className={cx("container")}>
       <div className={cx("icons")} onClick={onOptionsClick}>
-          {/* {show && <IconCover>
+        {/* {show && <IconCover>
             <Icons src={cancel} alt="취소" />
           </IconCover>} */}
 
-          {show && record && <IconCover
+        {show && record && (
+          <IconCover
             onClick={() => {
               onRecordClick(dandelion.seq);
             }}
           >
             <Icons src={pencil_check} alt="꽃말" />
-          </IconCover>}
+          </IconCover>
+        )}
 
-          {show && record && blossom && <IconCover
+        {show && record && blossom && (
+          <IconCover
             onClick={() => {
               onAlbumClick(dandelion.seq);
             }}
           >
             <Icons src={photo} alt="보관함" />
-          </IconCover>}
+          </IconCover>
+        )}
 
-          {show && returned && 
-          (<IconCover
-              onClick={() => {
-                onPlantClick(dandelion.seq);
-              }}
-            >
-              <Icons src={shovel} alt="씨앗 심기" />
-            </IconCover>)}
-          
-          {show &&
-          (<IconCover
+        {show && returned && (
+          <IconCover
+            onClick={() => {
+              onPlantClick(dandelion.seq);
+            }}
+          >
+            <Icons src={shovel} alt="씨앗 심기" />
+          </IconCover>
+        )}
+
+        {show && (
+          <IconCover
             onClick={() => {
               onDeleteClick(dandelion.seq);
             }}
           >
-            <Icons src={flower_scissors} alt="삭제" />
-          </IconCover>)}
-      
+            <Icons src={bin2} alt="삭제" />
+          </IconCover>
+        )}
       </div>
       <div onClick={onOptionsClick} className={cx("sign-flower")}>
         {returned ? (
           <div className={cx("returned-sign")}>
-            <img style={{width: "100%"}} src={sign} alt="팻말" />
+            <img style={{ width: "100%" }} src={sign} alt="팻말" />
             <Dday>{date}</Dday>
           </div>
-          ) : (
+        ) : (
           <div className={cx("normal-sign")}>
-            <img style={{width: "100%"}} src={sign} alt="팻말" />
+            <img style={{ width: "100%" }} src={sign} alt="팻말" />
             <Dday>{date}</Dday>
           </div>
         )}
         {blossom && (
           <Blossom>
-            <img src={require(`assets/images/MyGarden/dand${randomNum}_garden.png`)} alt="꽃" />
+            <img
+              src={require(`assets/images/MyGarden/dand${randomNum}_garden.png`)}
+              alt="꽃"
+            />
           </Blossom>
         )}
-
       </div>
     </div>
   );

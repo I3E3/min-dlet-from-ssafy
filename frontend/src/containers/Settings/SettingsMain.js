@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +12,14 @@ import Swal from "sweetalert2";
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
 
+const MemberForm = styled.div`
+  display: flex;
+`;
+
 function SettingsMain() {
   // memberSeq는 atom에서 받아와야함
   const [memberSeq, setMemberSeq] = useState(0);
-  const soundOnOff = async (sound: string) => {
+  const soundOnOff = async (sound) => {
     await axios({
       url: `${BaseURL}/${memberSeq}/sound`,
       method: "patch",
@@ -58,7 +63,44 @@ function SettingsMain() {
     });
   };
 
+  const onLogoutClick = () => {
+    Swal.fire({
+      title: "로그아웃 하시겠습니까?",
+      showCancelButton: true,
+      confirmButtonText: "아웃",
+      cancelButtonText: "취소",
+    }).then((res) => {
+      if (res.isConfirmed) {
+        logoutMember();
+      }
+    });
+  };
+
   async function deleteMember() {
+    const token = localStorage.getItem("token");
+    const config = {
+      Authorization: "Bearer " + token,
+    };
+    await axios({
+      // 회원 seq받아와야함
+      url: `members/${memberSeq}`,
+      method: "delete",
+      baseURL: BaseURL,
+      headers: config,
+    })
+      .then((res) => {
+        Swal.fire("회원탈퇴 성공", "", "success");
+        console.log("회원탈퇴 성공");
+        navigate("/");
+      })
+      .catch((err) => {
+        Swal.fire("회원탈퇴 실패", "", "success");
+        console.log("회원탈퇴 실패");
+        console.log(err);
+      });
+  }
+
+  async function logoutMember() {
     const token = localStorage.getItem("token");
     const config = {
       Authorization: "Bearer " + token,
@@ -131,11 +173,19 @@ function SettingsMain() {
               <label htmlFor="off">Off</label>
             </div>
           </div>
-          <div className={cx("delete-btn-box")}>
-            <button className={cx("delete-btn")} onClick={onDeleteClick}>
-              회원탈퇴
-            </button>
-          </div>
+
+          <MemberForm>
+            <div className={cx("delete-btn-box")}>
+              <button className={cx("delete-btn")} onClick={onLogoutClick}>
+                로그아웃
+              </button>
+            </div>
+            <div className={cx("delete-btn-box")}>
+              <button className={cx("delete-btn")} onClick={onDeleteClick}>
+                회원탈퇴
+              </button>
+            </div>
+          </MemberForm>
         </div>
       </div>
     </div>
