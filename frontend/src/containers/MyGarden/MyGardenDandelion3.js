@@ -420,6 +420,12 @@ function MyGardenDandelion3({ dandelion }) {
           </Blossom>
         )}
       </div>
+      <button onClick={() => {Swal.fire({
+      title: '보관함에 저장 하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: '저장',
+      cancelButtonText: '취소',
+    })}}>얍!</button>
     </div>
   );
 }
