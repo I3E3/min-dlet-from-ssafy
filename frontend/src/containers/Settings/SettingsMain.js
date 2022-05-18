@@ -23,7 +23,6 @@ const MemberForm = styled.div`
 `;
 
 function SettingsMain() {
-  // 변경해야함 recoil로
   const [member, setMember] = useRecoilState(memberState);
   const [play, ] = useSound(ButtonEffect, {
     volume: 0.4,
