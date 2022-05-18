@@ -10,9 +10,8 @@ import album from "assets/images/photo-album.png";
 import Swal from "sweetalert2";
 import { useRecoilValue } from "recoil";
 import memberState from "utils/memberState";
-import { useSound } from 'use-sound';
-import ButtonEffect from 'assets/musics/button_effect.wav'
-
+import { useSound } from "use-sound";
+import ButtonEffect from "assets/musics/button_effect.wav";
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -24,7 +23,7 @@ const MemberForm = styled.div`
 function SettingsMain() {
   // 변경해야함 recoil로
   const member = useRecoilValue(memberState);
-  const [play, ] = useSound(ButtonEffect, {
+  const [play] = useSound(ButtonEffect, {
     volume: 0.4,
     interrupt: true,
   });
@@ -51,21 +50,21 @@ function SettingsMain() {
   const navigate = useNavigate();
   const onGardenClick = () => {
     if (!member.soundOff) {
-      play()
+      play();
     }
     navigate(`/mygarden`);
   };
 
   const onAlbumClick = () => {
     if (!member.soundOff) {
-      play()
+      play();
     }
     navigate(`/mygarden/album`);
   };
 
   const onCabinetClick = () => {
     if (!member.soundOff) {
-      play()
+      play();
     }
     navigate(`/mygarden/cabinet`);
   };
@@ -137,11 +136,11 @@ function SettingsMain() {
             <img className={cx("btn")} src={album} alt="앨범" />
           </button>
         </div>
-        <div>
+        {/* <div>
           <button onClick={onCabinetClick}>
             <img className={cx("btn")} src={pencil} alt="기록보관함" />
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className={cx("inner-container")}>
