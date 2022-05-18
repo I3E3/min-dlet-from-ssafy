@@ -16,11 +16,16 @@ window.addEventListener('resize', setScreenSize);
 
 function App() {
   return (
-    <div onClick={() => {
-      if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen()
-      }
-    }}>
+    <div
+      onClick={() => {
+        if (
+          document.fullscreenEnabled &&
+          document.documentElement.requestFullscreen
+        ) {
+          document.documentElement.requestFullscreen();
+        }
+      }}
+    >
       <RecoilRoot>
         <Toaster position="top-center" />
         <LoginRecoil />

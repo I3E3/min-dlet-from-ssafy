@@ -12,19 +12,19 @@ import {
   getContents,
   leftSeedCount,
   resetContentsState,
-} from "services/api/Contents";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import memberState from "utils/memberState";
-import { ReactComponent as Tap } from "assets/images/Landing/tap.svg";
-import { ReactComponent as DownArrow } from "assets/images/Landing/down-arrow.svg";
-import { ReactComponent as UpArrow } from "assets/images/Landing/up-arrow.svg";
-import { ReactComponent as Dandel } from "assets/images/Landing/dandelion-2.svg";
-import { ReactComponent as MusicOn } from "assets/images/Landing/music.svg";
-import { ReactComponent as MusicOff } from "assets/images/Landing/music_muted.svg";
-import { useSound } from "use-sound";
-import Landing from "assets/musics/Landing2.mp3";
-import ButtonEffect from "assets/musics/button_effect.wav";
-import axios from "axios";
+} from 'services/api/Contents';
+import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
+import memberState from 'utils/memberState';
+import { ReactComponent as Tap } from 'assets/images/Landing/tap.svg';
+import { ReactComponent as DownArrow } from 'assets/images/Landing/down-arrow.svg';
+import { ReactComponent as UpArrow } from 'assets/images/Landing/up-arrow.svg';
+import { ReactComponent as Dandel } from 'assets/images/Landing/dandelion-2.svg';
+import { ReactComponent as MusicOn } from 'assets/images/Landing/music.svg';
+import { ReactComponent as MusicOff } from 'assets/images/Landing/music_muted.svg';
+import { useSound } from 'use-sound';
+import Landing from 'assets/musics/Landing2.mp3';
+import ButtonEffect from 'assets/musics/button_effect.wav';
+import axios from 'axios';
 
 const BaseURL = process.env.REACT_APP_BASE_URL;
 const cx = classNames.bind(styles);
@@ -49,12 +49,12 @@ const LandingPage = () => {
     volume: 0.35,
     interrupt: true,
   });
-  const sound1 = obj1.sound
+  const sound1 = obj1.sound;
   const [play2, obj2] = useSound(ButtonEffect, {
     volume: 0.4,
     interrupt: true,
   });
-  const sound2 = obj2.sound
+  const sound2 = obj2.sound;
 
   let howManyTouches = 0;
   const navigate = useNavigate();
@@ -154,11 +154,11 @@ const LandingPage = () => {
   };
 
   const handleMute = async (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
     if (!member.soundOff) {
-      sound1.mute(true)
+      sound1.mute(true);
     } else {
-      sound1.mute(false)
+      sound1.mute(false);
     }
     // const memberSeq = member.seq;
     // const res = await axios({
@@ -172,10 +172,10 @@ const LandingPage = () => {
     //   }
     // })
     // console.log(res)
-    const newMember = {...member}
-    newMember.soundOff = !member.soundOff
-    setMember(newMember)
-  }
+    const newMember = { ...member };
+    newMember.soundOff = !member.soundOff;
+    setMember(newMember);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -242,7 +242,7 @@ const LandingPage = () => {
             onClick={(e) => {
               e.stopPropagation();
               if (!member.soundOff) {
-                play2()
+                play2();
               }
               setIsGroupShowing((isGroupShowing) => !isGroupShowing);
             }}
@@ -255,17 +255,17 @@ const LandingPage = () => {
           </div>
         </>
       )}
-    
-    {isGardenShowing && !member.soundOff &&
-      (<button className={cx('music-button')}
-      onClick={handleMute}>
-        <MusicOn />
-      </button>)}
-    {isGardenShowing && member.soundOff &&
-    (<button className={cx('music-button')}
-    onClick={handleMute}>
-        <MusicOff />
-      </button>)}
+
+      {isGardenShowing && !member.soundOff && (
+        <button className={cx('music-button')} onClick={handleMute}>
+          <MusicOn />
+        </button>
+      )}
+      {isGardenShowing && member.soundOff && (
+        <button className={cx('music-button')} onClick={handleMute}>
+          <MusicOff />
+        </button>
+      )}
 
       {isShowing && <LandingModel />}
       {isGroupShowing && (
@@ -316,14 +316,14 @@ const LandingPage = () => {
           className={cx('garden')}
           style={{}}
           onClick={(e) => {
-            e.stopPropagation()
+            e.stopPropagation();
             navigate('/mygarden');
           }}
         >
           My Garden
         </div>
       )}
-       {/* <button onClick={(e) => {
+      {/* <button onClick={(e) => {
         e.stopPropagation();
         console.log('되는디...')
         console.log(document.querySelectorAll("audio"))
