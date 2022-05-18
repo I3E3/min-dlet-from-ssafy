@@ -55,9 +55,9 @@ function GroupSelection ({setIsGroupShowing = () => {}}: React.SetStateAction<Re
 
   return (
     <div
-      style={{top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.2)', position: 'absolute'}}>
+      style={{top: 0, zIndex: 1, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.2)', position: 'absolute'}}>
       <div
-        style={{zIndex: 1, position: 'absolute', top: '25%', left: '50%', width: 'min(90vw, 400px)', height: 'min(25vh, 250px)', padding: '40px', textAlign: 'center', backgroundColor: '#FBFBFB66', borderRadius: '10px', boxShadow: '0 2px 3px 0 rgba(34, 36, 38, 0.15)', transform: 'translateX(-50%) translateY(-50%)', }}>
+        style={{zIndex: 3, position: 'absolute', top: '35%', left: '50%', width: 'min(90vw, 400px)', height: 'min(25vh, 250px)', padding: '40px', textAlign: 'center', backgroundColor: '#FBFBFB66', borderRadius: '10px', boxShadow: '0 2px 3px 0 rgba(34, 36, 38, 0.15)', transform: 'translateX(-50%) translateY(-50%)', }}>
         <h1 style={{color: "white", fontWeight: "normal"}}>커뮤니티 설정</h1>
         <hr/>
         {/* <label htmlFor="options">허허</label> */}

@@ -24,7 +24,7 @@ import { ReactComponent as MusicOff } from 'assets/images/Landing/music_muted.sv
 import { useSound } from 'use-sound';
 import Landing from 'assets/musics/Landing2.mp3';
 import ButtonEffect from 'assets/musics/button_effect.wav';
-import axios from 'axios';
+// import axios from 'axios';
 
 const BaseURL = process.env.REACT_APP_BASE_URL;
 const cx = classNames.bind(styles);
@@ -165,9 +165,23 @@ const LandingPage = () => {
         soundOff: !member.soundOff
       })
     }
+    try {
+      const res = await fetch(`${BaseURL}members/${member.seq}/sound-off`, checkData);
+      if (res.status === 200) {
+        toast.success(`계정의 음악 설정을 성공적으로 변경하였습니다.`);
+      } else {
+        toast.error('계정 음악 설정 변경에 실패하였습니다.');
+      }
+    } catch {
+      toast.error('계정 음악 설정 변경에 실패하였습니다.');
+    }
     if (!member.soundOff) {
       sound1.mute(true);
     } else {
+      if (!musicOn[0]) {
+        play1();
+        musicOn[0] = true
+      }
       sound1.mute(false);
     }
     // const memberSeq = member.seq;
@@ -182,10 +196,10 @@ const LandingPage = () => {
     //   }
     // })
     // console.log(res)
-    const newMember = { ...member };
-    newMember.soundOff = !member.soundOff;
-    setMember(newMember);
-  };
+    const newMember = {...member}
+    newMember.soundOff = !member.soundOff
+    setMember(newMember)
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -265,17 +279,17 @@ const LandingPage = () => {
           </div>
         </>
       )}
-
-      {isGardenShowing && !member.soundOff && (
-        <button className={cx('music-button')} onClick={handleMute}>
-          <MusicOn />
-        </button>
-      )}
-      {isGardenShowing && member.soundOff && (
-        <button className={cx('music-button')} onClick={handleMute}>
-          <MusicOff />
-        </button>
-      )}
+    
+    {isGardenShowing && !member.soundOff &&
+      (<button className={cx('music-button')}
+      onClick={handleMute}>
+        <MusicOn />
+      </button>)}
+    {isGardenShowing && member.soundOff &&
+    (<button className={cx('music-button')}
+    onClick={handleMute}>
+        <MusicOff />
+      </button>)}
 
       {isShowing && <LandingModel />}
       {isGroupShowing && (
@@ -327,13 +341,14 @@ const LandingPage = () => {
           style={{}}
           onClick={(e) => {
             e.stopPropagation();
+            obj1.stop()
             navigate('/mygarden');
           }}
         >
           My Garden
         </div>
       )}
-      {/* <button onClick={(e) => {
+       {/* <button onClick={(e) => {
         e.stopPropagation();
         console.log('되는디...')
         console.log(document.querySelectorAll("audio"))

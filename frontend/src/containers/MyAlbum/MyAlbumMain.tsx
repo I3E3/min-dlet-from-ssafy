@@ -92,7 +92,6 @@ function MyAlbumMain() {
     const nowBook = book.current;
     nowBook?.addEventListener("touchstart", handleTouchStart);
     nowBook?.addEventListener("touchend", handleTouchEnd);
-
     axios({
       // url: `baseUrl/dandelions/{id}/description`, 나중에 아이디 있는거로 교체
       url: `garden/album?page=1&size=4`,
