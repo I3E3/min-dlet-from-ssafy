@@ -241,6 +241,7 @@ function MyGardenDandelion3({ dandelion }) {
       headers: config,
     })
       .then((res) => {
+        setFinalDate(description);
         Swal.fire({
           title: `[ ${description} ]를 등록하였습니다.`,
           confirmButtonText: "확인",
@@ -420,12 +421,18 @@ function MyGardenDandelion3({ dandelion }) {
           </Blossom>
         )}
       </div>
-      <button onClick={() => {Swal.fire({
-      title: '보관함에 저장 하시겠습니까?',
-      showCancelButton: true,
-      confirmButtonText: '저장',
-      cancelButtonText: '취소',
-    })}}>얍!</button>
+      <button
+        onClick={() => {
+          Swal.fire({
+            title: "보관함에 저장 하시겠습니까?",
+            showCancelButton: true,
+            confirmButtonText: "저장",
+            cancelButtonText: "취소",
+          });
+        }}
+      >
+        얍!
+      </button>
     </div>
   );
 }
