@@ -5,6 +5,7 @@ import { BrowserView, MobileView } from 'react-device-detect';
 import LoginRecoil from 'utils/LoginRecoil';
 import { Toaster } from 'react-hot-toast';
 import MobileGuidePage from 'pages/MobileGuidePage/MobileGuidePage';
+import 'assets/styles/base/swal.css'
 
 function setScreenSize() {
   let vh = window.innerHeight * 0.01;
@@ -16,11 +17,12 @@ window.addEventListener('resize', setScreenSize);
 
 function App() {
   return (
-    <div onClick={() => {
-      if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen()
-      }
-    }}>
+    // <div onClick={(e) => {
+    //   if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
+    //     document.documentElement.requestFullscreen()
+    //   }
+    // }}>
+    <div>
       <RecoilRoot>
         <Toaster position="top-center" />
         <LoginRecoil />
