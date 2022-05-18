@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 
-export default function Fullscreen () {
+export default function Fullscreen() {
   document.fullscreenEnabled =
-	document.fullscreenEnabled ||
-	document.mozFullScreenEnabled ||
-	document.documentElement.webkitRequestFullScreen;
+    document.fullscreenEnabled ||
+    document.mozFullScreenEnabled ||
+    document.documentElement.webkitRequestFullScreen;
 
   function requestFullscreen(element) {
-    console.log('히히')
+    console.log('히히');
     if (element.requestFullscreen) {
       element.requestFullscreen();
     } else if (element.mozRequestFullScreen) {
@@ -17,13 +17,21 @@ export default function Fullscreen () {
     }
   }
 
-  useEffect(()=> {
-    console.log('하이', document.fullscreenEnabled)
+  useEffect(() => {
+    console.log('하이', document.fullscreenEnabled);
     if (document.fullscreenEnabled) {
-      console.log("hello")
-      console.log(document.documentElement)
+      console.log('hello');
+      console.log(document.documentElement);
       requestFullscreen(document.documentElement);
     }
-  }, [])
-  return <button onClick={() =>{requestFullscreen(document.documentElement)}}>눌러봐!</button>
+  }, []);
+  return (
+    <button
+      onClick={() => {
+        requestFullscreen(document.documentElement);
+      }}
+    >
+      눌러봐!
+    </button>
+  );
 }

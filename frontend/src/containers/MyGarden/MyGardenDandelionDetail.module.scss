@@ -2,7 +2,10 @@
 
 .container {
   overflow: hidden;
-
+  .swal2-popup {
+    font-size: 1.6rem !important;
+    font-family: Georgia, serif;
+  }
   .deck {
     margin: 15vh 0 0 0;
     position: absolute;
@@ -10,6 +13,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     .petal {
       text-align: center;
       touch-action: none;
@@ -64,6 +68,10 @@
           display: flex;
           padding: 5px 3% 0 3%;
           justify-content: space-between;
+          .bin-img {
+            height: 3vh;
+            width: 3vh;
+          }
           .date {
             color: gray;
           }

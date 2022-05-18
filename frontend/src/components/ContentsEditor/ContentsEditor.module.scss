@@ -10,11 +10,11 @@ $color: blue;
   }
   .petal-img {
     position: relative;
-    margin: 15vh 0 0 5vw;
+    margin: 15vh 3vw 0 3vw;
     text-align: center;
     .petal {
       transform: rotate(-20deg);
-      width: 90vw;
+      //     width: 90vw;
       height: 65vh;
     }
     .editor {
@@ -75,7 +75,6 @@ $color: blue;
     text-align: center;
   }
   .write-btn {
-    margin: 20px 0 0 0;
     font-size: 1.5em;
     text-align: center;
   }

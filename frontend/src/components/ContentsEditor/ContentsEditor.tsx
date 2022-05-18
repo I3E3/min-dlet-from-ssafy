@@ -22,7 +22,7 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
       .split('')
       .map((s: string) => s.charCodeAt(0))
       .reduce((prev, c) => prev + (c === 10 ? 1 : c >> 7 ? 1 : 1), 0);
-    if (byte <= 500) {
+    if (byte <= 250) {
       SetLetters(byte);
     } else {
       // TODO : hot toast alert 적용 및 넘김 처리
@@ -44,8 +44,6 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
 
   const sendData = () => {
     onSend();
-    console.log(imgFile);
-    console.log(text);
   };
 
   const deleteImg = () => {
@@ -112,13 +110,13 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
           </div>
         </div>
         <div>
-          {letters >= 15 ? (
+          {letters >= 1 || imgFile ? (
             <div className={cx('write-btn')} onClick={sendData}>
               Write
             </div>
           ) : (
             <div className={cx('minsize-msg')}>
-              최소 15자 이상 작성해주세요✉
+              메세지 작성 또는 이미지를 첨부해주세요✉
             </div>
           )}
         </div>

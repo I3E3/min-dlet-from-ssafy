@@ -1,12 +1,12 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSprings, animated, to as interpolate } from '@react-spring/web';
 import petal from 'assets/images/petal-yellow-4.png';
 import { useDrag } from '@use-gesture/react';
 import classNames from 'classnames/bind';
-import iconimg from 'assets/images/icon/earth-globe-white.png';
-import { getDandelionDetail } from 'services/api/MyGardenApi';
+import Swal from 'sweetalert2';
+import { getDandelionDetail, deletePetalSeq } from 'services/api/MyGardenApi';
 import styles from './MyGardenDandelionDetail.module.scss';
+import bin2 from 'assets/images/bin2.png';
 import { useNavigate, useParams } from 'react-router-dom';
 const cx = classNames.bind(styles);
 const cards = [petal, petal, petal, petal, petal, petal];
@@ -49,6 +49,24 @@ const MyGardenDandelionDetail = () => {
 
   const Back = () => {
     navigate('/mygarden');
+  };
+
+  const deletePetal = async (seq: number) => {
+    Swal.fire({
+      title: '해당 꽃잎을 삭제하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log(seq);
+        const result = await deletePetalSeq(seq);
+        if (result.status === 204) {
+          Swal.fire(`삭제가 완료되었습니다.`, '', 'success');
+          window.location.reload();
+        }
+      }
+    });
+    console.log(seq);
   };
 
   // const onDeleteDandelionClick = async () => {
@@ -106,7 +124,7 @@ const MyGardenDandelionDetail = () => {
 
     const response = await getDandelionDetail(num);
     console.log(response);
-    setList(response.data.data.petalInfos);
+    setList(response.data.data.petalInfos.reverse());
     console.log(response.data.data.totalPetalCount);
     setCount(response.data.data.totalPetalCount);
   };
@@ -183,7 +201,17 @@ const MyGardenDandelionDetail = () => {
                             alt="preview"
                           />
                         </div>
-                        <div className={cx('date')}> {list[i].createdDate}</div>
+                        <div className={cx('date')}> {list[i].createdDate}</div>{' '}
+                        <div>
+                          {i !== count - 1 ? (
+                            <img
+                              className={cx('bin-img')}
+                              src={bin2}
+                              alt="bin"
+                              onClick={() => deletePetal(list[i].seq)}
+                            />
+                          ) : null}
+                        </div>
                       </div>
                       <div className={cx('scrollBar')}>
                         <div className={cx('textarea')}>{list[i].message}</div>
