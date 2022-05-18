@@ -155,6 +155,16 @@ const LandingPage = () => {
 
   const handleMute = async (e: React.MouseEvent) => {
     e.stopPropagation()
+    const checkData = {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        soundOff: !member.soundOff
+      })
+    }
     if (!member.soundOff) {
       sound1.mute(true)
     } else {
