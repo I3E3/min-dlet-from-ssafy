@@ -48,7 +48,7 @@ const MyGardenDandelionDetail = () => {
   }));
 
   const Back = () => {
-    navigate('/mygarden');
+    navigate(-1);
   };
 
   const deletePetal = async (seq: number) => {
