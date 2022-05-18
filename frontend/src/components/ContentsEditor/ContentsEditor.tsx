@@ -37,7 +37,6 @@ const ContentsEditor = ({ form, img, msg, onSend }: any) => {
   };
 
   const handleUploadImage = async (event: any) => {
-    event.stopPropagation()
     const file = event.target.files;
     img(file[0]);
     setImgFile(URL.createObjectURL(file[0]));
