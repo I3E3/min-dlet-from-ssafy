@@ -125,7 +125,8 @@ const AfterDday = styled.span`
   font-size: 15px;
 `;
 
-function MyGardenDandelion3({ dandelion }) {
+function MyGardenDandelion3({ dandelion, setDandel }) {
+  // setDandel: 앨범에 넣으면 없애주기 위하여.
   const [show, setShow] = useState(false); // 아이콘들 show
   const [record, setRecord] = useState(false); // 연필 아이콘
   const [date, setDate] = useState("");
@@ -278,6 +279,7 @@ function MyGardenDandelion3({ dandelion }) {
         Swal.fire("보관함에 저장 성공!", "", "success");
         console.log("보관함에 저장 성공");
         setStatus("ALBUM");
+        setDandel(false)
       })
       .catch((err) => {
         Swal.fire("보관함에 저장 실패!", "", "warning");

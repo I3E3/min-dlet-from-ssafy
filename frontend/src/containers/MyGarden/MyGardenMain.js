@@ -150,7 +150,7 @@ function MyGardenMain() {
                 .slice(0, 1)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} key={index} />
+                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion0} key={index} />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -175,7 +175,7 @@ function MyGardenMain() {
                 .slice(1, 2)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} key={index} />
+                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion1} key={index} />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -200,7 +200,7 @@ function MyGardenMain() {
                 .slice(2, 3)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} key={index} />
+                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion2} key={index} />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -225,7 +225,7 @@ function MyGardenMain() {
                 .slice(3, 4)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} key={index} />
+                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion3} key={index} />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -250,7 +250,7 @@ function MyGardenMain() {
                 .slice(4, 5)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} key={index} />
+                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion4} key={index} />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
