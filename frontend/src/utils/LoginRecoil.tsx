@@ -57,7 +57,12 @@ function LoginRecoil() {
           const data = result.data.data
           setMember(data)
         })
-        .catch((err) => {console.error(err)} )
+        .catch((err) => {
+          localStorage.removeItem('token')
+          navigate('/login')
+          return
+          console.error(err)
+        } )
 
       // 회원정보 조회
       // fetch(`${BaseURL}members`, checkData)

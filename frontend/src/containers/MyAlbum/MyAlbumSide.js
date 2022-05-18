@@ -23,7 +23,9 @@ function MyAlbumSide({ order }) {
       baseURL: BaseURL,
       headers: config,
     }).then((res) => {
-      setFlowers(res.data.data.dandelionInfos)
+      if (res.status === 200) {
+        setFlowers(res.data.data.dandelionInfos)
+      }
     })
   }, [])
 
