@@ -13,7 +13,7 @@ export const postContents = async (formData: any) => {
 
 export const postContentsAdd = async ({ formData, seq }: any) => {
   const result = await instance.post(COMMON + `/${seq}/petals`, formData);
-  console.log(result);
+  // console.log(result);
   return result;
 };
 

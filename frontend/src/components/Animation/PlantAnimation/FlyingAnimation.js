@@ -26,7 +26,7 @@ export default function FlyingAnimation({ endstate, msgCheck, isPossible }) {
 
   const touch = () => {
     msgCheck(1);
-    console.log(isPossible);
+    //  console.log(isPossible);
   };
 
   const handleNext = (next) => {
@@ -46,17 +46,17 @@ export default function FlyingAnimation({ endstate, msgCheck, isPossible }) {
   };
 
   useEffect(() => {
-    console.log(pagestate);
+    //  console.log(pagestate);
     if (pagestate === 1) endstate(true);
   }, [pagestate]);
 
   useEffect(() => {
-    console.log(nextstate);
+    //   console.log(nextstate);
     if (nextstate === true) down(true);
   }, [nextstate]);
 
   useEffect(() => {
-    console.log(dandelstate);
+    //   console.log(dandelstate);
     if (dandelstate === true) {
       //
       petalUp(true);

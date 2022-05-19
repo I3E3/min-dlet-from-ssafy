@@ -23,7 +23,7 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
   const [wind, SetWind] = useState(false);
   const navigate = useNavigate();
   const blow = () => {
-    console.log('바람 인식');
+    //   console.log('바람 인식');
     SetLoading(true);
     window.removeEventListener('blow', blow);
     SetWind(true);
@@ -35,17 +35,17 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
   };
 
   useEffect(() => {
-    console.log(endstate);
+    //  console.log(endstate);
     if (endstate === true) {
       navigate('/');
     }
   }, [endstate]);
 
   useEffect(() => {
-    console.log(form);
+    //   console.log(form);
     if (loading === true) {
       handleSend();
-      console.log('전송');
+      //   console.log('전송');
     }
   }, [loading]);
 
@@ -71,7 +71,7 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
   };
 
   const sendDataForm = async () => {
-    console.log(form.date);
+    // console.log(form.date);
     const formData = new FormData();
     formData.append('imageFile', form.image);
     formData.append(
@@ -87,12 +87,12 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
         }
       )
     );
-    console.log(formData);
+    // console.log(formData);
     try {
       setThrottle(true);
       const response = await postContentsAdd({ formData, seq });
       if (response.status === 201) {
-        console.log('성공');
+        //   console.log('성공');
         setThrottle(false);
         setPetalData([{}]);
         setPetalSeq(0);
@@ -101,7 +101,7 @@ const Blow = ({ onClick, form, setForm, seq }: any) => {
         setThrottle(false);
       }
     } catch (error) {
-      console.log('실패');
+      //   console.log('실패');
       toast('전송에 실패하였습니다.', {
         icon: '🌼',
         style: {

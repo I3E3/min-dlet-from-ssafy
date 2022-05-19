@@ -25,7 +25,6 @@ export default function NewPlantAnimation({ endstate }) {
   };
 
   useEffect(() => {
-    console.log(nextstate);
     if (nextstate > 0) endstate(true);
   }, [nextstate]);
 

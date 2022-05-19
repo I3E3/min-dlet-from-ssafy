@@ -18,7 +18,6 @@ const Blow = ({ onClick, form, setForm }: any) => {
   const [wind, SetWind] = useState(false);
   const navigate = useNavigate();
   const blow = () => {
-    console.log('바람 인식');
     SetLoading(true);
     window.removeEventListener('blow', blow);
     SetWind(true);
@@ -43,16 +42,13 @@ const Blow = ({ onClick, form, setForm }: any) => {
         }
       )
     );
-    console.log(formData);
     try {
       setThrottle(true);
       const response = await postContents(formData);
       if (response.status === 201) {
-        console.log('성공');
         setThrottle(false);
       }
     } catch (error) {
-      console.log('실패');
       toast('전송에 실패하였습니다.', {
         icon: '🌼',
         style: {
@@ -67,14 +63,14 @@ const Blow = ({ onClick, form, setForm }: any) => {
   };
 
   useEffect(() => {
-    console.log(endstate);
+    // console.log(endstate);
     if (endstate === true) {
       navigate('/');
     }
   }, [endstate]);
 
   useEffect(() => {
-    console.log(form);
+    // console.log(form);
     if (loading === true) {
       handleSend();
       console.log('전송');

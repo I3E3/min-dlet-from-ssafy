@@ -11,7 +11,7 @@ export default function Grass({ downgrass }) {
   });
 
   useEffect(() => {
-    console.log(downgrass);
+    //   console.log(downgrass);
   }, [downgrass]);
 
   return (

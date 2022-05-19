@@ -85,16 +85,9 @@ const LandingPage = () => {
       } else {
         navigate('/');
       }
-      //const result = mocklist;
-      //console.log(result);
-
-      //setList(mocklist);
-      //setSeq(2);
     } catch (error) {
       console.log(error);
     }
-
-    console.log('swipe down');
   };
 
   const moveCreatePage = async () => {
@@ -102,8 +95,6 @@ const LandingPage = () => {
       const result = await leftSeedCount();
       setIsShowing(true);
       if (result.data.leftSeedCount > 0) {
-        console.log(result.data.leftSeedCount);
-        console.log('action: swipe up');
         navigate('/contents/create');
       } else {
         toast('남은 씨앗 수가 없습니다.', {
@@ -145,7 +136,6 @@ const LandingPage = () => {
 
   const resetState = async () => {
     const response = await resetContentsState(patalseq);
-    console.log(response);
     setPetalData([{}]);
     setPetalSeq(0);
   };
@@ -156,19 +146,22 @@ const LandingPage = () => {
   };
 
   const handleMute = async (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
     const checkData = {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        soundOff: !member.soundOff
-      })
-    }
+        soundOff: !member.soundOff,
+      }),
+    };
     try {
-      const res = await fetch(`${BaseURL}members/${member.seq}/sound-off`, checkData);
+      const res = await fetch(
+        `${BaseURL}members/${member.seq}/sound-off`,
+        checkData
+      );
       if (res.status === 200) {
         toast.success(`계정의 음악 설정을 성공적으로 변경하였습니다.`);
       } else {
@@ -182,9 +175,9 @@ const LandingPage = () => {
     } else {
       if (!audioNow.landing) {
         play1();
-        const newAudio = {...audioNow}
-        newAudio.landing = true
-        setAudioNow(newAudio)
+        const newAudio = { ...audioNow };
+        newAudio.landing = true;
+        setAudioNow(newAudio);
       }
       sound1.mute(false);
     }
@@ -200,10 +193,10 @@ const LandingPage = () => {
     //   }
     // })
     // console.log(res)
-    const newMember = {...member}
-    newMember.soundOff = !member.soundOff
-    setMember(newMember)
-  }
+    const newMember = { ...member };
+    newMember.soundOff = !member.soundOff;
+    setMember(newMember);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -245,9 +238,9 @@ const LandingPage = () => {
         if (!audioNow.landing && !member.soundOff) {
           // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
           if (sound1) {
-            const newAudio = {...audioNow, stopFunc: obj1.stop}
-            newAudio.landing = true
-            setAudioNow(newAudio)
+            const newAudio = { ...audioNow, stopFunc: obj1.stop };
+            newAudio.landing = true;
+            setAudioNow(newAudio);
             play1();
           }
         }
@@ -285,17 +278,17 @@ const LandingPage = () => {
           </div>
         </>
       )}
-    
-    {isGardenShowing && !member.soundOff &&
-      (<button className={cx('music-button')}
-      onClick={handleMute}>
-        <MusicOn />
-      </button>)}
-    {isGardenShowing && member.soundOff &&
-    (<button className={cx('music-button')}
-    onClick={handleMute}>
-        <MusicOff />
-      </button>)}
+
+      {isGardenShowing && !member.soundOff && (
+        <button className={cx('music-button')} onClick={handleMute}>
+          <MusicOn />
+        </button>
+      )}
+      {isGardenShowing && member.soundOff && (
+        <button className={cx('music-button')} onClick={handleMute}>
+          <MusicOff />
+        </button>
+      )}
 
       {isShowing && <LandingModel />}
       {isGroupShowing && (
@@ -347,18 +340,18 @@ const LandingPage = () => {
           style={{}}
           onClick={(e) => {
             e.stopPropagation();
-            audioNow.stopFunc()
+            audioNow.stopFunc();
             obj1.stop();
-            const newAudio = {...audioNow}
-            newAudio.landing = false
-            setAudioNow(newAudio)
+            const newAudio = { ...audioNow };
+            newAudio.landing = false;
+            setAudioNow(newAudio);
             navigate('/mygarden');
           }}
         >
           My Garden
         </div>
       )}
-       {/* <button onClick={(e) => {
+      {/* <button onClick={(e) => {
         e.stopPropagation();
         console.log('되는디...')
         console.log(document.querySelectorAll("audio"))

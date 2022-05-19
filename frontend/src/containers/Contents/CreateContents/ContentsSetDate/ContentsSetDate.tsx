@@ -15,7 +15,7 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
   };
 
   const setData = () => {
-    console.log(form);
+    //   console.log(form);
     onClick(4);
   };
   const [dateState, setDateState] = useState(date);
