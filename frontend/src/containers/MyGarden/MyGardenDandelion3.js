@@ -140,14 +140,16 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
   // function ============================================
   function getDiff(targetDate) {
     const today = new Date();
+    const koreaTimeDiff = 9 * 60 * 60 * 1000;
     const dDay = new Date(targetDate);
+
     const diff = Math.floor(
-      (dDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+      (dDay.getTime() + koreaTimeDiff - today.getTime()) / (1000 * 60 * 60 * 24)
     );
-    if (diff + 1 === 0) {
+    if (diff === 0) {
       setDate(`D - day`);
     } else {
-      setDate(`D - ${diff + 1}`);
+      setDate(`D - ${diff}`);
     }
     // console.log(`Dday까지 ${dDay < 10 ? `0${diff}` : diff}일 남았습니다.`);
   }
