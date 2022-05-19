@@ -245,7 +245,6 @@ const LandingPage = () => {
         if (!audioNow.landing && !member.soundOff) {
           // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
           if (sound1) {
-            console.log("재생이 또 된다;;", audioNow)
             const newAudio = {...audioNow, stopFunc: obj1.stop}
             newAudio.landing = true
             setAudioNow(newAudio)
