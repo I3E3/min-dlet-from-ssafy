@@ -12,19 +12,30 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { useSound } from "use-sound";
 import ButtonEffect from "assets/musics/button_effect.wav";
-import { useRecoilValue } from "recoil";
+import FlowerGarden from "assets/musics/flower_garden.mp3";
+import { useRecoilValue, useRecoilState } from "recoil";
 import memberState from "utils/memberState";
+import audioState from "utils/audioState";
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
+const musicOn = [false]
+const isMusicStopped = [false]
 
 function MyGardenMain() {
   const member = useRecoilValue(memberState);
+  const [audioNow, setAudioNow] = useRecoilState(audioState)
   const navigate = useNavigate();
-  const [play] = useSound(ButtonEffect, {
+  const [play3, obj3] = useSound(FlowerGarden, {
+    volume: 0.2,
+    interrupt: true,
+  });
+  const sound3 = obj3.sound;
+  const [play2, obj2] = useSound(ButtonEffect, {
     volume: 0.4,
     interrupt: true,
   });
+  const sound2 = obj2.sound;
 
   const [dandelions, setDandelions] = useState([]);
   const [dandelion0, setDandelion0] = useState(true);
@@ -33,28 +44,34 @@ function MyGardenMain() {
   const [dandelion3, setDandelion3] = useState(true);
   const [dandelion4, setDandelion4] = useState(true);
 
-  const onHomeClick = () => {
+  const onHomeClick = (e) => {
+    e.stopPropagation()
+    // obj3.stop()
+    obj3.stop()
     if (!member.soundOff) {
-      play();
+      play2();
     }
+    const newAudio = {...audioNow}
+    newAudio.flowerGarden = false
+    setAudioNow(newAudio)
     navigate(`/`);
   };
   const onSettingsClick = () => {
     if (!member.soundOff) {
-      play();
+      play2();
     }
     navigate(`/settings`);
   };
 
   const onAlbumClick = () => {
     if (!member.soundOff) {
-      play();
+      play2();
     }
     navigate(`/mygarden/album`);
   };
 
   const onCabinetClick = () => {
-    play();
+    play2();
     navigate(`/mygarden/cabinet`);
   };
 
@@ -98,7 +115,19 @@ function MyGardenMain() {
   }, []);
 
   return (
-    <div className={cx("container")}>
+    <div className={cx("container")}
+      onClick={() => {
+        if (!member.soundOff && !audioNow.flowerGarden) {
+          if (sound3) {
+            console.log('또, ', audioNow.flowerGarden)
+            play3()
+            const newAudio = {...audioNow}
+            newAudio.flowerGarden = true
+            setAudioNow(newAudio)
+          }
+        }
+      }}
+    >
       <motion.div
         key={1}
         initial="hidden"
