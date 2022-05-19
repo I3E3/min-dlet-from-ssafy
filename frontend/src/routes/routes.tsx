@@ -12,6 +12,8 @@ import SignupPage from 'pages/LandingPage/SignupPage';
 import MyGardenDandelionDetail from 'pages/MyGardenPage/MyDandelDetailPage';
 import Background from 'layouts/background';
 import MyDandelDetailPage from 'pages/MyGardenPage/MyDandelDetailPage';
+import MyDandelionPlant from 'pages/MyGardenPage/MyDandelionPlant';
+import MyDandelArrivedPage from 'pages/MyGardenPage/MyDandelArrivedPage';
 
 export default function Router() {
   return useRoutes([
@@ -40,6 +42,14 @@ export default function Router() {
     {
       path: '/mygarden/cabinet',
       element: <MyCabinetPage />,
+    },
+    {
+      path: '/mygarden/plant/:id',
+      element: <MyDandelionPlant />,
+    },
+    {
+      path: '/mygarden/arrived/:id',
+      element: <MyDandelArrivedPage />,
     },
     {
       path: '/mygarden/dandelions/:id',
