@@ -34,13 +34,13 @@ public class AlbumListPageSvcDto {
     @ToString(of = {"dandelionSeq", "description"})
     public static class dandelionInfo {
 
-        private Long DandelionSeq;
+        private Long dandelionSeq;
 
         private String description;
 
         @Builder
         public dandelionInfo(Long dandelionSeq, String description) {
-            this.DandelionSeq = dandelionSeq;
+            this.dandelionSeq = dandelionSeq;
             this.description = description;
         }
     }
