@@ -119,7 +119,6 @@ function MyGardenMain() {
       onClick={() => {
         if (!member.soundOff && !audioNow.flowerGarden) {
           if (sound3) {
-            console.log('또, ', audioNow.flowerGarden)
             play3()
             const newAudio = {...audioNow}
             newAudio.flowerGarden = true
