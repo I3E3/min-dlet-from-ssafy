@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import Swal from 'sweetalert2';
 import { getDandelionDetail, deletePetalSeq } from 'services/api/MyGardenApi';
 import styles from './MyGardenDandelionDetail.module.scss';
-import bin2 from 'assets/images/signimg.png';
+import bin2 from 'assets/images/bin2.png';
 import { useNavigate, useParams } from 'react-router-dom';
 const cx = classNames.bind(styles);
 const cards = [petal, petal, petal, petal, petal, petal];
