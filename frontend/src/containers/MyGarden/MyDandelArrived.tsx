@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import Swal from 'sweetalert2';
 import { getDandelionDetail, deletePetalSeq } from 'services/api/MyGardenApi';
 import styles from './MyGardenDandelionDetail.module.scss';
-import bin2 from 'assets/images/signimg.png';
+import bin2 from 'assets/images/bin2.png';
 import { useNavigate, useParams } from 'react-router-dom';
 const cx = classNames.bind(styles);
 const cards = [petal, petal, petal, petal, petal, petal];
@@ -28,7 +28,6 @@ const trans = (r: number, s: number) =>
 const MyGardenDandelionDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const baseUrl = 'http://localhost:8080/';
   const [count, setCount] = useState(0);
   const [list, setList] = useState([
     {
@@ -48,7 +47,7 @@ const MyGardenDandelionDetail = () => {
   }));
 
   const Back = () => {
-    navigate(-1);
+    navigate('/mygarden');
   };
 
   const deletePetal = async (seq: number) => {
@@ -69,56 +68,7 @@ const MyGardenDandelionDetail = () => {
     console.log(seq);
   };
 
-  // const onDeleteDandelionClick = async () => {
-  //   await axios({
-  //     // url: `${baseUrl}/dandelions/${id}`,
-  //     url: `${baseUrl}/dandelions/1`,
-  //     method: 'delete',
-  //   })
-  //     .then((res) => {
-  //       console.log('민들레 상세보기 삭제 성공');
-  //       console.log(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log('민들레 상세보기 삭제 실패');
-  //       console.log(err);
-  //     });
-  // };
-
-  // const onStoreDandelionClick = async () => {
-  //   await axios({
-  //     // url: `${baseUrl}/dandelions/${id}/status`,
-  //     url: `${baseUrl}/dandelions/1/status`,
-  //     method: 'patch',
-  //     data: {
-  //       status: 'ALBUM',
-  //     },
-  //   })
-  //     .then((res) => {
-  //       console.log('민들레 보관하기 성공');
-  //       console.log(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log('민들레 보관하기 실패');
-  //       console.log(err);
-  //     });
-  // };
-
   const getDetail = async () => {
-    // await axios({
-    //   // url: `baseUrl/dandelions/${id}`,
-    //   url: `${baseUrl}/dandelions/1`,
-    //   method: 'get',
-    // })
-    //   .then((res) => {
-    //     console.log('민들레 상세보기 조회 성공');
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log('민들레 상세보기 조회 실패');
-    //     console.log(err);
-    //   });
-
     const num = Number(id);
     console.log(num);
 
