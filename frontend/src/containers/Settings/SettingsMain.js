@@ -10,10 +10,9 @@ import album from "assets/images/photo-album.png";
 import Swal from "sweetalert2";
 import { useRecoilState } from "recoil";
 import memberState from "utils/memberState";
-import { useSound } from 'use-sound';
-import ButtonEffect from 'assets/musics/button_effect.wav'
-import { toast } from 'react-hot-toast'
-
+import { useSound } from "use-sound";
+import ButtonEffect from "assets/musics/button_effect.wav";
+import { toast } from "react-hot-toast";
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -24,7 +23,7 @@ const MemberForm = styled.div`
 
 function SettingsMain() {
   const [member, setMember] = useRecoilState(memberState);
-  const [play, ] = useSound(ButtonEffect, {
+  const [play] = useSound(ButtonEffect, {
     volume: 0.4,
     interrupt: true,
   });
@@ -32,29 +31,32 @@ function SettingsMain() {
   // const soundOnOff = async (sound) => {
   const soundOnOff = async () => {
     const checkData = {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        soundOff: !member.soundOff
-      })
-    }
+        soundOff: !member.soundOff,
+      }),
+    };
     try {
-      const res = await fetch(`${BaseURL}members/${member.seq}/sound-off`, checkData);
+      const res = await fetch(
+        `${BaseURL}members/${member.seq}/sound-off`,
+        checkData
+      );
       if (res.status === 200) {
         toast.success(`계정의 음악 설정을 성공적으로 변경하였습니다.`);
       } else {
-        toast.error('계정 음악 설정 변경에 실패하였습니다.');
+        toast.error("계정 음악 설정 변경에 실패하였습니다.");
       }
     } catch {
-      toast.error('계정 음악 설정 변경에 실패하였습니다.');
+      toast.error("계정 음악 설정 변경에 실패하였습니다.");
     }
 
-    const newMember = { ...member }
-    newMember.soundOff = !member.soundOff
-    setMember(newMember)
+    const newMember = { ...member };
+    newMember.soundOff = !member.soundOff;
+    setMember(newMember);
 
     // await axios({
     //   url: `${BaseURL}/${memberSeq}/sound`,
@@ -76,21 +78,21 @@ function SettingsMain() {
   const navigate = useNavigate();
   const onGardenClick = () => {
     if (!member.soundOff) {
-      play()
+      play();
     }
     navigate(`/mygarden`);
   };
 
   const onAlbumClick = () => {
     if (!member.soundOff) {
-      play()
+      play();
     }
     navigate(`/mygarden/album`);
   };
 
   const onCabinetClick = () => {
     if (!member.soundOff) {
-      play()
+      play();
     }
     navigate(`/mygarden/cabinet`);
   };
@@ -162,11 +164,11 @@ function SettingsMain() {
             <img className={cx("btn")} src={album} alt="앨범" />
           </button>
         </div>
-        <div>
+        {/* <div>
           <button onClick={onCabinetClick}>
             <img className={cx("btn")} src={pencil} alt="기록보관함" />
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className={cx("inner-container")}>
@@ -177,30 +179,30 @@ function SettingsMain() {
           <div className={cx("content-box")}>
             <div className={cx("sub-title")}>Music</div>
             <form>
-            <div className={cx("content")}>
-              <input
-                type="radio"
-                name="sound"
-                id="on"
-                value="false"
-                checked={!member.soundOff}
-                onClick={soundOnOff}
-                // onChange={(e) => soundOnOff(e.target.value)}
-              />
-              <label htmlFor="on" style={{ marginRight: "20px" }}>
-                On
-              </label>
-              <input
-                type="radio"
-                name="sound"
-                id="off"
-                value="true"
-                checked={member.soundOff}
-                onClick={soundOnOff}
-                // onChange={(e) => {soundOnOff(e.target.value)}}
-              />
-              <label htmlFor="off">Off</label>
-            </div>
+              <div className={cx("content")}>
+                <input
+                  type="radio"
+                  name="sound"
+                  id="on"
+                  value="false"
+                  checked={!member.soundOff}
+                  onClick={soundOnOff}
+                  // onChange={(e) => soundOnOff(e.target.value)}
+                />
+                <label htmlFor="on" style={{ marginRight: "20px" }}>
+                  On
+                </label>
+                <input
+                  type="radio"
+                  name="sound"
+                  id="off"
+                  value="true"
+                  checked={member.soundOff}
+                  onClick={soundOnOff}
+                  // onChange={(e) => {soundOnOff(e.target.value)}}
+                />
+                <label htmlFor="off">Off</label>
+              </div>
             </form>
           </div>
 
