@@ -10,7 +10,6 @@ import 'assets/styles/base/swal.css'
 function setScreenSize() {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', `${vh}px`);
-  console.log('실행!');
 }
 setScreenSize();
 window.addEventListener('resize', setScreenSize);

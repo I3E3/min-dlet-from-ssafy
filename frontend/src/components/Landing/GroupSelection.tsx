@@ -4,13 +4,15 @@ import styles from 'pages/LandingPage/LandingPage.module.scss';
 import { useRecoilState } from 'recoil';
 import memberState from 'utils/memberState';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router';
 
 const BaseURL = process.env.REACT_APP_BASE_URL
 
 const cx = classNames.bind(styles);
-function GroupSelection ({setIsGroupShowing = () => {}}: React.SetStateAction<React.ComponentState>) {
+function GroupSelection ({setIsGroupShowing = () => {}, setAudioNow, stop, audioNow}: React.SetStateAction<React.ComponentState>) {
   const [communities, ] = useState(['KOREA', 'WORLD', 'US'])
   const [member, setMember] = useRecoilState(memberState)
+  const navigate = useNavigate();
 
   const handleIsGroupShowing = () => {
     setIsGroupShowing(false)
@@ -57,7 +59,7 @@ function GroupSelection ({setIsGroupShowing = () => {}}: React.SetStateAction<Re
     <div
       style={{top: 0, zIndex: 1, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.2)', position: 'absolute'}}>
       <div
-        style={{zIndex: 3, position: 'absolute', top: '35%', left: '50%', width: 'min(90vw, 400px)', height: 'min(25vh, 250px)', padding: '40px', textAlign: 'center', backgroundColor: '#FBFBFB66', borderRadius: '10px', boxShadow: '0 2px 3px 0 rgba(34, 36, 38, 0.15)', transform: 'translateX(-50%) translateY(-50%)', }}>
+        style={{zIndex: 3, position: 'absolute', top: '35%', left: '50%', width: 'min(90vw, 400px)', height: 'min(30vh, 300px)', padding: '40px', textAlign: 'center', backgroundColor: '#FBFBFB66', borderRadius: '10px', boxShadow: '0 2px 3px 0 rgba(34, 36, 38, 0.15)', transform: 'translateX(-50%) translateY(-50%)', }}>
         <h1 style={{color: "white", fontWeight: "normal"}}>커뮤니티 설정</h1>
         <hr/>
         {/* <label htmlFor="options">허허</label> */}
@@ -67,6 +69,20 @@ function GroupSelection ({setIsGroupShowing = () => {}}: React.SetStateAction<Re
           })}
 
         </select>
+        <div style={{textAlign: "end", position: "absolute", bottom: "20px", right: "20px"}}>
+          <button style={{fontSize: "20px", borderRadius: "10%", border: "2px solid #568BDA", padding: "5px"}}
+          onClick={(e) => {
+            e.stopPropagation()
+            const newAudio = {...audioNow}
+            newAudio.landing = false
+            setAudioNow(newAudio)
+            stop()
+            navigate('/guide')
+          }}
+          >
+            가이드 보기
+          </button>
+        </div>
       </div>
       <div onClick={handleIsGroupShowing} style={{width: "100%", height: "100%", position: "relative"}}></div>
     </div>
