@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './MyGardenDandelion2.module.scss';
-import bin2 from 'assets/images/signimg.png';
+import bin2 from 'assets/images/bin2.png';
 import photo from 'assets/images/photo-album.png';
 import shovel from 'assets/images/shovel.png';
 import pencil_check from 'assets/images/pencil_check.png';
@@ -276,10 +276,10 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
       headers: config,
     })
       .then((res) => {
-        Swal.fire("보관함에 저장 성공!", "", "success");
-        console.log("보관함에 저장 성공");
-        setStatus("ALBUM");
-        setDandel(false)
+        Swal.fire('보관함에 저장 성공!', '', 'success');
+        console.log('보관함에 저장 성공');
+        setStatus('ALBUM');
+        setDandel(false);
       })
       .catch((err) => {
         Swal.fire('보관함에 저장 실패!', '', 'warning');
