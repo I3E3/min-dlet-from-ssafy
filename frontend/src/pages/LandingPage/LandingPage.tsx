@@ -15,6 +15,7 @@ import {
 } from 'services/api/Contents';
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 import memberState from 'utils/memberState';
+import audioState from 'utils/audioState';
 import { ReactComponent as Tap } from 'assets/images/Landing/tap.svg';
 import { ReactComponent as DownArrow } from 'assets/images/Landing/down-arrow.svg';
 import { ReactComponent as UpArrow } from 'assets/images/Landing/up-arrow.svg';
@@ -42,6 +43,7 @@ const LandingPage = () => {
   const petaldata = useRecoilValue(petalCatchResultList);
   const patalseq = useRecoilValue(petalCatchResultSeq);
   const [member, setMember] = useRecoilState(memberState);
+  const [audioNow, setAudioNow] = useRecoilState(audioState);
   const [isGardenShowing, setIsGardenShowing] = useState(false);
   const [isGuideShowing, setIsGuideShowing] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(member.soundOff);
@@ -178,9 +180,11 @@ const LandingPage = () => {
     if (!member.soundOff) {
       sound1.mute(true);
     } else {
-      if (!musicOn[0]) {
+      if (!audioNow.landing) {
         play1();
-        musicOn[0] = true
+        const newAudio = {...audioNow}
+        newAudio.landing = true
+        setAudioNow(newAudio)
       }
       sound1.mute(false);
     }
@@ -238,11 +242,13 @@ const LandingPage = () => {
         overflow: 'hidden',
       }}
       onClick={() => {
-        if (!musicOn[0] && !member.soundOff) {
+        if (!audioNow.landing && !member.soundOff) {
           // 브금이 아직 재생 안 되었고 member의 soundoff가 false여야 재생
           if (sound1) {
+            const newAudio = {...audioNow, stopFunc: obj1.stop}
+            newAudio.landing = true
+            setAudioNow(newAudio)
             play1();
-            musicOn[0] = true;
           }
         }
       }}
@@ -341,7 +347,11 @@ const LandingPage = () => {
           style={{}}
           onClick={(e) => {
             e.stopPropagation();
-            obj1.stop()
+            audioNow.stopFunc()
+            obj1.stop();
+            const newAudio = {...audioNow}
+            newAudio.landing = false
+            setAudioNow(newAudio)
             navigate('/mygarden');
           }}
         >

@@ -14,6 +14,7 @@ import Background from 'layouts/background';
 import MyDandelDetailPage from 'pages/MyGardenPage/MyDandelDetailPage';
 import MyDandelionPlant from 'pages/MyGardenPage/MyDandelionPlant';
 import MyDandelArrivedPage from 'pages/MyGardenPage/MyDandelArrivedPage';
+import DesktopPage from 'pages/DesktopPage'
 
 export default function Router() {
   return useRoutes([
@@ -76,6 +77,10 @@ export default function Router() {
     {
       path: '/layout',
       element: <Background />,
+    },
+    {
+      path: '/desktop',
+      element: <DesktopPage />,
     },
   ]);
 }

@@ -153,11 +153,12 @@ const Login = () => {
                 <span
                   style={{
                     textAlign: 'left',
-                    color: '#1B9C37',
+                    color: 'red',
                     fontSize: '12px',
+                    lineHeight: '100%'
                   }}
                 >
-                  사용 할 수 없는 ID 입니다.
+                  사용할 수 없는 ID 입니다.
                 </span>
               ))}
           </div>
