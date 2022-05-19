@@ -28,8 +28,8 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
   };
 
   const sendData = () => {
-    console.log(imgFile);
-    console.log(text);
+    //  console.log(imgFile);
+    //  console.log(text);
     onClick(4);
   };
 

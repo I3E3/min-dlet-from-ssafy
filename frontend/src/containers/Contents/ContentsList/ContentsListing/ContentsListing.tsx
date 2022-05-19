@@ -50,9 +50,9 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
   };
 
   useEffect(() => {
-    console.log(list);
-    console.log(seq);
-    console.log(count);
+    // console.log(list);
+    // console.log(seq);
+    //  console.log(count);
   }, []);
 
   const bind = useDrag(

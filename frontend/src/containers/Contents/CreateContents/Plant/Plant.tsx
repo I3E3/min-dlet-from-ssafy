@@ -20,7 +20,6 @@ const Plant = ({ onClick }: any) => {
   const [isShowing, setIsShowing] = useState(true);
 
   useEffect(() => {
-    console.log(endstate);
     if (endstate === true) {
       onClick(1);
     }

@@ -29,18 +29,18 @@ const Plant = ({ onClick, seq, count, list }: any) => {
   const [isShowing, setIsShowing] = useState(true);
 
   useEffect(() => {
-    console.log(endstate);
+    //   console.log(endstate);
     if (endstate === true) {
       onClick(1);
     }
   }, [endstate]);
 
   useEffect(() => {
-    console.log(endstate);
+    //    console.log(endstate);
   }, [possibleState]);
 
   useEffect(() => {
-    console.log(checkState);
+    //   console.log(checkState);
     possible(1);
     //화면을 누르면  api 호출해서 가능한지 확인
     //가능하면 넌겨주고 안되면 toast 후 home으로

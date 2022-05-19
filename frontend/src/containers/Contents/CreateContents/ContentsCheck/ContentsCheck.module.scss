@@ -11,31 +11,34 @@
     padding: 0 0 50px 0;
     color: white;
     font-size: 1.3em;
+    text-shadow: 1px 1px 2px rgb(255, 255, 255), 0 0 1em rgb(99, 99, 99),
+      0 0 0.2em rgb(71, 71, 71);
   }
+
   .home-btn {
     position: absolute;
     width: 12vw;
     right: 12vw;
-    top: 7vh;
+    top: 10vh;
     padding: 0 0 50px 0;
   }
   .petal-img {
     position: relative;
-    margin: 15vh 0 0 5vw;
+    margin: 15vh 3vw 0 3vw;
     text-align: center;
 
     .petal {
+      margin-left: 2.5vw;
       transform: rotate(-20deg);
-      width: 90vw;
-      height: 65vh;
+      width: 92vw;
     }
     .editor {
       border: 2px solid white;
       box-shadow: 0px 2px 2px 1px rgb(199, 199, 199) inset;
-      top: 26vh;
-      left: 47%;
-      height: 30vh;
-      width: 70vw;
+      top: 42%;
+      left: 48%;
+      height: 200px;
+      width: 250px;
       transform: translate(-50%, -50%);
       position: absolute;
       padding: 2% 2% 2% 0;
@@ -124,5 +127,7 @@
     font-size: 1.7em;
     text-align: center;
     color: #ffffff;
+    text-shadow: 1px 1px 2px rgb(255, 255, 255), 0 0 1em rgb(99, 99, 99),
+      0 0 0.2em rgb(71, 71, 71);
   }
 }

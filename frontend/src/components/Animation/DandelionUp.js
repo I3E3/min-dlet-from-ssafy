@@ -6,7 +6,7 @@ export default function DandelionUp({ dandelUp, petal }) {
   const { scene } = useGLTF(require('assets/Models/two_dandel.glb'));
   const dandle = useRef();
   useEffect(() => {
-    console.log(dandelUp);
+    //   console.log(dandelUp);
   }, [dandelUp]);
 
   useFrame(() => {

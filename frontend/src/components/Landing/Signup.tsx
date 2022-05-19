@@ -116,7 +116,7 @@ const Login = () => {
   return (
     <section className={cx('member-modal')}>
       {/* <Toaster /> */}
-      <h1 style={{ paddingTop: '15px' }}>Min'dlet</h1>
+      <h1 style={{ paddingTop: '15px' }}>Min'dLet</h1>
       <form style={{ marginTop: '10px', lineHeight: '120%' }}>
         <div>
           <h3>아이디</h3>

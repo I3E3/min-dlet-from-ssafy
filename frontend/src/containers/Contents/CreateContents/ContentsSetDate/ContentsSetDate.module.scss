@@ -6,13 +6,37 @@
   text-align: center;
   align-items: center;
   justify-content: center;
+  .back-btn {
+    position: absolute;
+    width: 10vw;
+    left: 10vw;
+    top: 10vh;
+    padding: 0 0 50px 0;
+    color: white;
+    font-size: 1.3em;
+    text-shadow: 1px 1px 2px rgb(255, 255, 255), 0 0 1em rgb(99, 99, 99),
+      0 0 0.2em rgb(71, 71, 71);
+  }
+
   .calendar-btn {
     color: white;
   }
+
   .calendar {
+    .btn {
+      .send-btn {
+        font-size: 1.7em;
+        text-align: center;
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgb(255, 255, 255), 0 0 1em rgb(99, 99, 99),
+          0 0 0.2em rgb(71, 71, 71);
+      }
+    }
     .calendar-title {
       color: white;
       font-size: 1.3em;
+      text-shadow: 1px 1px 2px rgb(255, 255, 255), 0 0 1em rgb(99, 99, 99),
+        0 0 0.2em rgb(71, 71, 71);
     }
     .selected-date {
       font-size: 0.9em;
@@ -37,6 +61,7 @@
     abbr[title] {
       font-size: 16px;
       color: #3a3a3d;
+      border: none;
     }
     .react-calendar__tile:enabled:hover,
     .react-calendar__tile:enabled:focus {

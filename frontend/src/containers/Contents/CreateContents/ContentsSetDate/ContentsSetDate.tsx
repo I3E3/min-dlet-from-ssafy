@@ -15,7 +15,7 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
   };
 
   const setData = () => {
-    console.log(form);
+    //   console.log(form);
     onClick(4);
   };
   const [dateState, setDateState] = useState(date);
@@ -31,6 +31,9 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
   return (
     <div className={cx('container')}>
       <div className={cx('calendar')}>
+        <button className={cx('back-btn')} onClick={back}>
+          Back
+        </button>
         <div className={cx('calendar-title')}>도착 할 날짜를 입력해주세요.</div>
         <Calendar
           className={cx('react-calendar')}
@@ -44,13 +47,8 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
           Selected: {moment(dateState).format('MMMM Do, YYYY')}
         </div> */}
         <div className={cx('btn')}>
-          <button className={cx('calendar-btn')} onClick={setData}>
+          <button className={cx('send-btn')} onClick={setData}>
             Send
-          </button>
-        </div>
-        <div>
-          <button className={cx('calendar-btn')} onClick={back}>
-            Back
           </button>
         </div>
       </div>
