@@ -14,7 +14,7 @@ const Blow = ({ onClick, form, setForm }: any) => {
   const [touchstate, SetTouchstate] = useState(false);
   const [throttle, setThrottle] = useState(false);
   const [checkState, SetCheckState] = useState(0);
-  const [possibleState, SetState] = useState(0);
+  const [possibleState, SetState] = useState(false);
   const [wind, SetWind] = useState(false);
   const navigate = useNavigate();
   const blow = () => {
@@ -88,7 +88,7 @@ const Blow = ({ onClick, form, setForm }: any) => {
     SetCheckState(state);
   };
 
-  const possible = (state: number) => {
+  const possible = (state: boolean) => {
     SetState(state);
   };
 
