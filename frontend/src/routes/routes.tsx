@@ -15,6 +15,7 @@ import MyDandelDetailPage from 'pages/MyGardenPage/MyDandelDetailPage';
 import MyDandelionPlant from 'pages/MyGardenPage/MyDandelionPlant';
 import MyDandelArrivedPage from 'pages/MyGardenPage/MyDandelArrivedPage';
 import DesktopPage from 'pages/DesktopPage'
+import GuidePage from 'pages/GuidePage'
 
 export default function Router() {
   return useRoutes([
@@ -81,6 +82,10 @@ export default function Router() {
     {
       path: '/desktop',
       element: <DesktopPage />,
+    },
+    {
+      path: '/guide',
+      element: <GuidePage />,
     },
   ]);
 }

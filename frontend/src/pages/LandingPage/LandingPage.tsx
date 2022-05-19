@@ -299,7 +299,7 @@ const LandingPage = () => {
 
       {isShowing && <LandingModel />}
       {isGroupShowing && (
-        <GroupSelection setIsGroupShowing={setIsGroupShowing} />
+        <GroupSelection stop={obj1.stop} setAudioNow={setAudioNow} setIsGroupShowing={setIsGroupShowing} audioNow={audioNow} />
       )}
 
       {isGuideShowing && (
