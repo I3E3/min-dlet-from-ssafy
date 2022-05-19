@@ -29,12 +29,15 @@ public class LogTraceAspect {
             String[] parameterNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
             Object[] args = joinPoint.getArgs();
             if (parameterNames != null && args != null) {
-                parameterMessage.append(" ").append("(parameters");
+                parameterMessage.append(" parameters=[");
                 int size = parameterNames.length;
                 for (int i = 0; i < size; i++) {
-                    parameterMessage.append(" ").append("[").append(parameterNames[i]).append(" ").append("->").append(" ").append(args[i]).append("]");
+                    parameterMessage.append("(").append(parameterNames[i]).append("=").append(args[i]).append(")");
+                    if (i < size - 1) {
+                        parameterMessage.append(", ");
+                    }
                 }
-                parameterMessage.append(")");
+                parameterMessage.append("]");
             }
 
             status = logTrace.begin(message, parameterMessage.toString());
