@@ -7,9 +7,7 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import javax.annotation.PostConstruct;
 import java.util.Optional;
-import java.util.TimeZone;
 import java.util.UUID;
 
 @EnableScheduling
@@ -24,11 +22,6 @@ public class MindletApplication {
 	@Bean
 	public AuditorAware<String> auditorProvider() {
 		return () -> Optional.of(UUID.randomUUID().toString());
-	}
-
-	@PostConstruct
-	public void started(){
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 	}
 }
 
