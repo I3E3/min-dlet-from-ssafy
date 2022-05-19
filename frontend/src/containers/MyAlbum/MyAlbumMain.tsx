@@ -1,16 +1,16 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "./MyAlbum.module.scss";
-import classNames from "classnames/bind";
-import gear from "assets/images/gear.png";
-import garden from "assets/images/garden.png";
-import pencil from "assets/images/pencil.png";
-import MyAlbumSide from "./MyAlbumSide";
-import axios from "axios";
-import ButtonEffect from "assets/musics/button_effect.wav";
-import { useSound } from "use-sound";
-import { useRecoilValue } from "recoil";
-import memberState from "utils/memberState";
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './MyAlbum.module.scss';
+import classNames from 'classnames/bind';
+import gear from 'assets/images/gear.png';
+import garden from 'assets/images/garden.png';
+import pencil from 'assets/images/pencil.png';
+import MyAlbumSide from './MyAlbumSide';
+import axios from 'axios';
+import ButtonEffect from 'assets/musics/button_effect.wav';
+import { useSound } from 'use-sound';
+import { useRecoilValue } from 'recoil';
+import memberState from 'utils/memberState';
 // import Flip from 'assets/musics/page-flip-7.wav'
 // import useSound from 'use-sound';
 
@@ -30,9 +30,9 @@ function MyAlbumMain() {
     interrupt: true,
   });
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   const config = {
-    Authorization: "Bearer " + token,
+    Authorization: 'Bearer ' + token,
   };
   let xStart = 0;
   let xEnd = 0;
@@ -90,12 +90,12 @@ function MyAlbumMain() {
 
   useEffect(() => {
     const nowBook = book.current;
-    nowBook?.addEventListener("touchstart", handleTouchStart);
-    nowBook?.addEventListener("touchend", handleTouchEnd);
+    nowBook?.addEventListener('touchstart', handleTouchStart);
+    nowBook?.addEventListener('touchend', handleTouchEnd);
     axios({
       // url: `baseUrl/dandelions/{id}/description`, 나중에 아이디 있는거로 교체
       url: `garden/album?page=1&size=4`,
-      method: "GET",
+      method: 'GET',
       baseURL: BaseURL,
       headers: config,
     })
@@ -114,8 +114,8 @@ function MyAlbumMain() {
       });
 
     return () => {
-      nowBook?.removeEventListener("touchstart", handleTouchStart);
-      nowBook?.removeEventListener("touchend", handleTouchEnd);
+      nowBook?.removeEventListener('touchstart', handleTouchStart);
+      nowBook?.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
@@ -156,9 +156,9 @@ function MyAlbumMain() {
     navigate(`/mygarden/cabinet`);
   };
   return (
-    <div className={cx("container")}>
+    <div className={cx('container')}>
       <div>{/* <span>앨범</span> */}</div>
-      <div className={cx("btns")}>
+      <div className={cx('btns')}>
         <div>
           <button
             onClick={(e) => {
@@ -168,7 +168,7 @@ function MyAlbumMain() {
               onSettingsClick();
             }}
           >
-            <img className={cx("btn")} src={gear} alt="설정" />
+            <img className={cx('btn')} src={gear} alt="설정" />
           </button>
         </div>
         <div>
@@ -180,7 +180,7 @@ function MyAlbumMain() {
               onGardenClick();
             }}
           >
-            <img className={cx("btn")} src={garden} alt="꽃밭" />
+            <img className={cx('btn')} src={garden} alt="꽃밭" />
           </button>
         </div>
         {/* <div>
@@ -196,11 +196,11 @@ function MyAlbumMain() {
       {/* <div>
       </div> */}
       {/* <h1 style={{fontSize: "1.2rem", marginLeft: "16%"}}>내가 따로 저장한 꽃들</h1> */}
-      <div ref={book} className={cx("cover")} style={{ position: "relative" }}>
-        <div className={cx("book")}>
+      <div ref={book} className={cx('cover')} style={{ position: 'relative' }}>
+        <div className={cx('book')}>
           {/* <input style={{width: "20px", height: "20px", backgroundColor: "black", display: "none"}} type="radio" checked/> */}
           <div
-            className={`${cx("book__page")} ${cx("book__page__first")}`}
+            className={`${cx('book__page')} ${cx('book__page__first')}`}
           ></div>
 
           {sides.map((value: number) => {
@@ -233,12 +233,12 @@ function MyAlbumMain() {
             </div>
           </div> */}
 
-          <div className={cx("book__page")}>
+          <div className={cx('book__page')}>
             <h1
               style={{
-                marginLeft: "20%",
-                marginTop: "50%",
-                fontSize: "1.2rem",
+                marginLeft: '20%',
+                marginTop: '50%',
+                fontSize: '1.2rem',
               }}
             >
               추억을 한 송이씩 채워보세요!
