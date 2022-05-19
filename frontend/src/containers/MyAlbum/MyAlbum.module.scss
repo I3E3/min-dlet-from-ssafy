@@ -1,5 +1,6 @@
 .container {
-  height: 100vh;
+  // height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background-image: url("../../assets/images/garden_back.webp");
   background-size: cover;
   padding-right: 20px;
