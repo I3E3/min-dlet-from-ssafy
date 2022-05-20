@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentsEdit.module.scss';
 import iconimg from 'assets/images/icon/earth-globe-white.png';
+import backimg from 'assets/images/icon/left-arrow.png';
 import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
@@ -41,7 +42,7 @@ const ContentsEdit = ({ onClick, form, setForm }: any) => {
       </div>
       <ContentsEditor form={form} img={SetImg} msg={SetMsg} onSend={check} />
       <button onClick={back} className={cx('back-btn')}>
-        Back
+        <img className={cx('back-img')} src={backimg} alt="backbtn" />
       </button>
     </>
   );

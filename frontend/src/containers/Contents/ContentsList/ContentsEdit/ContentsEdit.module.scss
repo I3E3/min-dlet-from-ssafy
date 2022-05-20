@@ -12,9 +12,12 @@
   position: absolute;
   width: 10vw;
   left: 10vw;
-  top: 10vh;
+  top: 7vh;
   z-index: 9999;
   padding: 0 0 50px 0;
   color: white;
   font-size: 1.3em;
+  .back-img {
+    width: 50px;
+  }
 }
