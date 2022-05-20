@@ -93,9 +93,10 @@ fe/feature/member/#adwadawdwadwad : 프론트엔드 작업 브랜치
 
 ## 와이어 프레임
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8286f486-0434-4a9f-ba7f-063d59f57199/Untitled.png)
+![2412412](https://user-images.githubusercontent.com/31895069/169442005-8c7fde34-3290-4bbb-b57e-f5fdd985612b.png)
+
 
 ## Site Map
-
+![Untitled 12222](https://user-images.githubusercontent.com/31895069/169442138-fa9f51c4-ceee-4758-bd8c-f259a75901c8.png)
 <hr>
 
