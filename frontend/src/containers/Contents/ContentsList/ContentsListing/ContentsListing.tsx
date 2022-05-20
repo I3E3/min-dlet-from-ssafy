@@ -155,9 +155,9 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
             </animated.div>
           ))}
         </div>
-        <div className={cx('send-btn')} onClick={send}>
+        <button className={cx('send-btn')} onClick={send}>
           Send
-        </div>
+        </button>
       </div>
     </section>
   );

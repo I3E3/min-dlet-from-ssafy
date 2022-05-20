@@ -7,6 +7,7 @@
   align-items: center;
   justify-content: center;
   .back-btn {
+    z-index: 9999;
     position: absolute;
     width: 10vw;
     left: 10vw;
@@ -28,8 +29,6 @@
         font-size: 1.7em;
         text-align: center;
         color: #ffffff;
-        text-shadow: 1px 1px 2px rgb(255, 255, 255), 0 0 1em rgb(99, 99, 99),
-          0 0 0.2em rgb(71, 71, 71);
       }
     }
     .calendar-title {
