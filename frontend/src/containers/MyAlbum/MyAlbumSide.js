@@ -7,7 +7,7 @@ import MyAlbumFlower from "./MyAlbumFlower";
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
 
-function MyAlbumSide({ order }) {
+function MyAlbumSide({ order, totalPage }) {
   const [flowers, setFlowers] = useState([])
 
   const token = localStorage.getItem("token");
@@ -53,7 +53,7 @@ function MyAlbumSide({ order }) {
             <span>🌼꽃</span>
           </div> */}
         </div>
-        <span style={{position: "absolute", fontSize: "1.2rem", bottom: "10px", right: "15px"}}>{order}</span>
+        <span style={{position: "absolute", fontSize: "1.2rem", bottom: "10px", right: "15px"}}>{order} / {totalPage}</span>
       </div>
     </>
 
