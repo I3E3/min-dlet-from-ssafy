@@ -19,11 +19,6 @@
  롤링페이퍼를 통하여 일상에 지친 소비자들에게 잠시 동화적 순간을 선물하여 힘이 되어 주는 것이 우리 웹사이트의 목표입니다. 평소 마음에 담아왔던 말을 정성스레 적어 민들레 씨앗으로 “후” 불어낸 뒤 다른 사람에게 위로를 받기도, 조언을 받기도 하는 것입니다.
 
 ---
-
-## 와이어 프레임
-
-[https://www.figma.com/file/1ORWF5Is7LwvbhH6uoGjwa/BlowYourDandelion?node-id=2%3A4](https://www.figma.com/file/1ORWF5Is7LwvbhH6uoGjwa/BlowYourDandelion?node-id=2%3A4)
-
 ## Git Convention
 
 - Commit Convention
