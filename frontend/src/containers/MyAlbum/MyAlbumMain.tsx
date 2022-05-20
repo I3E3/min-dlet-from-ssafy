@@ -21,6 +21,7 @@ const tempSide = [1, 1];
 
 function MyAlbumMain() {
   const [sides, setSides] = useState([1]); // 앨범이 총 몇 페이지 있는지 저장
+  const [totalPage, setTotalPage] = useState(0); // 앨범이 총 몇 페이지 있는지 저장
   // const [nowSide, setNowSide] = useState(1) // 현재 앨범 페이지
   const book = useRef<HTMLDivElement>(null);
   const member = useRecoilValue(memberState);
@@ -106,6 +107,7 @@ function MyAlbumMain() {
           return;
         } else {
           tempSide[1] = res.data.data.totalPageNum;
+          setTotalPage(res.data.data.totalPageNum)
           setSides(customRange(res.data.data.totalPageNum));
         }
       })
@@ -204,7 +206,7 @@ function MyAlbumMain() {
           ></div>
 
           {sides.map((value: number) => {
-            return <MyAlbumSide key={value} order={value} />;
+            return <MyAlbumSide key={value} order={value} totalPage={totalPage} />;
           })}
 
           {/* <input style={{width: "20px", height: "20px", backgroundColor: "black"}} type="radio" value="good" name="page" id="page-2"/>
