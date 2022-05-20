@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import petal from 'assets/images/petal-yellow-4.png';
 import classNames from 'classnames/bind';
-
+import backimg from 'assets/images/icon/left-arrow.png';
 import 'react-day-picker/dist/style.css';
 import styles from './ContentsCheck.module.scss';
 import { fDateDash } from 'utils/formatTime';
@@ -75,7 +75,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
             Send
           </div>
           <div className={cx('back-btn')} onClick={back}>
-            Back
+            <img className={cx('back-img')} src={backimg} alt="backbtn" />
           </div>
         </div>
       </div>

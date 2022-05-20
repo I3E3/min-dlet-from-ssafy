@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentsSetDate.module.scss';
 import Calendar from 'react-calendar';
+import backimg from 'assets/images/icon/left-arrow.png';
 import { fDateDash } from 'utils/formatTime';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
@@ -32,7 +33,7 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
     <div className={cx('container')}>
       <div className={cx('calendar')}>
         <button className={cx('back-btn')} onClick={back}>
-          Back
+          <img className={cx('back-img')} src={backimg} alt="backbtn" />
         </button>
         <div className={cx('calendar-title')}>도착 할 날짜를 입력해주세요.</div>
         <Calendar

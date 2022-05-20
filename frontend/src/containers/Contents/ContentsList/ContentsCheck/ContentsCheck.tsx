@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import 'react-day-picker/dist/style.css';
 import styles from './ContentsCheck.module.scss';
 import { fDateDash } from 'utils/formatTime';
+import backimg from 'assets/images/icon/left-arrow.png';
 import iconimg from 'assets/images/icon/earth-globe-white.png';
 import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
@@ -46,7 +47,7 @@ const ContentsCheck = ({ onClick, form, setForm }: any) => {
     <div className={cx('container')}>
       <img className={cx('home-btn')} src={iconimg} onClick={home} alt="home" />
       <div className={cx('back-btn')} onClick={back}>
-        Back
+        <img className={cx('back-img')} src={backimg} alt="backbtn" />
       </div>
       <div className={cx('petal-img')}>
         <img className={cx('petal')} src={petal} alt="petal" />
