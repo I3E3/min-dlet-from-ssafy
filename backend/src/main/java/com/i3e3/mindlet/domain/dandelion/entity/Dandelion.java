@@ -33,7 +33,7 @@ public class Dandelion extends BaseLastModifiedEntity {
     @Column(nullable = false, columnDefinition = "INT UNSIGNED")
     private Integer flowerSignNumber;
 
-    @Column(nullable = false)
+    @Column
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -77,6 +77,16 @@ public class Dandelion extends BaseLastModifiedEntity {
 
     public void delete() {
         this.isDeleted = true;
+
+        for (Petal petal : this.getPetals()) {
+            petal.delete();
+        }
+
+        this.tags.clear();
+    }
+
+    public void changeCommunity(Community community) {
+        this.community = community;
     }
 
     public enum Status {
@@ -86,6 +96,7 @@ public class Dandelion extends BaseLastModifiedEntity {
         RETURN("returned to owner"),
         PENDING("under confirm"),
         BLOCKED("inappropriate dandelion"),
+        READY("can't catch before return"),
         BLOSSOMED("in the garden"),
         ALBUM("in the album");
 

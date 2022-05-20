@@ -15,7 +15,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI(@Value("${springdoc.version}") String appVersion) {
         Info info = new Info()
-                .title("Mind'Let API")
+                .title("Min'dLet API")
                 .version(appVersion)
                 .description("Mind'Let API 명세서입니다.")
                 .termsOfService("https://smartbear.com/terms-of-use/")
