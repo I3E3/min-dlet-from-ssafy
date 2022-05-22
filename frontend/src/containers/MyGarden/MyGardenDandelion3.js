@@ -349,6 +349,8 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
     getDiff(dandelion.blossomedDate);
     if (finalDate == null) {
       setFinalDate("꽃말 등록하기");
+    } else {
+      setHasMessage(true)
     }
     console.log("이번 것", status, dandelion);
     if (status === "FLYING" || status === "ALBUM") {
@@ -356,7 +358,6 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
     } else if (status === "RETURN") {
       setRecord(true);
       setReturned(true);
-      console.log("뭐냐");
     } else if (status === "BLOSSOMED") {
       setRecord(true);
       setReturned(false);
@@ -371,7 +372,7 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
             <Icons src={cancel} alt="취소" />
           </IconCover>} */}
 
-        {show && record && (
+        {show && record && blossom (
           <IconCover
             onClick={() => {
               onRecordClick(dandelion.seq);

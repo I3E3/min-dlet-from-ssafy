@@ -5,8 +5,8 @@ import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
 import com.i3e3.mindlet.domain.dandelion.entity.Petal;
 import com.i3e3.mindlet.domain.dandelion.entity.Tag;
 import com.i3e3.mindlet.global.entity.base.BaseLastModifiedEntity;
+import com.i3e3.mindlet.global.enums.Role;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,13 +16,12 @@ import java.util.List;
 @Table(
         name = "tb_member",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "id"),
-                @UniqueConstraint(columnNames = "tel")
+                @UniqueConstraint(columnNames = "id")
         }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(of = {"seq", "id", "password", "tel", "role", "isDeleted"})
+@ToString(of = {"seq", "id", "password", "role", "isDeleted"})
 public class Member extends BaseLastModifiedEntity {
 
     @Id
@@ -35,9 +34,6 @@ public class Member extends BaseLastModifiedEntity {
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false, length = 13)
-    private String tel;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -68,19 +64,14 @@ public class Member extends BaseLastModifiedEntity {
     private List<MemberDandelionHistory> memberDandelionHistories = new ArrayList<>();
 
     @Builder
-    public Member(String id, String password, String tel) {
+    public Member(String id, String password) {
         this.id = id;
         this.password = password;
-        this.tel = tel;
         this.role = Role.MEMBER;
     }
 
     public void changePassword(String password) {
         this.password = password;
-    }
-
-    public void changeTel(String tel) {
-        this.tel = tel;
     }
 
     public void changeAppConfig(AppConfig appConfig) {
@@ -93,28 +84,15 @@ public class Member extends BaseLastModifiedEntity {
 
     public void delete() {
         this.isDeleted = true;
-    }
 
-    public enum Role implements GrantedAuthority {
-
-        MEMBER("ROLE_MEMBER", "ordinary member");
-
-        private final String authority;
-
-        private final String description;
-
-        Role(String authority, String description) {
-            this.authority = authority;
-            this.description = description;
+        for (Dandelion dandelion : this.dandelions) {
+            dandelion.delete();
         }
 
-        @Override
-        public String getAuthority() {
-            return null;
+        for (Petal petal : this.petals) {
+            petal.delete();
         }
 
-        public String getDescription() {
-            return description;
-        }
+        this.tags.clear();
     }
 }

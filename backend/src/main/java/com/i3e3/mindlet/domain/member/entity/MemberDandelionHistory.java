@@ -1,6 +1,7 @@
 package com.i3e3.mindlet.domain.member.entity;
 
 import com.i3e3.mindlet.domain.dandelion.entity.Dandelion;
+import com.i3e3.mindlet.global.entity.base.BaseCreatedEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @IdClass(MemberDandelionHistorySeq.class)
-public class MemberDandelionHistory {
+public class MemberDandelionHistory extends BaseCreatedEntity {
 
     @Id
     @ManyToOne(fetch = FetchType.EAGER)

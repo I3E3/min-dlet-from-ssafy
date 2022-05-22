@@ -1,6 +1,7 @@
 package com.i3e3.mindlet.domain.dandelion.entity;
 
 import com.i3e3.mindlet.domain.member.entity.Member;
+import com.i3e3.mindlet.global.entity.base.BaseCreatedEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(of = {"seq", "name"})
-public class Tag {
+public class Tag extends BaseCreatedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

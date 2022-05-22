@@ -36,7 +36,7 @@ public class AppConfig extends BaseLastModifiedEntity {
     @Builder
     public AppConfig(Language language, Member member) {
         this.language = language;
-        this.community = Community.WORLD;
+        this.community = Community.KOREA;
         this.member = member;
 
         member.changeAppConfig(this);

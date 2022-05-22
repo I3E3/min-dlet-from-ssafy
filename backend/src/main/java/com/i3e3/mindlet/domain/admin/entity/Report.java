@@ -55,10 +55,9 @@ public class Report extends BaseLastModifiedEntity {
 
         if (this.admin != null) {
             this.admin.getReports().remove(this);
+            this.admin = admin;
+            admin.getReports().add(this);
         }
-        this.admin = admin;
-
-        admin.getReports().add(this);
     }
 
     public enum Reason {

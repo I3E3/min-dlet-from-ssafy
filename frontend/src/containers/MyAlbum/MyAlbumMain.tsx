@@ -206,7 +206,7 @@ function MyAlbumMain() {
           ></div>
 
           {sides.map((value: number) => {
-            return <MyAlbumSide key={value} order={value} totalPage={totalPage} />;
+            return <MyAlbumSide key={value} order={value} totalPage={sides.at(-1)} />;
           })}
 
           {/* <input style={{width: "20px", height: "20px", backgroundColor: "black"}} type="radio" value="good" name="page" id="page-2"/>
