@@ -20,7 +20,6 @@
       margin-right: 5px;
       border: 1px solid saddlebrown;
     }
-
   }
 
   .sign-flower {
@@ -33,6 +32,7 @@
       object-fit: contain;
       margin: auto;
       color: white;
+      font-weight: 800;
       font-size: 20px;
       position: relative;
       animation: shake 1.5s;
@@ -41,6 +41,7 @@
 
     .normal-sign {
       width: 100%;
+      font-weight: 600;
       object-fit: contain;
       margin: auto;
       color: white;
@@ -85,9 +86,8 @@
     }
 
     .flower {
-      width: 80
+      width: 80;
     }
-
   }
 
   .btn {
