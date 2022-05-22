@@ -33,6 +33,22 @@ $color: blue;
   }
 }
 
+.guide-button {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+  border-radius: 100%;
+  border: 2px solid white;
+  z-index: 3;
+  object-fit: cover;
+  padding: 6px 6px 0 6px;
+  svg {
+    width: 25px;
+    height: 25px;
+    margin-left: -2px;
+  }
+}
+
 .menu-svg {
   z-index: 3;
   width: 24px;
@@ -130,18 +146,18 @@ $color: blue;
   animation-timing-function: ease-out;
   -moz-animation-timing-function: ease-out;
   -webkit-animation-timing-function: ease-out;
-  -moz-animation-duration: 1.5s;
-  -webkit-animation-duration: 1.5s;
-  animation-duration: 1.5s;
+  -moz-animation-duration: 5s;
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
   -moz-animation-name: slidein;
   -webkit-animation-name: slidein;
   animation-name: slidein;
   -moz-animation-iteration-count: infinite;
   -webkit-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
-  -moz-animation-direction: alternate;
-  -webkit-animation-direction: alternate;
-  animation-direction: alternate;
+  -moz-animation-direction: normal;
+  -webkit-animation-direction: normal;
+  animation-direction: normal;
 
   &__second {
     -moz-animation-name: slideout;
@@ -153,7 +169,7 @@ $color: blue;
   }
 
   &__arrow1 {
-    opacity: 0.5;
+    opacity: 0;
     -moz-animation-name: slidein2;
     -webkit-animation-name: slidein2;
     animation-name: slidein2;
@@ -163,7 +179,7 @@ $color: blue;
   }
 
   &__arrow2 {
-    opacity: 0.5;
+    opacity: 0;
     -moz-animation-name: slideout2;
     -webkit-animation-name: slideout2;
     animation-name: slideout2;
@@ -175,11 +191,17 @@ $color: blue;
 
 @keyframes slidein {
   0% {
-    transform: translateY(-15px) rotate(0deg);
+    transform: translateY(15px);
+  }
+
+  80% {
+    opacity: 0.5;
+    transform: translateY(-15px);
   }
 
   100% {
-    transform: translateY(15px) rotate(-30deg);
+    transform: translateY(-15px);
+    opacity: 0;
   }
 }
 
@@ -194,13 +216,20 @@ $color: blue;
     padding: 0 3% 0 0;
   }
 }
+
 @keyframes slideout {
   0% {
-    transform: translateY(15px) rotate(-30deg);
+    transform: translateY(-15px);
+  }
+
+  80% {
+    opacity: 0.5;
+    transform: translateY(15px);
   }
 
   100% {
-    transform: translateY(-15px) rotate(0deg);
+    transform: translateY(15px);
+    opacity: 0;
   }
 }
 
@@ -218,20 +247,32 @@ $color: blue;
 
 @keyframes slideout2 {
   0% {
+    transform: translateY(-15px);
+  }
+
+  80% {
+    opacity: 0.5;
     transform: translateY(15px);
   }
 
   100% {
-    transform: translateY(-15px);
+    transform: translateY(15px);
+    opacity: 0;
   }
 }
 
 @keyframes slidein2 {
   0% {
+    transform: translateY(15px);
+  }
+
+  80% {
     transform: translateY(-15px);
+    opacity: 0.5;
   }
 
   100% {
-    transform: translateY(15px);
+    transform: translateY(-15px);
+    opacity: 0;
   }
 }

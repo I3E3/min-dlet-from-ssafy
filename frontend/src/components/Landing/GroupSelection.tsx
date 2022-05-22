@@ -116,7 +116,7 @@ function GroupSelection({
             right: '20px',
           }}
         >
-          <button
+          {/* <button
             style={{
               fontSize: '20px',
               borderRadius: '10%',
@@ -133,7 +133,7 @@ function GroupSelection({
             }}
           >
             가이드 보기
-          </button>
+          </button> */}
         </div>
       </div>
       <div

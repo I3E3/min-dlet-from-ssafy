@@ -19,6 +19,7 @@ import audioState from 'utils/audioState';
 import { ReactComponent as Tap } from 'assets/images/Landing/tap.svg';
 import { ReactComponent as DownArrow } from 'assets/images/Landing/down-arrow.svg';
 import { ReactComponent as UpArrow } from 'assets/images/Landing/up-arrow.svg';
+import { ReactComponent as Guide } from 'assets/images/Landing/question-mark.svg';
 import { ReactComponent as Dandel } from 'assets/images/Landing/dandelion-2.svg';
 import { ReactComponent as MusicOn } from 'assets/images/Landing/music.svg';
 import { ReactComponent as MusicOff } from 'assets/images/Landing/music_muted.svg';
@@ -145,6 +146,10 @@ const LandingPage = () => {
     setSeedNum(Seedresult.data.leftSeedCount);
   };
 
+  const moveGuide = () => {
+    navigate('/guide');
+  };
+
   const handleMute = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const checkData = {
@@ -205,9 +210,10 @@ const LandingPage = () => {
     setTimeout(() => {
       setIsGuideShowing(true);
     }, 6000);
-    setTimeout(() => {
-      setIsGuideShowing(false);
-    }, 15000);
+    // setTimeout(() => {
+    //   setIsGuideShowing(false);
+    // }, 15000);
+
     if (!localStorage.getItem('token')) {
       navigate('/login');
     }
@@ -292,7 +298,12 @@ const LandingPage = () => {
 
       {isShowing && <LandingModel />}
       {isGroupShowing && (
-        <GroupSelection stop={obj1.stop} setAudioNow={setAudioNow} setIsGroupShowing={setIsGroupShowing} audioNow={audioNow} />
+        <GroupSelection
+          stop={obj1.stop}
+          setAudioNow={setAudioNow}
+          setIsGroupShowing={setIsGroupShowing}
+          audioNow={audioNow}
+        />
       )}
 
       {isGuideShowing && (
@@ -335,21 +346,26 @@ const LandingPage = () => {
       )}
 
       {isGardenShowing && (
-        <div
-          className={cx('garden')}
-          style={{}}
-          onClick={(e) => {
-            e.stopPropagation();
-            audioNow.stopFunc();
-            obj1.stop();
-            const newAudio = { ...audioNow };
-            newAudio.landing = false;
-            setAudioNow(newAudio);
-            navigate('/mygarden');
-          }}
-        >
-          My Garden
-        </div>
+        <>
+          <button className={cx('guide-button')} onClick={moveGuide}>
+            <Guide height={32} />
+          </button>
+          <div
+            className={cx('garden')}
+            style={{}}
+            onClick={(e) => {
+              e.stopPropagation();
+              audioNow.stopFunc();
+              obj1.stop();
+              const newAudio = { ...audioNow };
+              newAudio.landing = false;
+              setAudioNow(newAudio);
+              navigate('/mygarden');
+            }}
+          >
+            My Garden
+          </div>
+        </>
       )}
       {/* <button onClick={(e) => {
         e.stopPropagation();
