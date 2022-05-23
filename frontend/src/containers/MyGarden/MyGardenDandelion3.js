@@ -372,7 +372,7 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
             <Icons src={cancel} alt="취소" />
           </IconCover>} */}
 
-        {show && record && blossom (
+        {show && record && blossom && (
           <IconCover
             onClick={() => {
               onRecordClick(dandelion.seq);
