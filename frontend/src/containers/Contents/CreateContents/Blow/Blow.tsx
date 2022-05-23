@@ -9,6 +9,7 @@ import styles from './Blow.module.scss';
 const cx = classNames.bind(styles);
 const Blow = ({ onClick, form, setForm }: any) => {
   const [isShowing, setIsShowing] = useState(true);
+  const [sendSuccess, SetsendSuccess] = useState(false);
   const [loading, SetLoading] = useState(false);
   const [endstate, SetEndstate] = useState(false);
   const [touchstate, SetTouchstate] = useState(false);
@@ -21,7 +22,55 @@ const Blow = ({ onClick, form, setForm }: any) => {
     SetLoading(true);
     window.removeEventListener('blow', blow);
     SetWind(true);
-    //setTimeout(pagemove, 300);
+  };
+
+  const skipBtn = async () => {
+    if (loading === false) {
+      //api 전송 전
+      const result = await sendDataForm();
+      console.log(result);
+      if (result === true) {
+        toast('전송에 성공하였습니다.', {
+          icon: '🌼',
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        });
+      } else {
+        toast('전송에 실패하였습니다.', {
+          icon: '🌼',
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        });
+      }
+    } else if (loading === true && sendSuccess === true) {
+      //api 전송 성공 후
+      toast('전송에 성공하였습니다.', {
+        icon: '🌼',
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      });
+    } else if (loading === true && sendSuccess === false) {
+      //api 전송 실패
+      toast('전송에 실패하였습니다.', {
+        icon: '🌼',
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      });
+    }
+    //api 전송 전
+    navigate('/');
   };
 
   const sendDataForm = async () => {
@@ -47,6 +96,12 @@ const Blow = ({ onClick, form, setForm }: any) => {
       const response = await postContents(formData);
       if (response.status === 201) {
         setThrottle(false);
+        SetsendSuccess(true);
+        return true;
+      } else {
+        console.log(response);
+        setThrottle(false);
+        return false;
       }
     } catch (error) {
       toast('전송에 실패하였습니다.', {
@@ -59,12 +114,21 @@ const Blow = ({ onClick, form, setForm }: any) => {
       });
       navigate('/');
       setThrottle(false);
+      return false;
     }
   };
 
   useEffect(() => {
     // console.log(endstate);
     if (endstate === true) {
+      toast('전송에 성공하였습니다.', {
+        icon: '🌼',
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+        },
+      });
       navigate('/');
     }
   }, [endstate]);
@@ -117,6 +181,9 @@ const Blow = ({ onClick, form, setForm }: any) => {
         overflow: 'hidden',
       }}
     >
+      <button className={cx('skip')} onClick={skipBtn}>
+        Skip
+      </button>
       <Toaster position="top-center" reverseOrder={false} />
       {isShowing && (
         <>

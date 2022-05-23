@@ -18,7 +18,6 @@ const ContentsMain = () => {
   const [form, setForm] = useState({ image: '', message: '', date: '' });
   const [seq, setSeq] = useState(0);
   const [count, setCount] = useState(0);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const petaldata = useRecoilValue(petalCatchResultList);
   const patalseq = useRecoilValue(petalCatchResultSeq);
