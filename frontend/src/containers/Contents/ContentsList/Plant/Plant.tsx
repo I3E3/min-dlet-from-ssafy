@@ -8,7 +8,6 @@ import { getContents } from 'services/api/Contents';
 const cx = classNames.bind(styles);
 const Plant = ({ onClick, seq, count, list }: any) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [endstate, SetEndstate] = useState(false);
   const [checkState, SetCheckState] = useState(0);
   const [possibleState, SetState] = useState(0);
