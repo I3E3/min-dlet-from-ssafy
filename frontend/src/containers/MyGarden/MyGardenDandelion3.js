@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import sign from 'assets/images/signimg.png';
+import sign from 'assets/images/signimg1.png';
 import flower from 'assets/images/flower.png';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -345,13 +345,14 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
       });
   }
   useEffect(() => {
+    // console.log(dandelion.flowerSignNumber);
     getDiff(dandelion.blossomedDate);
     if (finalDate == null) {
       setFinalDate('꽃말 등록하기');
     } else {
       setHasMessage(true);
     }
-    console.log('이번 것', status, dandelion);
+    // console.log('이번 것', status, dandelion);
     if (status === 'FLYING' || status === 'ALBUM') {
       setRecord(false);
     } else if (status === 'RETURN') {
@@ -414,12 +415,20 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
       <div onClick={onOptionsClick} className={cx('sign-flower')}>
         {returned ? (
           <div className={cx('returned-sign')}>
-            <img style={{ width: '100%' }} src={sign} alt="팻말" />
+            <img
+              style={{ width: '100%' }}
+              src={require(`assets/images/signimg${dandelion.flowerSignNumber}_dandle.png`)}
+              alt="팻말"
+            />
             <Dday>{date}</Dday>
           </div>
         ) : (
           <div className={cx('normal-sign')}>
-            <img style={{ width: '100%' }} src={sign} alt="팻말" />
+            <img
+              style={{ width: '100%' }}
+              src={require(`assets/images/signimg${dandelion.flowerSignNumber}_dandle.png`)}
+              alt="팻말"
+            />
             {blossom ? <AfterDday>{finalDate}</AfterDday> : <Dday>{date}</Dday>}
           </div>
         )}

@@ -11,6 +11,7 @@ import LoginPage from 'pages/LandingPage/LoginPage';
 import SignupPage from 'pages/LandingPage/SignupPage';
 import MyGardenDandelionDetail from 'pages/MyGardenPage/MyDandelDetailPage';
 import Background from 'layouts/background';
+import GardenBackground from 'layouts/garden/gardenBack';
 import MyDandelDetailPage from 'pages/MyGardenPage/MyDandelDetailPage';
 import MyDandelionPlant from 'pages/MyGardenPage/MyDandelionPlant';
 import MyDandelArrivedPage from 'pages/MyGardenPage/MyDandelArrivedPage';
@@ -31,9 +32,15 @@ export default function Router() {
     },
     {
       path: '/mygarden',
+      element: <GardenBackground />,
       children: [
         { path: '', element: <MyGardenPage /> },
         { path: 'album', element: <MyAlbumPage /> },
+      ],
+    },
+    {
+      path: '/mygarden',
+      children: [
         { path: 'plant/:id', element: <MyDandelionPlant /> },
         { path: 'arrived/:id', element: <MyDandelArrivedPage /> },
         { path: 'dandelions/:id', element: <MyGardenDandelionDetail /> },
@@ -41,7 +48,8 @@ export default function Router() {
     },
     {
       path: '/settings',
-      element: <SettingsPage />,
+      element: <GardenBackground />,
+      children: [{ path: '', element: <SettingsPage /> }],
     },
     {
       path: '/contents',
@@ -72,6 +80,10 @@ export default function Router() {
     {
       path: '/guide',
       element: <GuidePage />,
+    },
+    {
+      path: '/test',
+      element: <GardenBackground />,
     },
   ]);
 }
