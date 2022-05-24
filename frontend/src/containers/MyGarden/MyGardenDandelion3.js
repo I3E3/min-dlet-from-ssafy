@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './MyGardenDandelion2.module.scss';
-import bin2 from 'assets/images/bin2.png';
+import bin2 from 'assets/images/bin4.png';
 import photo from 'assets/images/photo-album.png';
 import shovel from 'assets/images/shovel.png';
 import pencil_check from 'assets/images/pencil_check.png';
@@ -91,14 +91,13 @@ const IconBox = styled.div`
 
 const IconCover = styled.div`
   display: flex;
-  background-color: white;
+  background-color: rgba(235, 235, 235, 0.85);
   border-radius: 50%;
   width: 40px;
   height: 40px;
   justify-content: center;
   align-items: center;
   margin-right: 5px;
-  border: 1px solid saddlebrown;
 `;
 
 const Icons = styled.img`
@@ -348,9 +347,9 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
   useEffect(() => {
     getDiff(dandelion.blossomedDate);
     if (finalDate == null) {
-      setFinalDate("꽃말 등록하기");
+      setFinalDate('꽃말 등록하기');
     } else {
-      setHasMessage(true)
+      setHasMessage(true);
     }
     console.log('이번 것', status, dandelion);
     if (status === 'FLYING' || status === 'ALBUM') {
@@ -358,7 +357,7 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
     } else if (status === 'RETURN') {
       setRecord(true);
       setReturned(true);
-    } else if (status === "BLOSSOMED") {
+    } else if (status === 'BLOSSOMED') {
       setRecord(true);
       setReturned(false);
       setBlossom(true);
