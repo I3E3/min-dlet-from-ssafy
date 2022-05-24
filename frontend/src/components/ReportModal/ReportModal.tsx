@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ReportModal.module.scss';
 import toast, { Toaster } from 'react-hot-toast';
-import Select from 'react-select';
+// import Select from 'react-select';
 import { ReactComponent as Close } from 'assets/images/icon/cancel.svg';
 import { reportContents } from 'services/api/Contents';
 const cx = classNames.bind(styles);
