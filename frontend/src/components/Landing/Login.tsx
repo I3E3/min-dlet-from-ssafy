@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 import { useRecoilState } from 'recoil';
 import memberState from 'utils/memberState';
-
+import title from 'assets/images/title.png';
 const BaseURL = process.env.REACT_APP_BASE_URL;
 
 const cx = classNames.bind(styles);
@@ -57,8 +57,9 @@ const Login = () => {
 
   return (
     <div className={cx('member-modal')}>
-      {/* <Toaster /> */}
-      <h1 style={{ paddingTop: '15px' }}>Min'dLet</h1>
+      <div className={cx('title')}>
+        <img src={title} alt="title"></img>
+      </div>
       <form>
         <div>
           <h3>아이디</h3>
