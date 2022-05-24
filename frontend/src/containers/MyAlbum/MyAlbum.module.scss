@@ -1,7 +1,8 @@
 .container {
   // height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
-  background-image: url("../../assets/images/garden_back.webp");
+  z-index: 5000;
+  background-image: url('../../assets/images/garden_back.webp');
   background-size: cover;
   padding-right: 20px;
   padding-top: 20px;
@@ -10,10 +11,12 @@
   // .inner-container {
   // }
   .btns {
+    z-index: 5000;
     display: inline;
     text-align: right;
   }
   .btn {
+    z-index: 5000;
     height: 40px;
     width: 40px;
     margin-bottom: 15px;
@@ -41,6 +44,7 @@
     // border: 6px solid saddlebrown;
     border-radius: 2%;
     left: -2%;
+    z-index: 5000;
     background-color: saddlebrown;
     background-image: linear-gradient(
       0deg,
@@ -114,7 +118,7 @@
       }
     }
 
-    input[type="radio"] {
+    input[type='radio'] {
       display: none;
 
       &:checked + .book__page {

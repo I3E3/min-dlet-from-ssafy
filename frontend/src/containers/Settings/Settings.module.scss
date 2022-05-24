@@ -1,7 +1,8 @@
 .container {
   // height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
-  background-image: url("../../assets/images/garden_back.webp");
+  background-image: url('../../assets/images/garden_back.webp');
+  z-index: 5000;
   background-size: cover;
   background-position: center;
   display: flex;

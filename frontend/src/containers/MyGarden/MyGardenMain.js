@@ -182,7 +182,7 @@ function MyGardenMain() {
                     <MyGardenDandelion3
                       dandelion={dandelion}
                       setDandel={setDandelion0}
-                      key={index}
+                      key={5}
                     />
                   ) : null
                 )}
@@ -198,7 +198,7 @@ function MyGardenMain() {
             </div>
           ) : (
             <div className={cx('sign_box_5')}>
-              <MyGardenNoDandelion />
+              <MyGardenNoDandelion keynum={5} />
             </div>
           )}
 
@@ -211,7 +211,7 @@ function MyGardenMain() {
                     <MyGardenDandelion3
                       dandelion={dandelion}
                       setDandel={setDandelion1}
-                      key={index}
+                      key={1}
                     />
                   ) : null
                 )}
@@ -227,7 +227,7 @@ function MyGardenMain() {
             </div>
           ) : (
             <div className={cx('sign_box_4')}>
-              <MyGardenNoDandelion />
+              <MyGardenNoDandelion keynum={4} />
             </div>
           )}
 
@@ -240,7 +240,7 @@ function MyGardenMain() {
                     <MyGardenDandelion3
                       dandelion={dandelion}
                       setDandel={setDandelion2}
-                      key={index}
+                      key={2}
                     />
                   ) : null
                 )}
@@ -256,7 +256,7 @@ function MyGardenMain() {
             </div>
           ) : (
             <div className={cx('sign_box_3')}>
-              <MyGardenNoDandelion />
+              <MyGardenNoDandelion keynum={3} />
             </div>
           )}
 
@@ -269,7 +269,7 @@ function MyGardenMain() {
                     <MyGardenDandelion3
                       dandelion={dandelion}
                       setDandel={setDandelion3}
-                      key={index}
+                      key={3}
                     />
                   ) : null
                 )}
@@ -285,7 +285,7 @@ function MyGardenMain() {
             </div>
           ) : (
             <div className={cx('sign_box_2')}>
-              <MyGardenNoDandelion />
+              <MyGardenNoDandelion keynum={2} />
             </div>
           )}
 
@@ -298,7 +298,7 @@ function MyGardenMain() {
                     <MyGardenDandelion3
                       dandelion={dandelion}
                       setDandel={setDandelion4}
-                      key={index}
+                      key={4}
                     />
                   ) : null
                 )}
@@ -314,7 +314,7 @@ function MyGardenMain() {
             </div>
           ) : (
             <div className={cx('sign_box_1')}>
-              <MyGardenNoDandelion />
+              <MyGardenNoDandelion keynum={1} />
             </div>
           )}
           {/* <div className={cx("sign_box_5")}>
