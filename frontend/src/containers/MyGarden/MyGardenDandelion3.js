@@ -417,7 +417,7 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
           <div className={cx('returned-sign')}>
             <img
               style={{ width: '100%' }}
-              src={require(`assets/images/signimg${dandelion.flowerSignNumber}_dandle.png`)}
+              src={require(`assets/images/signimg${dandelion.flowerSignNumber}.png`)}
               alt="팻말"
             />
             <Dday>{date}</Dday>
@@ -426,7 +426,7 @@ function MyGardenDandelion3({ dandelion, setDandel }) {
           <div className={cx('normal-sign')}>
             <img
               style={{ width: '100%' }}
-              src={require(`assets/images/signimg${dandelion.flowerSignNumber}_dandle.png`)}
+              src={require(`assets/images/signimg${dandelion.flowerSignNumber}.png`)}
               alt="팻말"
             />
             {blossom ? <AfterDday>{finalDate}</AfterDday> : <Dday>{date}</Dday>}

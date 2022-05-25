@@ -58,7 +58,7 @@ const MyGardenDandelionDetail = () => {
       confirmButtonText: 'Yes',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(seq);
+        //   console.log(seq);
         const result = await deletePetalSeq(seq);
         if (result.status === 204) {
           Swal.fire(`삭제가 완료되었습니다.`, '', 'success');
@@ -66,7 +66,7 @@ const MyGardenDandelionDetail = () => {
         }
       }
     });
-    console.log(seq);
+    //   console.log(seq);
   };
 
   // const onDeleteDandelionClick = async () => {
@@ -120,12 +120,12 @@ const MyGardenDandelionDetail = () => {
     //   });
 
     const num = Number(id);
-    console.log(num);
+    //  console.log(num);
 
     const response = await getDandelionDetail(num);
-    console.log(response);
+    //  console.log(response);
     setList(response.data.data.petalInfos.reverse());
-    console.log(response.data.data.totalPetalCount);
+    //  console.log(response.data.data.totalPetalCount);
     setCount(response.data.data.totalPetalCount);
   };
   useEffect(() => {
