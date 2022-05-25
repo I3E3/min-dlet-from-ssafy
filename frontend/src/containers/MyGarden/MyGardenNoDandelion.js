@@ -7,7 +7,7 @@ const cx = classNames.bind(styles);
 
 function MyGardenNoDandelion({ keynum }) {
   useEffect(() => {
-    console.log(keynum);
+    // console.log(keynum);
   }, []);
   return (
     <div className={cx('container')}>

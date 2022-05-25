@@ -87,8 +87,8 @@ function MyGardenMain() {
       headers: config,
     })
       .then((res) => {
-        console.log('꽃밭 가져오기 성공');
-        console.log(res.data.data);
+        //   console.log('꽃밭 가져오기 성공');
+        //  console.log(res.data.data);
         setDandelions(res.data.data);
         res.data.data.map((data, index) => {
           if (data == null && index === 0) {
@@ -105,8 +105,8 @@ function MyGardenMain() {
         });
       })
       .catch((err) => {
-        console.log('꽃밭 가져오기 실패');
-        console.log(err);
+        //   console.log('꽃밭 가져오기 실패');
+        //   console.log(err);
       });
   }
 
