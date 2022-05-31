@@ -7,13 +7,11 @@ import iconimg from 'assets/images/icon/earth-globe-white.png';
 import styles from './ContentsList.module.scss';
 import { resetContentsState } from 'services/api/Contents';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as NationImg } from 'assets/images/Flag_of_South_Korea.svg';
+import { ReactComponent as SirenImg } from 'assets/images/icon/siren.svg';
 import { petalCatchResultList, petalCatchResultSeq } from 'atoms/atoms';
 import { useSetRecoilState } from 'recoil';
-
+import ReportModal from 'components/ReportModal/ReportModal';
 const cx = classNames.bind(styles);
-const cards = [petal, petal, petal, petal, petal, petal];
-
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
 
 const to = (i: number) => ({
@@ -28,8 +26,12 @@ const from = (_i: number) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 });
 const trans = (r: number, s: number) =>
   `perspective(1500px) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
-const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
+const ContentsList = ({ onClick, list, seq, count }: any) => {
   const navigate = useNavigate();
+  const [reportlist, SetReportList] = useState([-1]);
+  const [msg, SetMsg] = useState('');
+  const [petalseq, SetSeq] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
   const setPetalData = useSetRecoilState(petalCatchResultList);
   const setPetalSeq = useSetRecoilState(petalCatchResultSeq);
   const [gone] = useState(() => new Set());
@@ -37,6 +39,17 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
     ...to(i),
     from: from(i),
   }));
+
+  const openModal = (i: number, msg: any) => {
+    // console.log(i);
+    console.log(msg);
+    SetSeq(i);
+    SetMsg(msg);
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   const home = async () => {
     const response = await resetContentsState(seq);
@@ -49,11 +62,26 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
     onClick(2);
   };
 
+  const setBlind = (val: number) => {
+    return reportlist.some(function (arrVal: number) {
+      return val === arrVal;
+    });
+  };
+
+  const reportComplete = () => {
+    console.log('신고접수된 꽃잎', petalseq);
+    SetReportList((prev) => [...prev, petalseq]);
+  };
+
   useEffect(() => {
-    // console.log(list);
-    // console.log(seq);
-    //  console.log(count);
+    console.log(list);
+    console.log(seq);
+    console.log(count);
   }, []);
+
+  useEffect(() => {
+    console.log('reportlist', reportlist);
+  }, [reportlist]);
 
   const bind = useDrag(
     ({
@@ -113,11 +141,7 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
                   transform: interpolate([rot, scale], trans),
                 }}
               >
-                <img
-                  className={cx('petals')}
-                  src={`${cards[0]}`}
-                  alt="petals"
-                />
+                <img className={cx('petals')} src={petal} alt="petals" />
                 <div className={cx('contents')}>
                   <div className={cx('petal-img')}>
                     <div className={cx('editor')}>
@@ -130,13 +154,28 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
                             alt="preview"
                           />
                         </div>
-                        <div className={cx('date')}> {list[i].createdDate}</div>
+                        <div className={cx('date')}>{list[i].createdDate}</div>
+                        <div>
+                          {setBlind(list[i].seq) ? null : (
+                            <SirenImg
+                              width={22}
+                              onClick={() =>
+                                openModal(list[i].seq, list[i].message)
+                              }
+                            />
+                          )}
+                        </div>
                       </div>
                       <div className={cx('scrollBar')}>
-                        <div className={cx('textarea')}>{list[i].message}</div>
+                        <div className={cx('textarea')}>
+                          {setBlind(list[i].seq)
+                            ? '신고 접수된 글입니다.'
+                            : `${list[i].message}`}
+                        </div>
                         <div className={cx('thumbnail')}>
                           <div className={cx('default')}>
-                            {list[i].contentImageUrlPath ? (
+                            {setBlind(list[i].seq) ? null : list[i]
+                                .contentImageUrlPath ? (
                               <div className={cx('preview-img')}>
                                 <img
                                   src={list[i].contentImageUrlPath}
@@ -147,7 +186,6 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
                           </div>
                         </div>
                       </div>
-                      {/* {i + 1} */}
                     </div>
                   </div>
                 </div>
@@ -155,6 +193,13 @@ const ContentsList = ({ onClick, form, setForm, list, seq, count }: any) => {
             </animated.div>
           ))}
         </div>
+        <ReportModal
+          open={modalOpen}
+          seq={petalseq}
+          close={closeModal}
+          complete={reportComplete}
+          contents={msg}
+        />
         <button className={cx('send-btn')} onClick={send}>
           Send
         </button>

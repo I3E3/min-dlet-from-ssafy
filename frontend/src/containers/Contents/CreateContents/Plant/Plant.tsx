@@ -17,6 +17,10 @@ const Plant = ({ onClick }: any) => {
     SetEndstate(state);
   };
 
+  const skipBtn = () => {
+    onClick(1);
+  };
+
   const [isShowing, setIsShowing] = useState(true);
 
   useEffect(() => {
@@ -34,7 +38,12 @@ const Plant = ({ onClick }: any) => {
       }}
     >
       {isShowing && (
-        <NewPlantAnimation endstate={stateDetect}></NewPlantAnimation>
+        <>
+          <button className={cx('skip')} onClick={skipBtn}>
+            Skip
+          </button>
+          <NewPlantAnimation endstate={stateDetect} />
+        </>
       )}
     </div>
   );

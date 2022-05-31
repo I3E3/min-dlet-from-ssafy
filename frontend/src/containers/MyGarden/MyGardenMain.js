@@ -1,41 +1,41 @@
-import { useNavigate } from "react-router-dom";
-import gear from "assets/images/gear.png";
-import pencil from "assets/images/pencil.png";
-import album from "assets/images/photo-album.png";
-import earth2 from "assets/images/earth2.png";
-import styles from "./MyGarden.module.scss";
-import classNames from "classnames/bind";
-import { useEffect, useState } from "react";
-import MyGardenDandelion3 from "./MyGardenDandelion3";
-import MyGardenNoDandelion from "./MyGardenNoDandelion";
-import axios from "axios";
-import { motion } from "framer-motion";
-import { useSound } from "use-sound";
-import ButtonEffect from "assets/musics/button_effect.wav";
-import FlowerGarden from "assets/musics/flower_garden.mp3";
-import { useRecoilValue, useRecoilState } from "recoil";
-import memberState from "utils/memberState";
-import audioState from "utils/audioState";
+import { useNavigate } from 'react-router-dom';
+import gear from 'assets/images/gear.png';
+import pencil from 'assets/images/pencil.png';
+import album from 'assets/images/photo-album.png';
+import earth2 from 'assets/images/earth2.png';
+import styles from './MyGarden.module.scss';
+import classNames from 'classnames/bind';
+import { useEffect, useState } from 'react';
+import MyGardenDandelion3 from './MyGardenDandelion3';
+import MyGardenNoDandelion from './MyGardenNoDandelion';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { useSound } from 'use-sound';
+import ButtonEffect from 'assets/musics/button_effect.wav';
+import FlowerGarden from 'assets/musics/flower_garden.mp3';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import memberState from 'utils/memberState';
+import audioState from 'utils/audioState';
 
 const cx = classNames.bind(styles);
 const BaseURL = process.env.REACT_APP_BASE_URL;
-const musicOn = [false]
-const isMusicStopped = [false]
+const musicOn = [false];
+const isMusicStopped = [false];
 
 function MyGardenMain() {
   const member = useRecoilValue(memberState);
-  const [audioNow, setAudioNow] = useRecoilState(audioState)
+  const [audioNow, setAudioNow] = useRecoilState(audioState);
   const navigate = useNavigate();
-  const [play3, obj3] = useSound(FlowerGarden, {
-    volume: 0.2,
-    interrupt: true,
-  });
-  const sound3 = obj3.sound;
-  const [play2, obj2] = useSound(ButtonEffect, {
-    volume: 0.4,
-    interrupt: true,
-  });
-  const sound2 = obj2.sound;
+  // const [play3, obj3] = useSound(FlowerGarden, {
+  //   volume: 0.2,
+  //   interrupt: true,
+  // });
+  // const sound3 = obj3.sound;
+  // const [play2, obj2] = useSound(ButtonEffect, {
+  //   volume: 0.4,
+  //   interrupt: true,
+  // });
+  // const sound2 = obj2.sound;
 
   const [dandelions, setDandelions] = useState([]);
   const [dandelion0, setDandelion0] = useState(true);
@@ -45,50 +45,50 @@ function MyGardenMain() {
   const [dandelion4, setDandelion4] = useState(true);
 
   const onHomeClick = (e) => {
-    e.stopPropagation()
+    // e.stopPropagation();
     // obj3.stop()
-    obj3.stop()
-    if (!member.soundOff) {
-      play2();
-    }
-    const newAudio = {...audioNow}
-    newAudio.flowerGarden = false
-    setAudioNow(newAudio)
+    // obj3.stop();
+    // if (!member.soundOff) {
+    //   play2();
+    // }
+    const newAudio = { ...audioNow };
+    //  newAudio.flowerGarden = false;
+    // setAudioNow(newAudio);
     navigate(`/`);
   };
   const onSettingsClick = () => {
     if (!member.soundOff) {
-      play2();
+      // play2();
     }
     navigate(`/settings`);
   };
 
   const onAlbumClick = () => {
     if (!member.soundOff) {
-      play2();
+      // play2();
     }
     navigate(`/mygarden/album`);
   };
 
   const onCabinetClick = () => {
-    play2();
+    //play2();
     navigate(`/mygarden/cabinet`);
   };
 
   async function getGarden() {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     const config = {
-      Authorization: "Bearer " + token,
+      Authorization: 'Bearer ' + token,
     };
     await axios({
       url: `garden`,
-      method: "get",
+      method: 'get',
       baseURL: BaseURL,
       headers: config,
     })
       .then((res) => {
-        console.log("꽃밭 가져오기 성공");
-        console.log(res.data.data);
+        //   console.log('꽃밭 가져오기 성공');
+        //  console.log(res.data.data);
         setDandelions(res.data.data);
         res.data.data.map((data, index) => {
           if (data == null && index === 0) {
@@ -105,8 +105,8 @@ function MyGardenMain() {
         });
       })
       .catch((err) => {
-        console.log("꽃밭 가져오기 실패");
-        console.log(err);
+        //   console.log('꽃밭 가져오기 실패');
+        //   console.log(err);
       });
   }
 
@@ -115,26 +115,27 @@ function MyGardenMain() {
   }, []);
 
   return (
-    <div className={cx("container")}
-      onClick={() => {
-        if (!member.soundOff && !audioNow.flowerGarden) {
-          if (sound3) {
-            play3()
-            const newAudio = {...audioNow}
-            newAudio.flowerGarden = true
-            setAudioNow(newAudio)
-          }
-        }
-      }}
+    <div
+      className={cx('container')}
+      // onClick={() => {
+      //   if (!member.soundOff && !audioNow.flowerGarden) {
+      //     if (sound3) {
+      //       play3();
+      //       const newAudio = { ...audioNow };
+      //       newAudio.flowerGarden = true;
+      //       setAudioNow(newAudio);
+      //     }
+      //   }
+      // }}
     >
       <motion.div
         key={1}
         initial="hidden"
         animate="visible"
-        exit={{ marginTop: "-300px", opacity: 0 }}
+        exit={{ marginTop: '-300px', opacity: 0 }}
         variants={{
           hidden: {
-            marginTop: "-300px",
+            marginTop: '-300px',
             opacity: 0,
           },
           visible: {
@@ -146,20 +147,20 @@ function MyGardenMain() {
           },
         }}
       >
-        <div className={cx("btns")}>
+        <div className={cx('btns')}>
           <div>
             <button type="button" onClick={onHomeClick}>
-              <img className={cx("btn")} src={earth2} alt="랜딩페이지" />
+              <img className={cx('btn')} src={earth2} alt="랜딩페이지" />
             </button>
           </div>
           <div>
             <button type="button" onClick={onSettingsClick}>
-              <img className={cx("btn")} src={gear} alt="설정" />
+              <img className={cx('btn')} src={gear} alt="설정" />
             </button>
           </div>
           <div>
             <button onClick={onAlbumClick}>
-              <img className={cx("btn")} src={album} alt="앨범" />
+              <img className={cx('btn')} src={album} alt="앨범" />
             </button>
           </div>
           {/* <div>
@@ -169,16 +170,20 @@ function MyGardenMain() {
           </div> */}
         </div>
 
-        <div className={cx("blank")}></div>
+        <div className={cx('blank')}></div>
 
-        <div className={cx("sign_boxs")}>
+        <div className={cx('sign_boxs')}>
           {dandelion0 ? (
-            <div className={cx("sign_box_5")}>
+            <div className={cx('sign_box_5')}>
               {dandelions
                 .slice(0, 1)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion0} key={index} />
+                    <MyGardenDandelion3
+                      dandelion={dandelion}
+                      setDandel={setDandelion0}
+                      key={5}
+                    />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -192,18 +197,22 @@ function MyGardenMain() {
           ))} */}
             </div>
           ) : (
-            <div className={cx("sign_box_5")}>
-              <MyGardenNoDandelion />
+            <div className={cx('sign_box_5')}>
+              <MyGardenNoDandelion keynum={5} />
             </div>
           )}
 
           {dandelion1 ? (
-            <div className={cx("sign_box_4")}>
+            <div className={cx('sign_box_4')}>
               {dandelions
                 .slice(1, 2)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion1} key={index} />
+                    <MyGardenDandelion3
+                      dandelion={dandelion}
+                      setDandel={setDandelion1}
+                      key={1}
+                    />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -217,18 +226,22 @@ function MyGardenMain() {
           ))} */}
             </div>
           ) : (
-            <div className={cx("sign_box_4")}>
-              <MyGardenNoDandelion />
+            <div className={cx('sign_box_4')}>
+              <MyGardenNoDandelion keynum={4} />
             </div>
           )}
 
           {dandelion2 ? (
-            <div className={cx("sign_box_3")}>
+            <div className={cx('sign_box_3')}>
               {dandelions
                 .slice(2, 3)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion2} key={index} />
+                    <MyGardenDandelion3
+                      dandelion={dandelion}
+                      setDandel={setDandelion2}
+                      key={2}
+                    />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -242,18 +255,22 @@ function MyGardenMain() {
           ))} */}
             </div>
           ) : (
-            <div className={cx("sign_box_3")}>
-              <MyGardenNoDandelion />
+            <div className={cx('sign_box_3')}>
+              <MyGardenNoDandelion keynum={3} />
             </div>
           )}
 
           {dandelion3 ? (
-            <div className={cx("sign_box_2")}>
+            <div className={cx('sign_box_2')}>
               {dandelions
                 .slice(3, 4)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion3} key={index} />
+                    <MyGardenDandelion3
+                      dandelion={dandelion}
+                      setDandel={setDandelion3}
+                      key={3}
+                    />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -267,18 +284,22 @@ function MyGardenMain() {
           ))} */}
             </div>
           ) : (
-            <div className={cx("sign_box_2")}>
-              <MyGardenNoDandelion />
+            <div className={cx('sign_box_2')}>
+              <MyGardenNoDandelion keynum={2} />
             </div>
           )}
 
           {dandelion4 ? (
-            <div className={cx("sign_box_1")}>
+            <div className={cx('sign_box_1')}>
               {dandelions
                 .slice(4, 5)
                 .map((dandelion, index) =>
                   dandelion ? (
-                    <MyGardenDandelion3 dandelion={dandelion} setDandel={setDandelion4} key={index} />
+                    <MyGardenDandelion3
+                      dandelion={dandelion}
+                      setDandel={setDandelion4}
+                      key={4}
+                    />
                   ) : null
                 )}
               {/* {[null, null, null, null, {seq: 11, 
@@ -292,8 +313,8 @@ function MyGardenMain() {
           ))} */}
             </div>
           ) : (
-            <div className={cx("sign_box_1")}>
-              <MyGardenNoDandelion />
+            <div className={cx('sign_box_1')}>
+              <MyGardenNoDandelion keynum={1} />
             </div>
           )}
           {/* <div className={cx("sign_box_5")}>
