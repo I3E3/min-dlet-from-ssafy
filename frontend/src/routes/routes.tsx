@@ -11,11 +11,12 @@ import LoginPage from 'pages/LandingPage/LoginPage';
 import SignupPage from 'pages/LandingPage/SignupPage';
 import MyGardenDandelionDetail from 'pages/MyGardenPage/MyDandelDetailPage';
 import Background from 'layouts/background';
+import GardenBackground from 'layouts/garden/gardenBack';
 import MyDandelDetailPage from 'pages/MyGardenPage/MyDandelDetailPage';
 import MyDandelionPlant from 'pages/MyGardenPage/MyDandelionPlant';
 import MyDandelArrivedPage from 'pages/MyGardenPage/MyDandelArrivedPage';
-import DesktopPage from 'pages/DesktopPage'
-import GuidePage from 'pages/GuidePage'
+import DesktopPage from 'pages/DesktopPage';
+import GuidePage from 'pages/GuidePage';
 
 export default function Router() {
   return useRoutes([
@@ -31,31 +32,24 @@ export default function Router() {
     },
     {
       path: '/mygarden',
-      element: <MyGardenPage />,
+      element: <GardenBackground />,
+      children: [
+        { path: '', element: <MyGardenPage /> },
+        { path: 'album', element: <MyAlbumPage /> },
+      ],
+    },
+    {
+      path: '/mygarden',
+      children: [
+        { path: 'plant/:id', element: <MyDandelionPlant /> },
+        { path: 'arrived/:id', element: <MyDandelArrivedPage /> },
+        { path: 'dandelions/:id', element: <MyGardenDandelionDetail /> },
+      ],
     },
     {
       path: '/settings',
-      element: <SettingsPage />,
-    },
-    {
-      path: '/mygarden/album',
-      element: <MyAlbumPage />,
-    },
-    {
-      path: '/mygarden/cabinet',
-      element: <MyCabinetPage />,
-    },
-    {
-      path: '/mygarden/plant/:id',
-      element: <MyDandelionPlant />,
-    },
-    {
-      path: '/mygarden/arrived/:id',
-      element: <MyDandelArrivedPage />,
-    },
-    {
-      path: '/mygarden/dandelions/:id',
-      element: <MyGardenDandelionDetail />,
+      element: <GardenBackground />,
+      children: [{ path: '', element: <SettingsPage /> }],
     },
     {
       path: '/contents',
@@ -86,6 +80,10 @@ export default function Router() {
     {
       path: '/guide',
       element: <GuidePage />,
+    },
+    {
+      path: '/test',
+      element: <GardenBackground />,
     },
   ]);
 }

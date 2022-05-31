@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from 'pages/LandingPage/LandingPage.module.scss';
 import { useNavigate } from 'react-router';
+import title from 'assets/images/title.png';
 import toast from 'react-hot-toast';
 
 const BaseURL = process.env.REACT_APP_BASE_URL;
@@ -116,7 +117,9 @@ const Login = () => {
   return (
     <section className={cx('member-modal')}>
       {/* <Toaster /> */}
-      <h1 style={{ paddingTop: '15px' }}>Min'dLet</h1>
+      <div className={cx('title')}>
+        <img src={title} alt="title"></img>
+      </div>
       <form style={{ marginTop: '10px', lineHeight: '120%' }}>
         <div>
           <h3>아이디</h3>
@@ -155,7 +158,7 @@ const Login = () => {
                     textAlign: 'left',
                     color: 'red',
                     fontSize: '12px',
-                    lineHeight: '100%'
+                    lineHeight: '100%',
                   }}
                 >
                   사용할 수 없는 ID 입니다.

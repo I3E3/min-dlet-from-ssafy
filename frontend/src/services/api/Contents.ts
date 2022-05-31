@@ -26,3 +26,9 @@ export const resetContentsState = async (seq: number) => {
   const result = await instance.patch(COMMON + `/${seq}/status-flying`);
   return result;
 };
+
+export const reportContents = async ({ seq, reason }: any) => {
+  const requestbody = { reason: reason };
+  const result = await instance.post(`/petals/${seq}/reports`, requestbody);
+  return result;
+};

@@ -10,7 +10,6 @@ const cx = classNames.bind(styles);
 const PlantEvent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [endstate, SetEndstate] = useState(false);
   const [checkState, SetCheckState] = useState(0);
   const [possibleState, SetState] = useState(0);
@@ -25,6 +24,10 @@ const PlantEvent = () => {
 
   const possible = (state: number) => {
     SetState(state);
+  };
+
+  const skipBtn = () => {
+    navigate(`/mygarden/arrived/${id}`);
   };
 
   const [isShowing, setIsShowing] = useState(true);
@@ -55,11 +58,16 @@ const PlantEvent = () => {
       }}
     >
       {isShowing && (
-        <FlyingAnimation
-          endstate={stateDetect}
-          msgCheck={msgDetect}
-          isPossible={possible}
-        ></FlyingAnimation>
+        <>
+          <button className={cx('skip')} onClick={skipBtn}>
+            Skip
+          </button>
+          <FlyingAnimation
+            endstate={stateDetect}
+            msgCheck={msgDetect}
+            isPossible={possible}
+          ></FlyingAnimation>
+        </>
       )}
       <Toaster />
     </div>

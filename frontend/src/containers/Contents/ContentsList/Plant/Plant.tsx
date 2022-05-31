@@ -8,7 +8,6 @@ import { getContents } from 'services/api/Contents';
 const cx = classNames.bind(styles);
 const Plant = ({ onClick, seq, count, list }: any) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [endstate, SetEndstate] = useState(false);
   const [checkState, SetCheckState] = useState(0);
   const [possibleState, SetState] = useState(0);
@@ -24,7 +23,10 @@ const Plant = ({ onClick, seq, count, list }: any) => {
   const possible = (state: number) => {
     SetState(state);
   };
-  // 초기값 0 가능하면 1 불가능하면 2
+
+  const skipBtn = () => {
+    onClick(1);
+  };
 
   const [isShowing, setIsShowing] = useState(true);
 
@@ -55,11 +57,16 @@ const Plant = ({ onClick, seq, count, list }: any) => {
       }}
     >
       {isShowing && (
-        <FlyingAnimation
-          endstate={stateDetect}
-          msgCheck={msgDetect}
-          isPossible={possible}
-        ></FlyingAnimation>
+        <>
+          <button className={cx('skip')} onClick={skipBtn}>
+            Skip
+          </button>
+          <FlyingAnimation
+            endstate={stateDetect}
+            msgCheck={msgDetect}
+            isPossible={possible}
+          ></FlyingAnimation>
+        </>
       )}
       <Toaster />
     </div>

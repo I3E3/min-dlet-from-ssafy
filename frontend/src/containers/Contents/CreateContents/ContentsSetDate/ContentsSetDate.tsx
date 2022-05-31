@@ -42,6 +42,7 @@ const ContentsSetDate = ({ onClick, form, setForm }: any) => {
           minDate={date}
           showNeighboringMonth={false}
           value={dateState}
+          calendarType={"US"}
           onChange={changeDate}
         />
         {/* <div className={cx('selected-date')}>

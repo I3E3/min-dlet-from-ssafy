@@ -8,19 +8,35 @@ $color: blue;
 
 .menu-button {
   position: fixed;
-  right: 10px;
-  top: 10px;
+  right: 20px;
+  top: 30px;
   border-radius: 20%;
   border: 2px solid white;
   z-index: 3;
-  padding: 4px 6px;
+  padding: 1px 6px;
   padding-top: 8px;
 }
 
 .music-button {
   position: fixed;
-  right: 11px;
-  top: 70px;
+  right: 20px;
+  top: 85px;
+  border-radius: 100%;
+  border: 2px solid white;
+  z-index: 3;
+  object-fit: cover;
+  padding: 6px 6px 0 6px;
+  svg {
+    width: 25px;
+    height: 25px;
+    margin-left: -2px;
+  }
+}
+
+.guide-button {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
   border-radius: 100%;
   border: 2px solid white;
   z-index: 3;
@@ -39,26 +55,47 @@ $color: blue;
   height: 24px;
 }
 
-.member-modal {
+.member-modal::after {
   position: absolute;
   z-index: 10;
   overflow: hidden;
   width: 86vw;
   max-width: 540px;
   min-height: 480px;
-  background-color: rgba(255, 255, 255, 0.2);
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.418);
   border-radius: 4%;
   border: 1px solid white;
   margin: auto;
   margin-top: 20vh;
   left: 50%;
-  margin-left: #{'max(-270px, -43vw)'};
+}
 
-  h1 {
+.member-modal {
+  position: absolute;
+  z-index: 10;
+  overflow: hidden;
+  width: 86vw;
+  backdrop-filter: blur(4px);
+  max-width: 540px;
+  min-height: 480px;
+  background-color: rgba(255, 255, 255, 0.205);
+  border-radius: 4%;
+  border: 2px solid rgba(235, 235, 235, 0.322);
+  margin: auto;
+  margin-top: 20vh;
+  left: 50%;
+  margin-left: #{'max(-270px, -43vw)'};
+  .title {
     text-align: center;
-    font-size: 32px;
-    color: white;
-    letter-spacing: 1vw;
+    margin: 30px 0 0 0;
+    img {
+      height: 50px;
+    }
   }
 
   form {
@@ -72,12 +109,13 @@ $color: blue;
 
     button {
       // border: 1px solid green;
-      width: 100px;
-      padding: 5px;
-      color: white;
+      border-radius: 5px;
+      width: 100%;
+      padding: 10px;
+      color: #224e8b;
       margin: auto;
       margin-top: 32px;
-      background-color: #224e8b;
+      background-color: #ffffff;
     }
   }
 
@@ -86,8 +124,8 @@ $color: blue;
     height: 40px;
     padding: 10px;
     margin-top: 8px;
-    color: #224e8b;
-    border: 1px solid #224e8b;
+    color: #0a0a0a;
+    background-color: rgba(235, 235, 235, 0.295);
     // border-radius: 3%;
     font-size: 16px;
   }
@@ -130,18 +168,18 @@ $color: blue;
   animation-timing-function: ease-out;
   -moz-animation-timing-function: ease-out;
   -webkit-animation-timing-function: ease-out;
-  -moz-animation-duration: 1.5s;
-  -webkit-animation-duration: 1.5s;
-  animation-duration: 1.5s;
+  -moz-animation-duration: 5s;
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
   -moz-animation-name: slidein;
   -webkit-animation-name: slidein;
   animation-name: slidein;
   -moz-animation-iteration-count: infinite;
   -webkit-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
-  -moz-animation-direction: alternate;
-  -webkit-animation-direction: alternate;
-  animation-direction: alternate;
+  -moz-animation-direction: normal;
+  -webkit-animation-direction: normal;
+  animation-direction: normal;
 
   &__second {
     -moz-animation-name: slideout;
@@ -153,7 +191,7 @@ $color: blue;
   }
 
   &__arrow1 {
-    opacity: 0.5;
+    opacity: 0;
     -moz-animation-name: slidein2;
     -webkit-animation-name: slidein2;
     animation-name: slidein2;
@@ -163,7 +201,7 @@ $color: blue;
   }
 
   &__arrow2 {
-    opacity: 0.5;
+    opacity: 0;
     -moz-animation-name: slideout2;
     -webkit-animation-name: slideout2;
     animation-name: slideout2;
@@ -175,34 +213,48 @@ $color: blue;
 
 @keyframes slidein {
   0% {
-    transform: translateY(-15px) rotate(0deg);
+    transform: translateY(15px);
+  }
+
+  80% {
+    opacity: 0.5;
+    transform: translateY(-15px);
   }
 
   100% {
-    transform: translateY(15px) rotate(-30deg);
+    transform: translateY(-15px);
+    opacity: 0;
   }
 }
 
 .leftseed {
   position: absolute;
-  right: 20%;
+  left: 20px;
   font-size: 1.5em;
   color: white;
   top: 0%;
   padding: 3% 0 0 0;
   .leftseedicon {
-    padding: 0 3% 0 0;
+    padding: 10px 0 0 0;
   }
 }
+
 @keyframes slideout {
   0% {
-    transform: translateY(15px) rotate(-30deg);
+    transform: translateY(-15px);
+  }
+
+  80% {
+    opacity: 0.5;
+    transform: translateY(15px);
   }
 
   100% {
-    transform: translateY(-15px) rotate(0deg);
+    transform: translateY(15px);
+    opacity: 0;
   }
 }
+
 .garden {
   padding: 1vh 3vw;
   width: auto;
@@ -217,20 +269,32 @@ $color: blue;
 
 @keyframes slideout2 {
   0% {
+    transform: translateY(-15px);
+  }
+
+  80% {
+    opacity: 0.5;
     transform: translateY(15px);
   }
 
   100% {
-    transform: translateY(-15px);
+    transform: translateY(15px);
+    opacity: 0;
   }
 }
 
 @keyframes slidein2 {
   0% {
+    transform: translateY(15px);
+  }
+
+  80% {
     transform: translateY(-15px);
+    opacity: 0.5;
   }
 
   100% {
-    transform: translateY(15px);
+    transform: translateY(-15px);
+    opacity: 0;
   }
 }

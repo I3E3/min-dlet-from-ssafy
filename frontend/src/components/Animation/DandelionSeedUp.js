@@ -10,9 +10,8 @@ export default function DandelionSeedUp({ flag }) {
   const petal = useRef();
 
   useFrame(() => {
-    if (down && petal.current.position.y < 380) petal.current.position.y += 2;
+    if (down && petal.current.position.y < 380) petal.current.position.y += 4;
     else if (petal.current.position.y >= 380) {
-      console.log('도달');
       flag(true);
     }
   });
